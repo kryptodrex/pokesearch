@@ -19,8 +19,8 @@
 <script>
 
 export default {
-  name: 'header',
-  
+  name: 'pageHeader'
+
 }
 </script>
 
