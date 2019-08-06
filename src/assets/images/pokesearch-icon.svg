@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="326px" height="326px" viewBox="0 0 326 326" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>pokesearch</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="pokesearch">
+            <g id="Group-2" transform="translate(174.818019, 174.110913) rotate(-45.000000) translate(-174.818019, -174.110913) translate(72.318019, -18.889087)" fill="#FFFFFF">
+                <circle id="Oval-2" stroke="#FFFFFF" stroke-width="15" cx="102.696699" cy="102.696699" r="101.889087"></circle>
+                <rect id="Rectangle" x="87" y="194" width="30" height="71"></rect>
+                <rect id="Rectangle" x="82" y="253" width="40" height="133"></rect>
+            </g>
+            <g id="Group" transform="translate(19.000000, 18.000000)">
+                <polygon id="Path-5" fill="#EF4036" points="0.777202183 93.7233325 5.8668788 52.6943067 36.1140998 14.7161191 76.508029 0.954701939 107.408153 0.954701939 148.517308 17.8648928 180.301819 61.9299181 184.237044 93.7233325 120.024022 106.938685 57.9269996 106.938685"></polygon>
+                <polygon id="Path-5" fill="#FFFFFF" transform="translate(92.507123, 139.554370) scale(1, -1) translate(-92.507123, -139.554370) " points="0.777202183 185.938685 5.8668788 144.909659 38.9794848 110.080246 76.508029 93.1700547 107.408153 93.1700547 148.517308 110.080246 180.301819 154.145271 184.237044 185.938685 133.011081 176.160587 57.4980965 174.123052"></polygon>
+                <circle id="Oval-2" stroke="#4A4A4A" stroke-width="12" cx="92" cy="92" r="92"></circle>
+                <path d="M5,92 C22.2930564,98.6585188 34.6600328,102.778626 42.100929,104.360321 C62.8267159,108.765957 79.4070763,107.64259 92,107.64259 C104.207267,107.64259 121.086813,108.500245 140.936436,104.360321 C148.705977,102.739872 161.393832,98.6197647 179,92" id="Line" stroke="#4A4A4A" stroke-width="15" stroke-linecap="square"></path>
+                <circle id="Oval-4" stroke="#4A4A4A" stroke-width="10" fill="#FFFFFF" cx="92" cy="108" r="25"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

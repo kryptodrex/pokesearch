@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="196px" height="196px" viewBox="0 0 196 196" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Artboard</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard">
+            <g id="Group" transform="translate(6.000000, 6.000000)">
+                <polygon id="Path-5" fill="#EF4036" points="0.777202183 93.7233325 5.8668788 52.6943067 36.1140998 14.7161191 76.508029 0.954701939 107.408153 0.954701939 148.517308 17.8648928 180.301819 61.9299181 184.237044 93.7233325 120.024022 106.938685 57.9269996 106.938685"></polygon>
+                <polygon id="Path-5" fill="#FFFFFF" transform="translate(92.507123, 139.554370) scale(1, -1) translate(-92.507123, -139.554370) " points="0.777202183 185.938685 5.8668788 144.909659 38.9794848 110.080246 76.508029 93.1700547 107.408153 93.1700547 148.517308 110.080246 180.301819 154.145271 184.237044 185.938685 133.011081 176.160587 57.4980965 174.123052"></polygon>
+                <circle id="Oval-2" stroke="#4A4A4A" stroke-width="12" cx="92" cy="92" r="92"></circle>
+                <path d="M5,92 C43.6254782,102.428394 72.6254782,107.64259 92,107.64259 C111.374522,107.64259 140.374522,102.428394 179,92" id="Line" stroke="#4A4A4A" stroke-width="15" stroke-linecap="square"></path>
+                <circle id="Oval-4" stroke="#4A4A4A" stroke-width="10" fill="#FFFFFF" cx="92" cy="108" r="25"></circle>
+            </g>
+            <g id="Group" transform="translate(6.000000, 6.000000)">
+                <polygon id="Path-5" fill="#EF4036" points="0.777202183 93.7233325 5.8668788 52.6943067 36.1140998 14.7161191 76.508029 0.954701939 107.408153 0.954701939 148.517308 17.8648928 180.301819 61.9299181 184.237044 93.7233325 120.024022 106.938685 57.9269996 106.938685"></polygon>
+                <polygon id="Path-5" fill="#FFFFFF" transform="translate(92.507123, 139.554370) scale(1, -1) translate(-92.507123, -139.554370) " points="0.777202183 185.938685 5.8668788 144.909659 38.9794848 110.080246 76.508029 93.1700547 107.408153 93.1700547 148.517308 110.080246 180.301819 154.145271 184.237044 185.938685 133.011081 176.160587 57.4980965 174.123052"></polygon>
+                <circle id="Oval-2" stroke="#4A4A4A" stroke-width="12" cx="92" cy="92" r="92"></circle>
+                <path d="M5,92 C43.6254782,102.428394 72.6254782,107.64259 92,107.64259 C111.374522,107.64259 140.374522,102.428394 179,92" id="Line" stroke="#4A4A4A" stroke-width="15" stroke-linecap="square"></path>
+                <circle id="Oval-4" stroke="#4A4A4A" stroke-width="10" fill="#FFFFFF" cx="92" cy="108" r="25"></circle>
+            </g>
+        </g>
+    </g>
+</svg>
