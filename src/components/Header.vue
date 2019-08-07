@@ -30,7 +30,7 @@ header {
     width: auto;
     padding: 1rem;
     /* margin: 0.2rem; */
-    /* margin-bottom: 0; */
+    margin-bottom: 1rem;
     background-color: #ef5350;
     border-radius: 0.625rem;
     color: white;
@@ -61,6 +61,9 @@ header {
     font-family: 'QSMed', Arial, Helvetica, sans-serif;
 }
 
+.header-search-input {
+    margin-right: 0.5rem;
+}
 .header-search-input:hover {
     border: 1px solid #707070;
 }
