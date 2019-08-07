@@ -1,7 +1,6 @@
 <template>
-  <div class="home">
-    Hi, 
-    {{ info }}
+  <div class="pokepage">
+    
   </div>
 </template>
 
@@ -25,7 +24,7 @@
 
       let url = 'https://pokeapi.co/api/v2/pokemon/' + pokemon;
 
-      axios.get(url).then(response => ( this.info = response ));
+      axios.get(url).then(response => ( this.info = response.data.pokemon ));
 
       // this.pokemonName = this.pokemonData.data.name;
     }
