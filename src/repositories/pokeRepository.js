@@ -1,6 +1,5 @@
 import Repository from "./repository";
 
-// const resource = "/posts";
 export default {
   getAllPokemonSpecies() {
     return Repository.get(`/pokemon-species?&limit=9999`);
