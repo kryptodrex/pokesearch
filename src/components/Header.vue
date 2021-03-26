@@ -8,18 +8,20 @@
     </div>
 
     <div class="header-search">
-      <div class="search-box">
-        <input class="header-search-input" type="text" id="poke-search" name="p" value="" placeholder="Enter a Pokémon...">
-        <input class="header-search-submit" type="submit" id="submit" value="GO!">
-      </div>
+        <input class="header-search-input" type="text" id="poke-search" value="" placeholder="Enter a Pokémon...">
+        <Button :text="'GO!'" />
     </div>
   </header>
 </template>
 
 <script>
+import Button from '@/components/Button';
 
 export default {
-  name: 'pageHeader'
+  name: 'pageHeader',
+  components: {
+      Button
+  }
 
 }
 </script>
@@ -61,25 +63,23 @@ header {
     font-family: 'QSMed', Arial, Helvetica, sans-serif;
 }
 
+.header-search {
+    display: flex;
+    flex-direction: row;
+}
+
 .header-search-input {
     margin-right: 0.5rem;
 }
 .header-search-input:hover {
     border: 1px solid #707070;
+    transition: 0.2s;
 }
 .header-search-input:focus {
     border: 1px solid #707070;
+    transition: 0.2s;
 }
-.header-search-submit { /* for poke_page only */
-    /* border: 1px solid white; */
-    background-color: #f1f1f1;
-    color: #ef4036;
-}
-.header-search-submit:hover { /* for poke_page only */
-    border: 1px solid #f1f1f1;
-    background-color: #4A4A4A;
-    color: #f1f1f1;
-}
+
 
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
