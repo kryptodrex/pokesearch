@@ -1,8 +1,8 @@
 <template>
   <div class="home">
-    <!-- {{ info }} -->
-    <div class="pokeBoxes">  
-        <PokeBox v-for="poke in pokeInfo" v-bind:key="poke.id" :name="poke.name" />
+    <Loader v-if="isLoading" />
+    <div class="pokeBoxes" v-if="!isLoading">  
+        <PokeBox v-for="poke in pokeInfo" v-bind:key="poke.id" :name="poke.name" :url="poke.url" />
     </div>
   </div>
 </template>
@@ -10,13 +10,17 @@
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
-import { RepositoryFactory } from './../repositories/repositoryFactory'
-import PokeBox from '../components/PokeBox'
+import { RepositoryFactory } from '@/repositories/repositoryFactory'
+import PokeBox from '@/components/PokeBox'
+import Loader from '@/components/Loader';
+
 const PokeRepository = RepositoryFactory.get('pokes')
+
 export default {
   name: 'Home',
   components: {
-    PokeBox
+    PokeBox,
+    Loader
   },
   data () {
     return {
