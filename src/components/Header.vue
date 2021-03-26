@@ -31,7 +31,7 @@ header {
     padding: 1rem;
     /* margin: 0.2rem; */
     margin-bottom: 1rem;
-    background-color: #ef5350;
+    background-color: rgb(201, 38, 63);
     border-radius: 0.625rem;
     color: white;
 
