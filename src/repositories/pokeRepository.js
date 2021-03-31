@@ -1,8 +1,8 @@
-import Repository from "./repository";
+import Repository from "./pokeApiRepo";
 
 export default {
-  getAllPokemonSpecies() {
-    return Repository.get(`/pokemon-species?&limit=9999`);
+  getAllPokemonSpecies(limit, offset) {
+    return Repository.get(`/pokemon-species?limit=${limit}&offset=${offset}`);
   },
 
   getPokemon(pokemon) {
@@ -11,5 +11,9 @@ export default {
 
   getPokemonSpecies(pokemon) {
     return Repository.get(`/pokemon-species/${pokemon}`);
+  },
+
+  getGeneration(gen) {
+    return Repository.get(`/generation/${gen}`);
   }
 };
