@@ -1,7 +1,7 @@
 import PokeRepository from "./pokeRepository";
 
 const repositories = {
-  pokes: PokeRepository,
+  pokeApi: PokeRepository,
   // other repositories ...
 };
 
