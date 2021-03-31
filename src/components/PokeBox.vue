@@ -71,10 +71,13 @@ export default {
 
     padding: 0.5rem;
     margin: 0.4rem;
+
+    transition: 0.2s;
 }
 
 .pokeBox:hover {
-  
+  box-shadow: 0px 3px 2px #757575;
+  transition: 0.2s;
 }
 
 .pokeInfo {
