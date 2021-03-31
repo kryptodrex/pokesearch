@@ -4,13 +4,14 @@
     <div class="router">
       <router-view/>
     </div>
+    <Footer />
   </div>
 </template>
 
 <style lang="scss">
 * {
   box-sizing: border-box;
-  cursor: url('assets/images/logo.svg'), auto !important;
+  // cursor: url('assets/images/logo.svg'), auto !important;
 }
 
 /* Font Declaration */
@@ -49,6 +50,8 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  font-size: 1.1rem;
+  line-height: 1.5rem;
 }
 .router {
   margin: 0 1rem;
@@ -63,7 +66,7 @@ input {
     -moz-appearance: none;
     font-family: 'QSReg', Arial, Helvetica, sans-serif;
     border: 1px solid transparent;
-    border-radius: 3px;
+    border-radius: 4px;
     background-color: #f1f1f1;
     padding: 0.625rem;
     font-size: 1rem;
@@ -75,10 +78,12 @@ input[type="submit"]{
 
 <script>
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
   components: {
-    Header
+    Header,
+    Footer
   }
 }
 </script>
