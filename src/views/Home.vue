@@ -2,43 +2,70 @@
   <div class="home">
     <Loader v-if="isLoading" />
     <div class="pokeBoxes" v-if="!isLoading">  
-        <PokeBox v-for="poke in pokeInfo" v-bind:key="poke.id" :name="poke.name" :url="poke.url" />
+      <PokeBox v-for="poke in pokeInfo" :key="poke.id" :name="poke.name" :url="poke.url" />
+    </div>
+    <div class="loadMore" v-on:click="getMorePokemon()">
+      <Button id="loadMoreBtn" text="Load more!" size="medium" color="red" v-if="!loadingMore" />
+      <Loader v-if="loadingMore" />
     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import PokeBox from '@/components/PokeBox'
 import Loader from '@/components/Loader';
+import Button from '@/components/Button';
 
-const PokeRepository = RepositoryFactory.get('pokes')
+const PokeRepository = RepositoryFactory.get('pokeApi')
 
 export default {
   name: 'Home',
   components: {
     PokeBox,
-    Loader
+    Loader,
+    Button
   },
   data () {
     return {
       isLoading: false,
-      pokeInfo: []
+      loadingMore: false,
+      pokeInfo: [],
+      limit: 30,
+      offset: 0,
+      disable: false
     }
   },
   created () {
     this.fetch()
   },
   methods: {
-    async fetch () {
+    fetch () {
       this.isLoading = true
-      const { data } = await PokeRepository.getAllPokemonSpecies()
-      console.log(data)
+      this.getPokemon()
       this.isLoading = false
-      this.pokeInfo = data.results
+    },
+
+     getMorePokemon() {
+      this.loadingMore = true
+      this.getPokemon()
+      this.loadingMore = false
+    },
+
+    async getPokemon() {
+      const { data } = await PokeRepository.getAllPokemonSpecies(this.limit, this.offset);
+      this.setNextPaging(data.next);
+      this.pokeInfo = this.pokeInfo.concat(data.results);
+      // this.limit += this.limit
+    },
+
+    setNextPaging(nextUrl) {
+      var splitUrl = nextUrl.split("?")[1].split("&");
+      this.limit = splitUrl[1].split("=")[1];
+      this.offset = splitUrl[0].split("=")[1];
     }
+
   },
   computed: {
     computedPosts () {
@@ -55,6 +82,12 @@ export default {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .loadMore {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   a {
