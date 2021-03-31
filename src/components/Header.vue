@@ -9,7 +9,7 @@
 
     <div class="header-search">
         <input class="header-search-input" type="text" id="poke-search" value="" placeholder="Enter a Pokémon...">
-        <Button :text="'GO!'" />
+        <Button text="GO!" size="medium" color="white" />
     </div>
   </header>
 </template>
