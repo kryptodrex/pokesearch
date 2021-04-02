@@ -2,17 +2,12 @@
   <div class="pokepage">
     <Loader v-if="isLoading" />
 
-    <!-- <div class="pokemonInfo">
-      {{ speciesInfo }}
-    </div> -->
-
     <div id="pokemon-data" v-if="!isLoading">
 
         <div class="poke-head">
             <h1 class="pokedex-num"> #{{ findIndex(speciesInfo.id) }} </h1>
 
-            <!-- <img class="pokemon-sprite" src="<?php //echo $pokemon['sprites']['front_default'] ?>" alt=""> -->
-            <img :src="'https://assets.pokemon.com/assets/cms2/img/pokedex/full/' + findIndex(speciesInfo.id) + '.png'" alt="" class="pokemon-image" id="poke-img">
+            <img :src="getPhotoUrl()" alt="" class="pokemon-image" id="poke-img">
 
             <!-- Grab the base name of the Pokémon -->
             <h1 class="pokemon-name" id="pokemon-name"> {{ toUpper(speciesInfo.name) }} </h1>
@@ -35,8 +30,8 @@
 
                 <p style="margin-bottom: 0"><strong>Abilities:</strong></p>
 
-                <details v-for="abilityInfo in pokeInfo.abilities" v-bind:key="abilityInfo.slot">
-                    <summary :id="'ab-' + abilityInfo.ability.name" class="poke-abilities poke-ab-<?php echo $poke_color?>" > {{ toUpper(abilityInfo.ability.name) }} </summary> 
+                <details v-for="abilityInfo in pokeInfo.abilities" :key="abilityInfo.slot">
+                    <summary :id="'ab-' + abilityInfo.ability.name" class="poke-abilities poke-ab-<?php echo $poke_color?>" > {{ getAbility(abilityInfo) }} </summary> 
                     <p :id="'ab-txt-' + abilityInfo.ability.name" :class="'poke-ab-txt-' + abilityInfo.ability.name"> ADD_ABILITY_DETAIL </p>
                 </details>
 
@@ -47,8 +42,8 @@
                 <p><strong>Shape:</strong> {{ toUpper(speciesInfo.shape.name) }} </p>
 
                 <p>
-                  <strong>Height:</strong> {{ getHeight() }} <br>
-                  <strong>Weight:</strong> {{ getWeight() }}
+                  <strong>Height:</strong> {{ getHeight(pokeInfo.height) }} <br>
+                  <strong>Weight:</strong> {{ getWeight(pokeInfo.weight) }}
                 </p>
 
                 <p>
@@ -75,14 +70,14 @@
                     <div class="poke-evs-all">
                         <h4>EV Yield</h4>
                         <div class="poke-evs-3">
-                            <div class="poke-evs poke-ev-hp"> <span>COMING SOON</span> <span><strong>HP</strong></span></div>
-                            <div class="poke-evs poke-ev-atk"> <span>COMING SOON</span> <span><strong>Atk</strong></span></div>
-                            <div class="poke-evs poke-ev-def"> <span>COMING SOON</span> <span><strong>Def</strong></span></div>
+                            <div class="poke-evs poke-ev-hp"> <span>{{ getStats('hp', 'effort', pokeInfo.stats) }}</span> <span><strong>HP</strong></span></div>
+                            <div class="poke-evs poke-ev-atk"> <span>{{ getStats('attack', 'effort', pokeInfo.stats) }}</span> <span><strong>Atk</strong></span></div>
+                            <div class="poke-evs poke-ev-def"> <span>{{ getStats('defense', 'effort', pokeInfo.stats) }}</span> <span><strong>Def</strong></span></div>
                         </div>
                         <div class="poke-evs-3">
-                            <div class="poke-evs poke-ev-spatk"> <span>COMING SOON</span> <span><strong>Sp.Atk</strong></span></div>
-                            <div class="poke-evs poke-ev-spdef"> <span>COMING SOON</span> <span><strong>Sp.Def</strong></span></div>
-                            <div class="poke-evs poke-ev-speed"> <span>COMING SOON</span> <span><strong>Speed</strong></span></div>
+                            <div class="poke-evs poke-ev-spatk"> <span>{{ getStats('special-attack', 'effort', pokeInfo.stats) }}</span> <span><strong>Sp.Atk</strong></span></div>
+                            <div class="poke-evs poke-ev-spdef"> <span>{{ getStats('special-defense', 'effort', pokeInfo.stats) }}</span> <span><strong>Sp.Def</strong></span></div>
+                            <div class="poke-evs poke-ev-speed"> <span>{{ getStats('speed', 'effort', pokeInfo.stats) }}</span> <span><strong>Speed</strong></span></div>
                         </div>
                     </div>
                     
@@ -113,16 +108,16 @@
                 <table class="base-stats">
                     <tbody>
                         <tr class="base-stats-r1">
-                            <td class="base-stats-c1 base-stat-hp"><strong>HP:</strong></td> <td class="base-stats-c2">COMING SOON</td>
-                            <td class="base-stats-c3 base-stat-spatk"><strong>Special Attack:</strong></td> <td class="base-stats-c4">COMING SOON</td>
+                            <td class="base-stats-c1 base-stat-hp"><strong>HP:</strong></td> <td class="base-stats-c2">{{ getStats('hp', 'base_stat', pokeInfo.stats) }}</td>
+                            <td class="base-stats-c3 base-stat-spatk"><strong>Special Attack:</strong></td> <td class="base-stats-c4">{{ getStats('special-attack', 'base_stat', pokeInfo.stats) }}</td>
                         </tr>
                         <tr class="base-stats-r2">
-                            <td class="base-stats-c1 base-stat-atk"><strong>Attack:</strong></td> <td class="base-stats-c2">COMING SOON</td>
-                            <td class="base-stats-c3 base-stat-spdef"><strong>Special Defense:</strong></td> <td class="base-stats-c4">COMING SOON</td>
+                            <td class="base-stats-c1 base-stat-atk"><strong>Attack:</strong></td> <td class="base-stats-c2">{{ getStats('attack', 'base_stat', pokeInfo.stats) }}</td>
+                            <td class="base-stats-c3 base-stat-spdef"><strong>Special Defense:</strong></td> <td class="base-stats-c4">{{ getStats('special-defense', 'base_stat', pokeInfo.stats) }}</td>
                         </tr>
                         <tr class="base-stats-r3">
-                            <td class="base-stats-c1 base-stat-def"><strong>Defense:</strong></td> <td class="base-stats-c2">COMING SOON</td>
-                            <td class="base-stats-c3 base-stat-speed"><strong>Speed:</strong></td> <td class="base-stats-c4">COMING SOON</td>
+                            <td class="base-stats-c1 base-stat-def"><strong>Defense:</strong></td> <td class="base-stats-c2">{{ getStats('defense', 'base_stat', pokeInfo.stats) }}</td>
+                            <td class="base-stats-c3 base-stat-speed"><strong>Speed:</strong></td> <td class="base-stats-c4">{{ getStats('speed', 'base_stat', pokeInfo.stats) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -131,27 +126,27 @@
                     <tbody>
                         <tr>
                             <td class="base-stats-m-c1 base-stat-hp"><strong>HP:</strong> </td>
-                            <td class="base-stats-m-c2">COMING SOON</td>
+                            <td class="base-stats-m-c2">{{ getStats('hp', 'base_stat', pokeInfo.stats) }}</td>
                         </tr>
                         <tr>
                             <td class="base-stats-m-c1 base-stat-atk"><strong>Attack:</strong> </td>
-                            <td class="base-stats-m-c2">COMING SOON</td>
+                            <td class="base-stats-m-c2">{{ getStats('attack', 'base_stat', pokeInfo.stats) }}</td>
                         </tr>
                         <tr>
                             <td class="base-stats-m-c1 base-stat-def"><strong>Defense:</strong> </td>
-                            <td class="base-stats-m-c2">COMING SOON</td>
+                            <td class="base-stats-m-c2">{{ getStats('defense', 'base_stat', pokeInfo.stats) }}</td>
                         </tr>
                         <tr>
                             <td class="base-stats-m-c1 base-stat-spatk"><strong>Special Attack:</strong> </td>
-                            <td class="base-stats-m-c2">COMING SOON</td>
+                            <td class="base-stats-m-c2">{{ getStats('special-attack', 'base_stat', pokeInfo.stats) }}</td>
                         </tr>
                         <tr>
                             <td class="base-stats-m-c1 base-stat-spdef"><strong>Special Defense:</strong> </td>
-                            <td class="base-stats-m-c2">COMING SOON</td>
+                            <td class="base-stats-m-c2">{{ getStats('special-defense', 'base_stat', pokeInfo.stats) }}</td>
                         </tr>
                         <tr>
                             <td class="base-stats-m-c1 base-stat-speed"><strong>Speed:</strong> </td>
-                            <td class="base-stats-m-c2">COMING SOON</td>
+                            <td class="base-stats-m-c2">{{ getStats('speed', 'base_stat', pokeInfo.stats) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -162,13 +157,13 @@
                 <h3>Breeding Info</h3>
                 <p><strong>Gender Rate:</strong> {{ getGenderRate() }} </p>
                 <p><strong>Egg-Group(s):</strong> {{ getEggGroups() }} </p>
-                <p><strong>Hatching:</strong>{{ calcHatching(speciesInfo.hatch_counter) }}</p>
+                <p><strong>Hatching:</strong> {{ calcHatching(speciesInfo.hatch_counter) }}</p>
             </div>
 
             <!-- Pokemon Dex Entries Info Box -->
-            <div class="pokemon-generation-dex-entries" v-bind:class="'poke-info' + speciesInfo.color.name">
+            <!-- <div class="pokemon-generation-dex-entries" v-bind:class="'poke-info' + speciesInfo.color.name">
                 COMING SOON
-            </div>
+            </div> -->
 
 </div>
 
@@ -181,6 +176,7 @@
   import Loader from '@/components/Loader';
   
   const pokeApi = RepositoryFactory.get('pokeApi');
+  const util = RepositoryFactory.get('util');
 
   export default {
 
@@ -192,7 +188,8 @@
       return {
         isLoading: false,
         speciesInfo: null,
-        pokeInfo: null
+        pokeInfo: null,
+        abilityInfo: []
       };
     },
     created () {
@@ -209,6 +206,8 @@
         
         var { data } = await pokeApi.getPokemon(pokemon);
         this.pokeInfo = data;
+
+        console.log(util.getBrowserLocales());
         
         this.isLoading = false;
       },
@@ -219,6 +218,10 @@
 
       formatText(text) {
         return text.replace('/\s+/', ' ').trim();
+      },
+
+      getPhotoUrl() {
+        return util.getPokemonImageUrl(this.findIndex(this.speciesInfo.id))
       },
 
       findIndex(value) {
@@ -255,6 +258,15 @@
         }
       },
 
+      getAbility(data) {
+        var ability = this.toUpper(data.ability.name)
+        if (data.is_hidden) {
+          return ability + ' (hidden)'
+        } else {
+          return ability
+        }
+      },
+
       getSpecies(data) {
         for (var i = 0; i < data.length; i++) {
           var entry = data[i];
@@ -264,12 +276,21 @@
         }
       },
 
-      getWeight() {
-
+      getWeight(data) {
+        var weight_metric = data / 10;
+        var weight_us = Math.round(weight_metric * 2.20462262185);
+        return weight_metric + ' kg  |  ' + weight_us + ' lbs';
       },
 
-      getHeight() {
+      getHeight(data) {
+        var height_metric = data / 10;
 
+        var inches = height_metric * 39.37007874;
+        var feet = Math.floor(inches / 12);
+
+        var inches_r = Math.round(inches % 12);
+
+        return height_metric + ' m  |  ' + feet + " ft " + inches_r + ' in';
       },
 
       getJapaneseName(data) {
@@ -290,44 +311,35 @@
         return japaneseName
       },
 
-      getGenderRate() {
+      getStats(name, type, stats) {
+        for (var i = 0; i < stats.length; i++) {
+          switch (type) {
+            case 'base_stat':
+              if (stats[i].stat.name == name) {
+                return stats[i].base_stat;
+              }
+              break;
 
+            case 'effort': 
+              if (stats[i].stat.name == name) {
+                return stats[i].effort;
+              }
+              break;
+          }
+        }
+      },
+
+      getGenderRate() {
+        return 'COMING SOON';
       },
 
       calcHatching(data) {
-        
+        var egg_walk_amt = data * 256;
+        return data + ' egg cycles (' + egg_walk_amt + ' steps)';
       },
 
       getEggGroups() {
-
-      },
-
-      getBrowserLocales(options = {}) {
-        const defaultOptions = {
-          languageCodeOnly: false,
-        };
-
-        const opt = {
-          ...defaultOptions,
-          ...options,
-        };
-
-        const browserLocales =
-          navigator.languages === undefined
-            ? [navigator.language]
-            : navigator.languages;
-
-        if (!browserLocales) {
-          return undefined;
-        }
-
-        return browserLocales.map(locale => {
-          const trimmedLocale = locale.trim();
-
-          return opt.languageCodeOnly
-            ? trimmedLocale.split(/-|_/)[0]
-            : trimmedLocale;
-        });
+        return 'COMING SOON';
       }
     },
     computed: {
@@ -488,6 +500,7 @@
 
         .poke-training-box {
             display: flex;
+            flex-direction: column;
         }
 
         .poke-evs-all {
@@ -586,6 +599,10 @@
     max-width: 46.875rem;
     display: flex;
     flex-direction: column;
+  }
+
+  .poke-training-box {
+    flex-direction: row;
   }
 }
   
