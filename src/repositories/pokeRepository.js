@@ -1,9 +1,6 @@
 import Repository from "./pokeApiRepo";
 
 export default {
-  getPokemonImageUrl(num) {
-    return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num}.png`
-  },
 
   getAllPokemonSpecies(limit, offset) {
     return Repository.get(`/pokemon-species?limit=${limit}&offset=${offset}`);
@@ -24,4 +21,5 @@ export default {
   getAbility(ability) {
     return Repository.get(`/ability/${ability}`);
   }
+  
 };
