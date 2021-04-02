@@ -61,8 +61,7 @@ export default {
   font-size: 1.1rem;
   border: 0.2rem solid;
   border-radius: 4px;
-  padding: 0.5rem 1rem;
-  margin: 0 1rem;
+  /* margin: 0 1rem; */
   width: fit-content;
   cursor: pointer;
   transition: 0.2s;
@@ -95,6 +94,13 @@ export default {
     border-color: #f1f1f1;
     background-color: #4A4A4A;
     color: #f1f1f1;
+}
+
+/* Styling for desktop/tablet viewing */
+@media screen and (min-width: 25.9375rem) {
+  .button {
+    margin: 0 1rem;
+  }
 }
   
 </style>
