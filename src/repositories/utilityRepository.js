@@ -1,5 +1,10 @@
 
 export default {
+
+    getPokemonImageUrl(num) {
+        return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num}.png`
+    },
+
     getBrowserLocales(options = {}) {
         const defaultOptions = {
             languageCodeOnly: false,
@@ -27,4 +32,5 @@ export default {
             : trimmedLocale;
         });
     }
+    
 };
