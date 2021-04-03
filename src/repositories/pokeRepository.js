@@ -20,6 +20,14 @@ export default {
 
   getAbility(ability) {
     return Repository.get(`/ability/${ability}`);
+  },
+
+  getAllTypes() {
+    return Repository.get(`/type?limit=100`);
+  },
+
+  getType(type) {
+    return Repository.get(`/type/${type}`);
   }
   
 };
