@@ -52,7 +52,9 @@
 
                 <p><strong>Type Defenses:</strong> Effectiveness of each type on {{ toUpper(speciesInfo.name) }}</p>
                 <div class="dmg-relations">
+                  <TypeEffectiveness :typing="pokeInfo.types" />
                   <p>COMING SOON</p>
+                  
                     <!-- <?php foreach($type_effectiveness as $types) : ?>
                         <div class="dmg-box">
                             <span class="dmg-type-<?php echo $types[2] ?>"><?php echo $types[0]?></span>
@@ -155,8 +157,8 @@
             <!-- Pokemon Breeding Info Box -->
             <div class="pokemon-breeding" v-bind:class="'poke-info-' + speciesInfo.color.name">
                 <h3>Breeding Info</h3>
-                <p><strong>Gender Rate:</strong> {{ getGenderRate() }} </p>
-                <p><strong>Egg-Group(s):</strong> {{ getEggGroups() }} </p>
+                <p><strong>Gender Rate:</strong> {{ getGenderRate(speciesInfo.gender_rate) }} </p>
+                <p><strong>Egg-Group(s):</strong> {{ getEggGroups(speciesInfo.egg_groups) }} </p>
                 <p><strong>Hatching:</strong> {{ calcHatching(speciesInfo.hatch_counter) }}</p>
             </div>
 
@@ -174,6 +176,7 @@
   import router from '@/router';
   import { RepositoryFactory } from '@/repositories/repositoryFactory';
   import Loader from '@/components/Loader';
+  import TypeEffectiveness from '@/components/TypeEffectiveness'
   
   const pokeApi = RepositoryFactory.get('pokeApi');
   const util = RepositoryFactory.get('util');
@@ -181,8 +184,10 @@
   export default {
 
     name: 'PokePage',
+    // title: this.toUpper(this.speciesInfo.name),
     components: {
-      Loader
+      Loader,
+      TypeEffectiveness
     },
     data() {
       return {
@@ -329,8 +334,22 @@
         }
       },
 
-      getGenderRate() {
-        return 'COMING SOON';
+      getGenderRate(rate) {
+
+        if (rate >= 0) {
+          var f_rate = (rate / 8) * 100;
+          var m_rate = 100 - f_rate;
+
+          if (f_rate == 100) {
+            return '100% Female';
+          } else if (m_rate == 100) {
+            return '100% Male';
+          } else {
+            return m_rate + '% Male, ' + f_rate + '% Female'
+          }
+        } else {
+          return 'Genderless'
+        }
       },
 
       calcHatching(data) {
@@ -338,13 +357,45 @@
         return data + ' egg cycles (' + egg_walk_amt + ' steps)';
       },
 
-      getEggGroups() {
-        return 'COMING SOON';
-      }
-    },
-    computed: {
-      computedPosts () {
-        return this.posts.slice(0, 10)
+      getEggGroups(data) {
+
+        var groups = "";
+
+        for (var i = 0; i < data.length; i++) {
+
+          if (i > 0 && i <= data.length) {
+            groups += ' & '
+          }
+
+          switch (data[i].name) {
+            case 'no-eggs':
+                groups += 'Undiscovered';
+                break;
+            case 'water1':
+                groups += 'Water 1';
+                break;
+            case 'water2':
+                groups += 'Water 2';
+                break;
+            case 'water3':
+                groups += 'Water 3';
+                break;
+            case 'humanshape':
+                groups += 'Human-Like';
+                break;
+            case 'indeterminate':
+                groups += 'Amorphous';
+                break;
+            case 'ground':
+                groups += 'Field';
+                break;
+            default:
+                groups += this.toUpper(data[i].name);
+                break;
+          }
+        }
+        
+        return groups;
       }
     }
 
