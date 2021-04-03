@@ -18,7 +18,7 @@
 import Button from '@/components/Button';
 
 export default {
-  name: 'pageHeader',
+  name: 'Header',
   components: {
       Button
   }
