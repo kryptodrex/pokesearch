@@ -1,9 +1,9 @@
 <template> 
     <div class="pokeBox">
-        <router-link :to="'/pokemon/' + this.name">
+        <router-link :to="'/pokemon/' + this.dexNum">
         <div class="pokeInfo" >
           <span>{{ toUpper(this.name) }}</span>
-          <span>#{{ this.index }}</span>
+          <span>#{{ findIndex() }}</span>
         </div>
         
         <img class="pokePic" :src="getImageUrl()" :alt="toUpper(this.name)">
@@ -12,14 +12,12 @@
 </template>
 
 <script>
+
 export default {
   name: 'PokeBox',
-//   components: {
-//     PokeBox
-//   },
   props: {
       name: String,
-      url: String
+      dexNum: String
   },
   data () {
     return {
@@ -36,28 +34,22 @@ export default {
     },
 
     findIndex() {
-      var splitUrl = this.url.split("/");
-      var num = splitUrl[6];
-      if (num < 10) {
-        this.index = '00' + num;
-      } else if (num < 100) {
-        this.index = '0' + num;
+      if (this.dexNum < 10) {
+        return '00' + this.dexNum;
+      } else if (this.dexNum < 100) {
+        return '0' + this.dexNum;
       } else {
-        this.index = num;
+        return this.dexNum;
       }
     },
 
     getImageUrl() {
       var basePath = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/"
-      return basePath + this.index + ".png";
+      return basePath + this.findIndex() + ".png";
     }
-  },
-//   computed: {
-//     computedPosts () {
-//       return this.posts.slice(0, 10)
-//     }
-//   }
+  }
 }
+
 </script>
 
 
