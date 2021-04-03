@@ -55,7 +55,10 @@
 }
 
 main {
-  margin: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin: 0 auto;
 }
 
 body {
@@ -75,6 +78,14 @@ input {
 input[type="submit"]{
     font-family: 'QSMed', Arial, Helvetica, sans-serif;
 }
+
+
+@media screen and (min-width: 25.9375rem) {
+  main {
+    max-width: 46.875rem;
+  }
+}
+
 </style>
 
 <script>
