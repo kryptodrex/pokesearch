@@ -1,6 +1,9 @@
 <template>
   <div class="typeEffectiveness">
-    
+    <div class="dmg-box" v-for="(type, index) in types" :key="index">
+        <span :class="'dmg-type-' + type.name "> {{ getAbbrType(type.name) }} </span>
+        <span :class="'dmg-num dmg-' + 'NOT_DONE'"> N/A </span>
+    </div>
   </div>
 </template>
 
@@ -18,10 +21,14 @@ export default {
     return {
       types: [],
       typingData: [],
+      doubleDmgList: [],
+      halfDmgList: [],
+      noDmgList: [],
       damageMap: {
             double_damage_from: 2,
             half_damage_from: 0.5,
-            no_damage_from: 0
+            no_damage_from: 0,
+            normal_damage_from: 1
       }
     };
   },
@@ -32,14 +39,29 @@ export default {
     async fetch() {
         var { data } = await pokeApi.getAllTypes();
         this.types = data.results;
+        this.types.splice(18,2);
         
         var { data } = await pokeApi.getType(this.typing[0].type.name);
-            this.typingData.push(data);
+            this.typingData.push(data.damage_relations);
 
         if (this.typing.length > 1) {
             var { data } = await pokeApi.getType(this.typing[1].type.name);
-            this.typingData.push(data);
+            this.typingData.push(data.damage_relations);
         }
+
+        this.typingData.forEach( data => {
+                this.doubleDmgList = this.doubleDmgList.concat(data.double_damage_from)
+                this.halfDmgList = this.halfDmgList.concat(data.half_damage_from)
+                this.noDmgList = this.noDmgList.concat(data.no_damage_from)
+            }
+        )
+
+        console.log(this.doubleDmgList, this.halfDmgList, this.noDmgList);
+    },
+
+    getAbbrType(name) {
+        var abbr_name = name.substring(0,3);
+        return abbr_name.toUpperCase();
     }
   },
 };
@@ -48,6 +70,12 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="css">
 .typeEffectiveness {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-row-gap: 0.5rem;
+
+    margin-bottom: 1.25rem;
 }
 
 /* Damage Relations Data */
@@ -169,4 +197,31 @@ export default {
   background-color: #73d216;
   color: #ffdd57;
 }
+
+/* Viewing on smaller phones, like iPhone SE */
+@media screen and (max-width: 22.25rem) {
+    .typeEffectiveness {
+        display: grid;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-row-gap: 0.5rem;
+
+        margin-bottom: 1.25rem;
+    }
+}
+
+/* Viewing on large devices, like tablets and desktop */
+@media screen and (min-width: 25.9375rem) {
+    .typeEffectiveness {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-row-gap: 0.5rem;
+
+        margin-bottom: 1.25rem;
+    }
+}
+
+
+
 </style>
