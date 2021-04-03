@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <Header />
-    <div class="router">
+    <main>
       <router-view/>
-    </div>
+    </main>
     <Footer />
   </div>
 </template>
@@ -53,7 +53,8 @@
   font-size: 1.1rem;
   line-height: 1.5rem;
 }
-.router {
+
+main {
   margin: 0 1rem;
 }
 
