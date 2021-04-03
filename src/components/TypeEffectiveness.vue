@@ -1,6 +1,6 @@
 <template>
   <div class="typeEffectiveness">
-    <p>All images are owned by Pokémon. TM, ® Nintendo.</p>
+    
   </div>
 </template>
 
