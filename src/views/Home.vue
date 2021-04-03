@@ -2,7 +2,7 @@
   <div class="home">
     <Loader v-if="isLoading" />
     <div class="pokeBoxes" v-if="!isLoading">  
-      <PokeBox v-for="poke in pokeInfo" :key="poke.id" :name="poke.name" :url="poke.url" />
+      <PokeBox v-for="(poke, index) in pokeInfo" :key="index" :dexNum="getIndex(poke.url)" :name="poke.name" />
     </div>
     <div class="loadMore" v-on:click="getMorePokemon()">
       <Button id="loadMoreBtn" text="Load more!" size="medium" color="red" v-if="!loadingMore" />
@@ -57,20 +57,19 @@ export default {
       const { data } = await PokeRepository.getAllPokemonSpecies(this.limit, this.offset);
       this.setNextPaging(data.next);
       this.pokeInfo = this.pokeInfo.concat(data.results);
-      // this.limit += this.limit
     },
 
     setNextPaging(nextUrl) {
       var splitUrl = nextUrl.split("?")[1].split("&");
       this.limit = splitUrl[1].split("=")[1];
       this.offset = splitUrl[0].split("=")[1];
+    },
+
+    getIndex(url) {
+      var splitUrl = url.split("/");
+      return splitUrl[6];
     }
 
-  },
-  computed: {
-    computedPosts () {
-      return this.posts.slice(0, 10)
-    }
   }
 }
 </script>
