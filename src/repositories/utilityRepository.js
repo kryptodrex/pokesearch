@@ -5,6 +5,20 @@ export default {
         return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num}.png`
     },
 
+    findIndex(value) {
+        if (value < 10) {
+          return '00' + value;
+        } else if (value < 100) {
+          return '0' + value;
+        } else {
+          return value;
+        }
+    },
+
+    toUpper(value) {
+        return value[0].toUpperCase() + value.slice(1);
+    },
+
     getBrowserLocales(options = {}) {
         const defaultOptions = {
             languageCodeOnly: false,
