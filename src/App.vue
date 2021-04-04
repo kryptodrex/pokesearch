@@ -80,11 +80,11 @@ input[type="submit"]{
 }
 
 
-@media screen and (min-width: 25.9375rem) {
-  main {
-    max-width: 46.875rem;
-  }
-}
+// @media screen and (min-width: 25.9375rem) {
+//   main {
+//     max-width: 46.875rem;
+//   }
+// }
 
 </style>
 
