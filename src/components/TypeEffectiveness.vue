@@ -97,8 +97,6 @@ export default {
                 })
             })
         })
-
-        console.log(this.damageRelations);
     },
 
     getDamageAmount(type) {
