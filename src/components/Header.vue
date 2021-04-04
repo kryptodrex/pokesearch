@@ -81,6 +81,25 @@ header {
 }
 
 
+@media screen and (max-width: 22.25rem) {
+    .header-text {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .logo {
+        height: 2rem;
+        margin: 0 0 0.2rem 0;
+    }
+    
+    .header-pokepage {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
   header {
