@@ -51,9 +51,7 @@
                 </p>
 
                 <p><strong>Type Defenses:</strong> Effectiveness of each move typing on {{ toUpper(speciesInfo.name) }}</p>
-                <div class="dmg-relations">
-                  <TypeEffectiveness :typing="pokeInfo.types" />
-                </div>
+                <TypeEffectiveness :typing="pokeInfo.types" />
                 
             </div>
             
