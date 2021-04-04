@@ -1,5 +1,9 @@
 import Repository from "./pokeApiRepo";
 
+var totalPokemon = {
+  count: 0
+};
+
 export default {
 
   getAllPokemonSpecies(limit, offset) {
@@ -7,7 +11,12 @@ export default {
   },
 
   getCurrentTotalPokemon() {
-    return Repository.get(`/pokemon-species?limit=1`);
+    if (totalPokemon.count == 0) {
+      return Repository.get(`/pokemon-species?limit=1`);
+    } else {
+      return totalPokemon;
+    }
+    
   },
 
   getPokemon(pokemon) {
