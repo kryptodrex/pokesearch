@@ -6,6 +6,10 @@ export default {
     return Repository.get(`/pokemon-species?limit=${limit}&offset=${offset}`);
   },
 
+  getCurrentTotalPokemon() {
+    return Repository.get(`/pokemon-species?limit=1`);
+  },
+
   getPokemon(pokemon) {
     return Repository.get(`/pokemon/${pokemon}`);
   },
