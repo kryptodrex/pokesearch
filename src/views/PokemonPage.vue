@@ -44,20 +44,21 @@
         <p style="margin-bottom: 0"><strong>Abilities:</strong></p>
 
         <details
-          v-for="abilityInfo in pokeInfo.abilities"
-          :key="abilityInfo.slot"
+          v-for="(abilityInfo, index) in pokeInfo.abilities"
+          :key="index"
         >
           <summary
             :id="'ab-' + abilityInfo.ability.name"
-            class="poke-abilities poke-ab-<?php echo $poke_color?>"
+            class="poke-abilities"
+            :class="'poke-ab-' + speciesInfo.color.name"
           >
-            {{ getAbility(abilityInfo) }}
+            {{ getAbilityName(abilityInfo) }}
           </summary>
           <p
             :id="'ab-txt-' + abilityInfo.ability.name"
             :class="'poke-ab-txt-' + abilityInfo.ability.name"
           >
-            ADD_ABILITY_DETAIL
+            {{ getAbilityDesc(index)  }}
           </p>
         </details>
 
@@ -319,7 +320,7 @@
         isLoading: false,
         speciesInfo: null,
         pokeInfo: null,
-        abilityInfo: [],
+        abilityList: [],
         nextNum: null,
         prevNum: null,
         navigating: false
@@ -350,6 +351,13 @@
         else this.prevNum = this.speciesInfo.id - 1;
         if ((this.speciesInfo.id + 1) > this.totalPokemon) this.nextNum = 1;
         else this.nextNum = this.speciesInfo.id + 1;
+
+        this.abilityList = [];
+        for (var i = 0; i < this.pokeInfo.abilities.length; i++) {
+          var abilityInfo = this.pokeInfo.abilities[i];
+          var { data } = await pokeApi.getAbility(abilityInfo.ability.name);
+          this.storeAbilityData(data);
+        }
 
         // console.log(util.getBrowserLocales());
         
@@ -396,12 +404,45 @@
         }
       },
 
-      getAbility(data) {
+      getAbilityName(data) {
         var ability = this.toUpper(data.ability.name)
         if (data.is_hidden) {
           return ability + ' (hidden)'
         } else {
           return ability
+        }
+      },
+
+      storeAbilityData(data) {
+        var effect = {}
+        data.effect_entries.forEach( entry => {
+          if (entry.language.name == 'en') {
+            effect = {
+              short: entry.short_effect,
+              long: entry.effect,
+            }
+          }
+        })
+        var flavorText;
+        data.flavor_text_entries.forEach( entry => {
+          if (entry.language.name == 'en') {
+            flavorText = entry.flavor_text;
+          }
+        })
+
+        this.abilityList.push({
+          name: data.name,
+          short_desc: effect.short,
+          long_desc: effect.long,
+          flavor_text: flavorText
+        })
+      },
+
+      getAbilityDesc(num) {
+        if (this.abilityList[num].short_desc == null) {
+          return this.abilityList[num].flavor_text
+        } else {
+          return this.abilityList[num].short_desc
         }
       },
 
@@ -869,5 +910,16 @@
   .poke-training-box {
     flex-direction: row;
   }
+
+  .poke-ab-black:hover { color: #323232;}
+  .poke-ab-blue:hover { color: #3482DE;}
+  .poke-ab-brown:hover { color: #AF891F;}
+  .poke-ab-gray:hover { color: #707070;}
+  .poke-ab-green:hover { color: #64A743;}
+  .poke-ab-pink:hover { color: #E97698;}
+  .poke-ab-purple:hover { color: #7C63B8;}
+  .poke-ab-red:hover { color: #EF4036;}
+  .poke-ab-white:hover { color: #aaaaaa;}
+  .poke-ab-yellow:hover { color: #F8D030;}
 }
 </style>
