@@ -1,42 +1,57 @@
 <template>
-  <div class="typeEffectiveness">
-    <div class="dmg-box" v-for="(type, index) in types" :key="index">
-        <span :class="'dmg-type-' + type.name "> {{ getAbbrType(type.name) }} </span>
-        <span :class="'dmg-num dmg-' + 'NOT_DONE'"> N/A </span>
+  <div v-if="!isLoading">
+    <Loader v-if="isLoading" />
+    <div v-if="!isLoading" class="typeEffectiveness">
+        <div class="dmg-box" v-for="(type, index) in types" :key="index">
+            <span :class="'dmg-type-' + type.name "> {{ getAbbrType(type.name) }} </span>
+            <span :class="'dmg-num dmg-' + getDamageAmount(type.name)"> {{ getDamageAmount(type.name) }} </span>
+        </div>
     </div>
   </div>
 </template>
 
 <script>
-import { RepositoryFactory } from "@/repositories/repositoryFactory";
+import { RepositoryFactory } from '@/repositories/repositoryFactory';
+import Loader from '@/components/Loader'
 
 const pokeApi = RepositoryFactory.get("pokeApi");
 
+const damageMap = {
+    double_damage_from: 2,
+    half_damage_from: 0.5,
+    no_damage_from: 0
+}
+
+const DamageRepo = {
+    get: dmg => damageMap[dmg]
+};
+
 export default {
   name: "TypeEffectiveness",
+  components: {
+      Loader
+  },
   props: {
     typing: Array,
   },
   data() {
     return {
-      types: [],
-      typingData: [],
-      doubleDmgList: [],
-      halfDmgList: [],
-      noDmgList: [],
-      damageMap: {
-            double_damage_from: 2,
-            half_damage_from: 0.5,
-            no_damage_from: 0,
-            normal_damage_from: 1
-      }
+        isLoading: false,
+        types: [],
+        typingData: [],
+        doubleDmgList: [],
+        halfDmgList: [],
+        noDmgList: [],
+        damageRelations: [],
     };
   },
   created() {
-    this.fetch();
+        this.fetch();
   },
   methods: {
     async fetch() {
+        this.isLoading = true;
+
         var { data } = await pokeApi.getAllTypes();
         this.types = data.results;
         this.types.splice(18,2);
@@ -49,20 +64,63 @@ export default {
             this.typingData.push(data.damage_relations);
         }
 
-        this.typingData.forEach( data => {
-                this.doubleDmgList = this.doubleDmgList.concat(data.double_damage_from)
-                this.halfDmgList = this.halfDmgList.concat(data.half_damage_from)
-                this.noDmgList = this.noDmgList.concat(data.no_damage_from)
-            }
-        )
+        this.storeDamageRelations();
 
-        console.log(this.doubleDmgList, this.halfDmgList, this.noDmgList);
+        this.isLoading = false;
     },
 
     getAbbrType(name) {
-        var abbr_name = name.substring(0,3);
-        return abbr_name.toUpperCase();
+        return name.substring(0,3).toUpperCase();
+    },
+
+    storeDamageRelations() {
+        this.typingData.forEach( data => {
+
+            data.double_damage_from.forEach( type => {
+                this.damageRelations = this.damageRelations.concat({
+                    name: type.name,
+                    damage: DamageRepo.get('double_damage_from')
+                })
+            })
+
+            data.half_damage_from.forEach( type => {
+                this.damageRelations = this.damageRelations.concat({
+                    name: type.name,
+                    damage: DamageRepo.get('half_damage_from')
+                })
+            })
+
+            data.no_damage_from.forEach( type => {
+                this.damageRelations = this.damageRelations.concat({
+                    name: type.name,
+                    damage: DamageRepo.get('no_damage_from')
+                })
+            })
+        })
+
+        console.log(this.damageRelations);
+    },
+
+    getDamageAmount(type) {
+        
+        var damageAmt = 1;
+
+        this.damageRelations.forEach( data => {
+            if (data.name == type) {
+                damageAmt *= data.damage;
+            }
+        })
+
+        if (damageAmt == 0.5) {
+            return '½'
+        } else if (damageAmt == 0.25) {
+            return '¼'
+        } else {
+            return damageAmt.toString();
+        }
+
     }
+
   },
 };
 </script>
