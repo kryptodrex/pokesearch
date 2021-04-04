@@ -320,7 +320,6 @@
         speciesInfo: null,
         pokeInfo: null,
         abilityInfo: [],
-        totalPokemon: 0,
         nextNum: null,
         prevNum: null,
         navigating: false
@@ -345,10 +344,8 @@
         var { data } = await pokeApi.getPokemon(this.pokemon);
         this.pokeInfo = data;
 
-        if (this.totalPokemon == 0) {
-          var { data } = await pokeApi.getCurrentTotalPokemon();
-          this.totalPokemon = data.count;
-        }
+        var { data } = await pokeApi.getCurrentTotalPokemon();
+        this.totalPokemon = data.count;
         if ((this.speciesInfo.id - 1) < 1) this.prevNum = this.totalPokemon; 
         else this.prevNum = this.speciesInfo.id - 1;
         if ((this.speciesInfo.id + 1) > this.totalPokemon) this.nextNum = 1;
