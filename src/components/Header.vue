@@ -59,7 +59,7 @@ header {
 
 .site-name {
     margin: 0;
-    display: none;
+    /* display: none; */
     font-family: 'QSMed', Arial, Helvetica, sans-serif;
 }
 
