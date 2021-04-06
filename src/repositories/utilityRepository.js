@@ -1,4 +1,6 @@
 
+var userLocales = [];
+
 export default {
 
     getPokemonImageUrl(num) {
@@ -17,6 +19,14 @@ export default {
 
     toUpper(value) {
         return value[0].toUpperCase() + value.slice(1);
+    },
+
+    setUserLocales() {
+        userLocales = this.getBrowserLocales({languageCodeOnly: true});
+    },
+
+    getUserLocales() {
+        return userLocales;
     },
 
     getBrowserLocales(options = {}) {
