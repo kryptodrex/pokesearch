@@ -308,7 +308,9 @@
   export default {
 
     name: 'PokePage',
-    // title: this.toUpper(this.speciesInfo.name),
+    // title () {
+    //   return `${value} - PokéSearch`
+    // },
     components: {
       Loader,
       TypeEffectiveness,
@@ -317,7 +319,7 @@
     data() {
       return {
         pokemon: router.currentRoute.params.name,
-        isLoading: false,
+        isLoading: true,
         speciesInfo: null,
         pokeInfo: null,
         abilityList: [],
@@ -326,7 +328,7 @@
         navigating: false
       };
     },
-    created () {
+    mounted () {
       this.fetch()
     },
     updated() {
@@ -337,7 +339,7 @@
     },
     methods: {
       async fetch () {
-        this.isLoading = true;
+        // this.isLoading = true;
 
         var { data } = await pokeApi.getPokemonSpecies(this.pokemon);
         this.speciesInfo = data;
@@ -358,8 +360,6 @@
           var { data } = await pokeApi.getAbility(abilityInfo.ability.name);
           this.storeAbilityData(data);
         }
-
-        // console.log(util.getBrowserLocales());
         
         this.isLoading = false;
       },
@@ -588,11 +588,6 @@
   height: 10rem;
 }
 
-/* .pokemon-name {
-    font-family: 'quicksandmedium', Arial, Helvetica, sans-serif;
-    margin: 0.5rem 0;
-} */
-
 /* Type styling */
 .pokemon-types {
   display: flex;
@@ -609,7 +604,7 @@
   min-width: 5.625rem;
   text-align: center;
 
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 /* [class*="typing-"]:hover {
         box-shadow: 0 3px 3px 0 rgba(0,0,0,0.20);
