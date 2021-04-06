@@ -1,9 +1,17 @@
 <template>
   <div class="home">
     <Loader v-if="isLoading" />
-    <div class="pokeBoxes" v-if="!isLoading">  
-      <PokeBox v-for="(poke, index) in pokeInfo" :key="index" :dexNum="getIndex(poke.url)" :name="poke.name" />
+
+    <div class="content">
+      <div class="searchbar">
+        <input class="search-input" type="text" value="" placeholder="Start typing a name...">
+      </div>
+
+      <div class="pokeBoxes" v-if="!isLoading">  
+        <PokeBox v-for="(poke, index) in pokeInfo" :key="index" :dexNum="getIndex(poke.url)" :name="poke.name" />
+      </div>
     </div>
+    
     <div class="loadMore" v-on:click="getMorePokemon()">
       <Button id="loadMoreBtn" text="Load more!" size="medium" color="red" v-if="!loadingMore" />
       <Loader v-if="loadingMore" />
@@ -18,7 +26,8 @@ import PokeBox from '@/components/PokeBox'
 import Loader from '@/components/Loader';
 import Button from '@/components/Button';
 
-const PokeRepository = RepositoryFactory.get('pokeApi')
+const pokeApi = RepositoryFactory.get('pokeApi')
+const util = RepositoryFactory.get('util');
 
 export default {
   name: 'Home',
@@ -39,6 +48,8 @@ export default {
   },
   created () {
     this.fetch()
+    util.setUserLocales()
+    console.log(util.getUserLocales());
   },
   methods: {
     fetch () {
@@ -54,7 +65,7 @@ export default {
     },
 
     async getPokemon() {
-      const { data } = await PokeRepository.getAllPokemonSpecies(this.limit, this.offset);
+      const { data } = await pokeApi.getPagedPokemonSpecies(this.limit, this.offset);
       this.setNextPaging(data.next);
       this.pokeInfo = this.pokeInfo.concat(data.results);
     },
@@ -76,24 +87,48 @@ export default {
 
 <style lang="scss">
 
-  .pokeBoxes {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+.content {
+  display: flex;
+  flex-direction: column;
+}
 
-  .loadMore {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+.search-input {
+  border: 2px solid #707070;
+  border-radius: 0.625rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
+  line-height: 1.8rem;
+  font-size: 1.2rem;
+  width: 100%;
+  transition: 0.3s;
+}
+.search-input:hover {
+    border: 2px solid rgb(201, 38, 63);
+    transition: 0.3s;
+}
+.search-input:focus {
+    border: 2px solid rgb(201, 38, 63);
+    transition: 0.3s;
+}
 
-  a {
-    text-decoration: none;
-    color: #4A4A4A;
-    cursor: pointer;
-  }
+.pokeBoxes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.loadMore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+a {
+  text-decoration: none;
+  color: #4A4A4A;
+  cursor: pointer;
+}
 
 </style>
 
