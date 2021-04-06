@@ -4,9 +4,16 @@ var totalPokemon = {
   count: 0
 };
 
+var allSpecies = []
+
 export default {
 
-  getAllPokemonSpecies(limit, offset) {
+  async storePokemonSpeciesList() {
+    var { data } = await Repository.get(`/pokemon-species?limit=9999`);
+    allSpecies = data.results;
+  },
+
+  getPagedPokemonSpecies(limit, offset) {
     return Repository.get(`/pokemon-species?limit=${limit}&offset=${offset}`);
   },
 
@@ -16,7 +23,6 @@ export default {
     } else {
       return totalPokemon;
     }
-    
   },
 
   getPokemon(pokemon) {
