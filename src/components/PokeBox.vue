@@ -83,6 +83,13 @@ export default {
   height: 8rem;
 }
 
+/* Viewing on smaller phones, like iPhone SE */
+@media screen and (max-width: 22.25rem) {
+  .pokePic {
+    height: 6.5rem;
+  }
+}
+
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
   .pokeBox {
