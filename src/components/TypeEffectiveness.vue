@@ -32,7 +32,7 @@ export default {
       Loader
   },
   props: {
-    typing: Array,
+    typing: Array, // 'typing' is passed in as an Array to the component
   },
   data() {
     return {
