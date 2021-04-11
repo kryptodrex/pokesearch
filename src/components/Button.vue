@@ -1,6 +1,6 @@
 <template> 
     <div class="button" :class="getFormatting()">
-      {{text}}
+      <slot></slot>
     </div>
 </template>
 
@@ -10,8 +10,7 @@ export default {
   name: 'PokeBox',
   props: {
     size: String,
-    color: String,
-    text: String
+    color: String
   },
   methods: {
     // getSize() {
