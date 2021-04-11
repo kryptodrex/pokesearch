@@ -1,19 +1,28 @@
 <template>
   <div class="home">
-    <Loader v-if="isLoading" />
 
     <div class="content">
+
+      <div class="filterBtns">
+        <div v-for="gen in generations" :key="gen.name" v-on:click="changeGeneration(gen.name)">
+          <Button size="medium" color="red"> {{ getGeneration(gen.name) }} </Button>
+        </div>
+      </div>
+
       <div class="searchbar">
         <input class="search-input" type="text" value="" placeholder="Start typing a name...">
       </div>
 
-      <div class="pokeBoxes" v-if="!isLoading">  
+      <div class="pokeBoxes" v-if="!isLoading">
         <PokeBox v-for="(poke, index) in pokeInfo" :key="index" :dexNum="getIndex(poke.url)" :name="poke.name" />
       </div>
+
     </div>
+
+    <Loader v-if="isLoading" />
     
-    <div class="loadMore" v-on:click="getMorePokemon()">
-      <Button id="loadMoreBtn" text="Load more!" size="medium" color="red" v-if="!loadingMore" />
+    <div class="loadMore" v-on:click="getMorePokemon('generation-ii')">
+      <Button id="loadMoreBtn" size="medium" color="red" v-if="(!loadingMore && !isLoading) || nextGen != null"> Load more! </Button>
       <Loader v-if="loadingMore" />
     </div>
   </div>
@@ -41,34 +50,79 @@ export default {
       isLoading: false,
       loadingMore: false,
       pokeInfo: [],
+      generations: [],
+      genToSearch: null,
+      nextGen: null,
       limit: 30,
       offset: 0,
-      disable: false
+      disable: false,
+      locales: []
     }
   },
   created () {
     this.fetch()
-    util.setUserLocales()
-    console.log(util.getUserLocales());
+    this.locales = util.getUserLocales();
   },
   methods: {
     fetch () {
-      this.isLoading = true
       this.getPokemon()
-      this.isLoading = false
     },
 
-     getMorePokemon() {
-      this.loadingMore = true
-      this.getPokemon()
-      this.loadingMore = false
+    changeGeneration(gen) {
+      this.genToSearch = gen;
+      this.pokeInfo = [];
+      this.getPokemon();
     },
 
     async getPokemon() {
-      const { data } = await pokeApi.getPagedPokemonSpecies(this.limit, this.offset);
-      this.setNextPaging(data.next);
-      this.pokeInfo = this.pokeInfo.concat(data.results);
+      // this.isLoading = true
+
+      var { data } = await pokeApi.getAllGenerations();
+      this.generations = data.results;
+      // var latestGen = this.generations[this.generations.length - 1].name;
+      var latestGen = 'generation-i';
+
+      if (this.genToSearch == null) this.genToSearch = latestGen;
+
+      this.nextGen = this.setNextGen();
+
+      var { data } = await pokeApi.getGeneration(this.genToSearch);
+      
+      // var pokeList = [];
+      data.pokemon_species.forEach(species => {
+        this.pokeInfo = this.pokeInfo.concat([{
+          name: species.name,
+          url: species.url,
+          index: this.getIndex(species.url)
+        }])
+      })
+
+      this.pokeInfo.sort(function (a,b) {
+        return a.index - b.index;
+      })
+
+      // this.pokeInfo = this.pokeInfo.concat(pokeList);
+
+      // this.isLoading = false
     },
+
+    getMorePokemon() {
+      // this.loadingMore = true
+      this.genToSearch = this.nextGen
+      this.getPokemon()
+      // this.loadingMore = false
+    },
+
+    // async getPokemon() {
+    //   var { data } = await pokeApi.getPagedPokemonSpecies(this.limit, this.offset);
+    //   this.setNextPaging(data.next);
+    //   this.pokeInfo = this.pokeInfo.concat(data.results);
+    // },
+
+    // async getGenerations() {
+    //   var { gens } = await pokeApi.getAllGenerations();
+    //   this.generations = gens.results;
+    // },
 
     setNextPaging(nextUrl) {
       var splitUrl = nextUrl.split("?")[1].split("&");
@@ -76,9 +130,24 @@ export default {
       this.offset = splitUrl[0].split("=")[1];
     },
 
+    setNextGen() {
+      for (var i = 0; i < this.generations.length; i++) {
+        if (this.generations[i].name == this.genToSearch) {
+          return this.generations[i + 1].name
+        }
+      }
+    },
+
     getIndex(url) {
       var splitUrl = url.split("/");
       return splitUrl[6];
+    },
+
+    getGeneration(gen) {
+      var split = gen.split("-");
+      return 'Gen ' + split[1].toUpperCase();
+      // var { data } = await pokeApi.getGeneration(gen);
+      // this.generation = data.names[0].name;
     }
 
   }
@@ -90,6 +159,10 @@ export default {
 .content {
   display: flex;
   flex-direction: column;
+}
+
+.filterBtns {
+  display: none;
 }
 
 .search-input {
@@ -128,6 +201,17 @@ a {
   text-decoration: none;
   color: #4A4A4A;
   cursor: pointer;
+}
+
+
+/* Styling for desktop/tablet viewing */
+@media screen and (min-width: 25.9375rem) {
+  .filterBtns {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
 }
 
 </style>
