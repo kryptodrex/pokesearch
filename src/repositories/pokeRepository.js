@@ -5,6 +5,7 @@ var totalPokemon = {
 };
 
 var allSpecies = []
+var allGens = []
 
 export default {
 
@@ -19,7 +20,8 @@ export default {
 
   getCurrentTotalPokemon() {
     if (totalPokemon.count == 0) {
-      return Repository.get(`/pokemon-species?limit=1`);
+      totalPokemon = Repository.get(`/pokemon-species?limit=1`)
+      return totalPokemon;
     } else {
       return totalPokemon;
     }
@@ -31,6 +33,15 @@ export default {
 
   getPokemonSpecies(pokemon) {
     return Repository.get(`/pokemon-species/${pokemon}`);
+  },
+
+  getAllGenerations() {
+    if (allGens.length == 0) {
+      allGens = Repository.get(`/generation`);
+      return allGens;
+    } else {
+      return allGens;
+    };
   },
 
   getGeneration(gen) {
