@@ -9,17 +9,17 @@
 </template>
 
 <script>
-// import { RepositoryFactory } from '@/repositories/repositoryFactory';
+import { RepositoryFactory } from '@/repositories/repositoryFactory';
 
-// const util = RepositoryFactory.get('util');
+const util = RepositoryFactory.get('util');
 
-// export default {
-//   name: 'App',
-//   created () {
-//     util.setUserLocales();
-//     console.log(util.getUserLocales())
-//   }
-// }
+export default {
+  name: 'App',
+  mounted () {
+    util.setUserLocales();
+    console.log(util.getUserLocales())
+  }
+}
 </script>
 
 <style lang="scss">
