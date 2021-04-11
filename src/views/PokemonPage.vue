@@ -52,7 +52,7 @@
             class="poke-abilities"
             :class="'poke-ab-' + speciesInfo.color.name"
           >
-            {{ getAbilityName(abilityInfo) }}
+            {{ getAbilityName(abilityInfo, index) }}
           </summary>
           <p
             :id="'ab-txt-' + abilityInfo.ability.name"
@@ -325,11 +325,13 @@
         abilityList: [],
         nextNum: null,
         prevNum: null,
-        navigating: false
+        navigating: false,
+        locales: []
       };
     },
     mounted () {
       this.fetch()
+      this.locales = util.getUserLocales()
     },
     updated() {
       if (this.navigating) {
@@ -339,7 +341,7 @@
     },
     methods: {
       async fetch () {
-        // this.isLoading = true;
+        this.isLoading = true;
 
         var { data } = await pokeApi.getPokemonSpecies(this.pokemon);
         this.speciesInfo = data;
@@ -349,11 +351,14 @@
 
         var { data } = await pokeApi.getCurrentTotalPokemon();
         this.totalPokemon = data.count;
+
+        // Set the prev Pokedex num and next Pokedex num
         if ((this.speciesInfo.id - 1) < 1) this.prevNum = this.totalPokemon; 
         else this.prevNum = this.speciesInfo.id - 1;
         if ((this.speciesInfo.id + 1) > this.totalPokemon) this.nextNum = 1;
         else this.nextNum = this.speciesInfo.id + 1;
 
+        // Get the details for abilities of Pokemon
         this.abilityList = [];
         for (var i = 0; i < this.pokeInfo.abilities.length; i++) {
           var abilityInfo = this.pokeInfo.abilities[i];
@@ -369,11 +374,13 @@
       },
 
       formatText(text) {
-        return text.replace('/\s+/', ' ').trim();
+        var rem1 = text.replace('/\n/', ' ').trim()
+        var rem2 = text.replace('/\f/', ' ').trim()
+        return rem2;
       },
 
       getPhotoUrl() {
-        return util.getPokemonImageUrl(this.findIndex(this.speciesInfo.id))
+        return util.getPokemonImageUrl(util.findIndex(this.speciesInfo.id))
       },
 
       findIndex(value) {
@@ -382,77 +389,68 @@
 
       getTyping(types) {
         if (types.length > 1) {
-          return this.toUpper(types[0].type.name) + ' & ' + this.toUpper(types[1].type.name);
+          return util.toUpper(types[0].type.name) + ' & ' + util.toUpper(types[1].type.name);
         } else {
-          return this.toUpper(types[0].type.name)
+          return util.toUpper(types[0].type.name)
         }
       },
 
       getGeneration(gen) {
         var split = gen.split("-");
-        return this.toUpper(split[0]) + ' ' + split[1].toUpperCase();
-        // var { data } = await pokeApi.getGeneration(gen);
-        // this.generation = data.names[0].name;
+        return util.toUpper(split[0]) + ' ' + split[1].toUpperCase();
       },
 
       getFlavorText(data) {
-        for (var i = 0; i < data.length; i++) {
-          var entry = data[i];
-          if (entry.language.name == 'en') {
-            return this.formatText(entry.flavor_text);
-          }
-        }
-      },
-
-      getAbilityName(data) {
-        var ability = this.toUpper(data.ability.name)
-        if (data.is_hidden) {
-          return ability + ' (hidden)'
-        } else {
-          return ability
-        }
+        return this.getEntryForLocale(data).flavor_text;
       },
 
       storeAbilityData(data) {
-        var effect = {}
-        data.effect_entries.forEach( entry => {
-          if (entry.language.name == 'en') {
-            effect = {
-              short: entry.short_effect,
-              long: entry.effect,
-            }
-          }
-        })
-        var flavorText;
-        data.flavor_text_entries.forEach( entry => {
-          if (entry.language.name == 'en') {
-            flavorText = entry.flavor_text;
-          }
-        })
+
+        var effectEntry = this.getEntryForLocale(data.effect_entries)
+        var flavorTextEntry = this.getEntryForLocale(data.flavor_text_entries)
+
+        var shortDesc, longDesc, flavorText;
+
+        if (this.checkNull(effectEntry)) {
+          shortDesc = null
+          longDesc = null
+        } else {
+          shortDesc = effectEntry.short_effect
+          longDesc = effectEntry.effect
+        }
+
+        if (this.checkNull(flavorTextEntry)) flavorText = null; else flavorText = flavorTextEntry.flavor_text
 
         this.abilityList.push({
           name: data.name,
-          short_desc: effect.short,
-          long_desc: effect.long,
+          names: data.names,
+          short_desc: shortDesc,
+          long_desc: longDesc,
           flavor_text: flavorText
         })
+
+      },
+
+      getAbilityName(info, num) {
+        var ability = this.abilityList[num];
+        var name = this.getEntryForLocale(ability.names).name
+        if (info.is_hidden) {
+          return name + ' (hidden)'
+        } else {
+          return name
+        }
       },
 
       getAbilityDesc(num) {
-        if (this.abilityList[num].short_desc == null) {
-          return this.abilityList[num].flavor_text
-        } else {
+        if (this.abilityList[num].short_desc != null) {
           return this.abilityList[num].short_desc
+        } else {
+          return this.abilityList[num].flavor_text
         }
       },
 
       getSpecies(data) {
-        for (var i = 0; i < data.length; i++) {
-          var entry = data[i];
-          if (entry.language.name == 'en') {
-            return entry.genus;
-          }
-        }
+        return this.getEntryForLocale(data).genus;
       },
 
       getWeight(data) {
@@ -564,7 +562,7 @@
                 groups += 'Field';
                 break;
             default:
-                groups += this.toUpper(data[i].name);
+                groups += util.toUpper(data[i].name);
                 break;
           }
         }
@@ -575,6 +573,33 @@
       navigateDex(event) {
         this.pokemon = event;
         this.navigating = true;
+      },
+
+      checkNull(data) {
+        if (data == null) return true;
+        else return false
+      },
+
+      getEntryForLocale(data) {
+        var entry;
+        // this.locales.forEach(lang => {
+        //   data.forEach(item => {
+        //     if (item.language.name == lang) {
+        //       entry = item;
+        //     }
+        //   })
+          
+        // })
+
+        if (entry == null) {
+          data.forEach(item => {
+            if (item.language.name == 'en') {
+              entry = item;
+            }
+          })
+        }
+
+        return entry;
       }
     }
 
