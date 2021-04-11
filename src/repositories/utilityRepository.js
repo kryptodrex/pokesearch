@@ -1,5 +1,5 @@
 
-var userLocales = [];
+// var userLocales = [];
 
 export default {
 
@@ -21,12 +21,12 @@ export default {
         return value[0].toUpperCase() + value.slice(1);
     },
 
-    setUserLocales() {
-        userLocales = this.getBrowserLocales({languageCodeOnly: true});
-    },
+    // setUserLocales() {
+    //     userLocales = this.getBrowserLocales({languageCodeOnly: true});
+    // },
 
     getUserLocales() {
-        return userLocales;
+        return this.getBrowserLocales({languageCodeOnly: true});
     },
 
     getBrowserLocales(options = {}) {
