@@ -13,16 +13,6 @@ export default {
     color: String
   },
   methods: {
-    // getSize() {
-    //   var button = 'button';
-    //   switch (this.size) {
-    //     case 'large':
-    //       return button + '-lg'
-    //     case 'medium':
-    //       return button + '-med'
-    //   }
-    // }
-
     getFormatting() {
       if (this.size != null && this.color != null) {
         return this.size + ' ' + this.color;
@@ -38,7 +28,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped lang="css">
 
 .large{
   border-radius: 0.5rem;
@@ -98,7 +88,7 @@ export default {
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
   .button {
-    margin: 0 1rem;
+    /* margin: 0 1rem; */
   }
 }
   
