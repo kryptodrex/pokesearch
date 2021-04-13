@@ -82,6 +82,7 @@ body {
 input {
     -webkit-appearance: none;
     -moz-appearance: none;
+    outline:none;
     font-family: 'QSReg', Arial, Helvetica, sans-serif;
     border: 1px solid transparent;
     border-radius: 4px;
@@ -93,6 +94,19 @@ input[type="submit"]{
     font-family: 'QSMed', Arial, Helvetica, sans-serif;
 }
 
+a {
+  text-decoration: none;
+  color: #4A4A4A;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  font-weight: bold;
+  text-align: center;
+  color: rgb(199, 95, 95);
+}
 
 // @media screen and (min-width: 25.9375rem) {
 //   main {
