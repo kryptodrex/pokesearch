@@ -1,6 +1,7 @@
 <template>
-    <div class="forward-back" v-if="!isLoading">
-        <div class="back-div">
+    <div class="forward-back">
+        <div class="placeholder" v-if="isLoading"></div>
+        <div class="back-div" v-if="!isLoading">
             <router-link :to="'/pokemon/' + prevNum">
                 <img class="arrow" id="back-arrow" src="@/assets/images/back.svg" alt="" v-on:click="navigatingTo(prevNum)">
             </router-link>
@@ -11,7 +12,7 @@
             </div>
         </div>
 
-        <div class="forward-div">
+        <div class="forward-div" v-if="!isLoading">
             <div class="spacer"></div>
             <div class="pokenumname">
                 <div class="pokenum next"> #{{ nextPokeData.dexNum }} </div>
@@ -80,8 +81,8 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="css">
+
 /* Next/Prev in Pokédex */
 .forward-back {
     margin: 0 0.7rem;
@@ -147,6 +148,11 @@ export default {
 /* Images */
 .pokemon-sprite {
     margin-top: 1rem;
+}
+
+.placeholder {
+    height: 2rem;
+    background-color: white;
 }
 
 
