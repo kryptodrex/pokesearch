@@ -53,7 +53,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped lang="css">
 
 .pokeBox {
     border: 2px solid #4A4A4A;
