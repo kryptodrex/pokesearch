@@ -4,26 +4,27 @@
     <div class="content">
 
       <div class="filterBtns">
-        <div v-for="gen in generations" :key="gen.name" v-on:click="changeGeneration(gen.name)">
+        <div class="genBtns" v-for="gen in generations" :key="gen.name" v-on:click="changeGeneration(gen.name)">
           <Button size="medium" color="red"> {{ getGeneration(gen.name) }} </Button>
         </div>
       </div>
 
-      <div class="searchbar">
-        <input class="search-input" type="text" value="" placeholder="Start typing a name...">
+      <div>
+        <Search placeholder="Start typing a name..." v-on:searching="setSearchedPokemon($event)" />
+        <p class="error" v-if="pokeInfo.length == 0 && !isLoading">No matching Pokémon found!</p>
       </div>
-
-      <div class="pokeBoxes" v-if="!isLoading">
-        <PokeBox v-for="(poke, index) in pokeInfo" :key="index" :dexNum="getIndex(poke.url)" :name="poke.name" />
+      
+      <div class="pokeBoxes">
+        <PokeBox v-for="(poke, index) in sortedPokeInfo" :key="index" :dexNum="getIndex(poke.url)" :name="poke.name" />
       </div>
 
     </div>
 
-    <Loader v-if="isLoading" />
+    <!-- <Loader v-if="isLoading" /> -->
     
-    <div class="loadMore" v-on:click="getMorePokemon('generation-ii')">
-      <Button id="loadMoreBtn" size="medium" color="red" v-if="(!loadingMore && !isLoading) || nextGen != null"> Load more! </Button>
-      <Loader v-if="loadingMore" />
+    <div class="loadMore" v-on:click="getNextGen('generation-ii')">
+      <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen != null && !searching"> Load {{ getGeneration(nextGen) }} </Button>
+      <Loader v-if="isLoading" size="large"/>
     </div>
   </div>
 </template>
@@ -34,6 +35,7 @@ import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import PokeBox from '@/components/PokeBox'
 import Loader from '@/components/Loader';
 import Button from '@/components/Button';
+import Search from '@/components/Search';
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util');
@@ -43,12 +45,13 @@ export default {
   components: {
     PokeBox,
     Loader,
-    Button
+    Button,
+    Search
   },
   data () {
     return {
       isLoading: false,
-      loadingMore: false,
+      searching: false,
       pokeInfo: [],
       generations: [],
       genToSearch: null,
@@ -75,7 +78,7 @@ export default {
     },
 
     async getPokemon() {
-      // this.isLoading = true
+      this.isLoading = true
 
       var { data } = await pokeApi.getAllGenerations();
       this.generations = data.results;
@@ -88,7 +91,6 @@ export default {
 
       var { data } = await pokeApi.getGeneration(this.genToSearch);
       
-      // var pokeList = [];
       data.pokemon_species.forEach(species => {
         this.pokeInfo = this.pokeInfo.concat([{
           name: species.name,
@@ -97,43 +99,34 @@ export default {
         }])
       })
 
-      this.pokeInfo.sort(function (a,b) {
-        return a.index - b.index;
-      })
-
-      // this.pokeInfo = this.pokeInfo.concat(pokeList);
-
-      // this.isLoading = false
+      this.isLoading = false
     },
 
-    getMorePokemon() {
-      // this.loadingMore = true
+    getNextGen() {
       this.genToSearch = this.nextGen
       this.getPokemon()
-      // this.loadingMore = false
     },
 
-    // async getPokemon() {
-    //   var { data } = await pokeApi.getPagedPokemonSpecies(this.limit, this.offset);
-    //   this.setNextPaging(data.next);
-    //   this.pokeInfo = this.pokeInfo.concat(data.results);
-    // },
+    setSearchedPokemon(e) {
+      this.searching = true;
 
-    // async getGenerations() {
-    //   var { gens } = await pokeApi.getAllGenerations();
-    //   this.generations = gens.results;
-    // },
+      if (e[0] == 'clear') {
+        this.searching = false;
+        this.pokeInfo = [];
+        this.fetch();
+      } else {
+        this.pokeInfo = e
+      }
 
-    setNextPaging(nextUrl) {
-      var splitUrl = nextUrl.split("?")[1].split("&");
-      this.limit = splitUrl[1].split("=")[1];
-      this.offset = splitUrl[0].split("=")[1];
+      
     },
 
     setNextGen() {
       for (var i = 0; i < this.generations.length; i++) {
         if (this.generations[i].name == this.genToSearch) {
-          return this.generations[i + 1].name
+          var nextgen = this.generations[i + 1]
+          if (nextgen == null) return null
+          else return nextgen.name
         }
       }
     },
@@ -150,11 +143,40 @@ export default {
       // this.generation = data.names[0].name;
     }
 
+    // async getPokemon() {
+    //   var { data } = await pokeApi.getPagedPokemonSpecies(this.limit, this.offset);
+    //   this.setNextPaging(data.next);
+    //   this.pokeInfo = this.pokeInfo.concat(data.results);
+    // },
+
+    // async getGenerations() {
+    //   var { gens } = await pokeApi.getAllGenerations();
+    //   this.generations = gens.results;
+    // },
+
+    // setNextPaging(nextUrl) {
+    //   var splitUrl = nextUrl.split("?")[1].split("&");
+    //   this.limit = splitUrl[1].split("=")[1];
+    //   this.offset = splitUrl[0].split("=")[1];
+    // },
+
+  },
+
+  computed: {
+    sortedPokeInfo() {
+      let tempPokeInfo = this.pokeInfo
+
+      tempPokeInfo.sort(function (a,b) {
+        return a.index - b.index;
+      })
+          
+      return tempPokeInfo
+    }
   }
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="css">
 
 .content {
   display: flex;
@@ -164,24 +186,8 @@ export default {
 .filterBtns {
   display: none;
 }
-
-.search-input {
-  border: 2px solid #707070;
-  border-radius: 0.625rem;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem 1rem;
-  line-height: 1.8rem;
-  font-size: 1.2rem;
-  width: 100%;
-  transition: 0.3s;
-}
-.search-input:hover {
-    border: 2px solid rgb(201, 38, 63);
-    transition: 0.3s;
-}
-.search-input:focus {
-    border: 2px solid rgb(201, 38, 63);
-    transition: 0.3s;
+.genBtns {
+  margin: 0 1rem;
 }
 
 .pokeBoxes {
@@ -195,12 +201,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-a {
-  text-decoration: none;
-  color: #4A4A4A;
-  cursor: pointer;
 }
 
 
