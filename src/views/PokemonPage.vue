@@ -606,7 +606,7 @@
   }
 </script>
 
-<style>
+<style scoped lang="css">
 
 .pokemon-image {
   margin-top: 1rem;
