@@ -9,11 +9,6 @@ var allGens = []
 
 export default {
 
-  async storePokemonSpeciesList() {
-    var { data } = await Repository.get(`/pokemon-species?limit=9999`);
-    allSpecies = data.results;
-  },
-
   getPagedPokemonSpecies(limit, offset) {
     return Repository.get(`/pokemon-species?limit=${limit}&offset=${offset}`);
   },
@@ -29,6 +24,15 @@ export default {
 
   getPokemon(pokemon) {
     return Repository.get(`/pokemon/${pokemon}`);
+  },
+
+  getAllPokemonSpecies() {
+    if (allSpecies.length == 0) {
+      allSpecies = Repository.get(`/pokemon-species?limit=99999`);
+      return allSpecies;
+    } else {
+      return allSpecies
+    }
   },
 
   getPokemonSpecies(pokemon) {
