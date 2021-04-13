@@ -1,6 +1,6 @@
 <template>
-  <div v-if="!isLoading">
-    <Loader v-if="isLoading" />
+  <div>
+    <Loader v-if="isLoading" type="ball" size="small" fullPage="false" />
     <div v-if="!isLoading" class="typeEffectiveness">
         <div class="dmg-box" v-for="(type, index) in types" :key="index">
             <span :class="'dmg-type-' + type.name "> {{ getAbbrType(type.name) }} </span>
@@ -46,7 +46,7 @@ export default {
     };
   },
   created() {
-        this.fetch();
+    this.fetch();
   },
   methods: {
     async fetch() {
@@ -54,7 +54,10 @@ export default {
 
         var { data } = await pokeApi.getAllTypes();
         this.types = data.results;
-        this.types.splice(18,2);
+
+        this.types = this.types.filter((item) => {
+          if (item.name != 'unknown' && item.name != 'shadow') return item
+        })
         
         var { data } = await pokeApi.getType(this.typing[0].type.name);
             this.typingData.push(data.damage_relations);
@@ -123,8 +126,8 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="css">
+
 .typeEffectiveness {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
