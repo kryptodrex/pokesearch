@@ -13,7 +13,7 @@
           <!-- <template slot-scope="{suggestion}">
             <span class="my-suggestion-item">{{suggestion.item}}</span>
           </template> -->
-        </vue-autosuggest>
+        <!-- </vue-autosuggest> -->
 
         <div class="clearBtn" v-on:click="clearSearch()" v-if="searchValue.length >= 3 && hasClear">
           <Button size="medium" color="red"> Clear </Button>
