@@ -9,8 +9,8 @@
         </div>
       </div>
 
-      <div>
-        <Search placeholder="Start typing a name..." v-on:searching="setSearchedPokemon($event)" />
+      <div class="searchInput">
+        <Search placeholder="Start typing a name..." v-on:searching="setSearchedPokemon($event)" :hasClear="true" />
         <p class="error" v-if="pokeInfo.length == 0 && !isLoading">No matching Pokémon found!</p>
       </div>
       
@@ -24,7 +24,7 @@
     
     <div class="loadMore" v-on:click="getNextGen('generation-ii')">
       <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen != null && !searching"> Load {{ getGeneration(nextGen) }} </Button>
-      <Loader v-if="isLoading" size="large"/>
+      <Loader v-if="isLoading" size="large" :full-page="true" />
     </div>
   </div>
 </template>
@@ -188,6 +188,10 @@ export default {
 }
 .genBtns {
   margin: 0 1rem;
+}
+
+.searchInput {
+  margin-bottom: 0.5rem;
 }
 
 .pokeBoxes {
