@@ -7,22 +7,48 @@
         <h1 class="site-name">PokéSearch</h1>
     </div>
 
-    <!-- <div class="header-search">
-        <input class="header-search-input" type="text" id="poke-search" value="" placeholder="Enter a Pokémon...">
+    <!-- <div class="header-search" v-if="!isHomeRoute && !isHome">
+        <Search class="header-search-input" placeholder="Search..." v-on:searching="setSearchedPokemon($event)" :hasAutosuggest="false" />
         <Button size="medium" color="white"> GO! </Button>
     </div> -->
   </header>
 </template>
 
 <script>
+import router from '@/router';
 import Button from '@/components/Button';
+import Search from '@/components/Search'
 
 export default {
   name: 'Header',
   components: {
-      Button
+      Button,
+      Search
+  },
+  data() {
+      return {
+          isHomeRoute: false
+      }
+  },
+  methods: {
+      setSearchedPokemon(e) {
+          console.log(e);
+      }
+  },
+  computed: {
+        isHome() {
+            var route = router.currentRoute.name
+            // console.log(route)
+            if (route == 'home') return true
+            else return false
+      }
+  },
+  watch: {
+    $route: function (to, from){
+        if (to.name == 'home') this.isHomeRoute = true;
+            else this.isHomeRoute = false;
+        }
   }
-
 }
 </script>
 
@@ -59,7 +85,7 @@ header {
 
 .site-name {
     margin: 0;
-    /* display: none; */
+    display: none;
     font-family: 'QSMed', Arial, Helvetica, sans-serif;
 }
 
@@ -70,14 +96,6 @@ header {
 
 .header-search-input {
     margin-right: 0.5rem;
-}
-.header-search-input:hover {
-    border: 1px solid #707070;
-    transition: 0.2s;
-}
-.header-search-input:focus {
-    border: 1px solid #707070;
-    transition: 0.2s;
 }
 
 
