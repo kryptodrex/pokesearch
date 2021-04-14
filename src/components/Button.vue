@@ -49,7 +49,7 @@ export default {
   font-weight: bold;
   font-size: 1.1rem;
   border: 0.2rem solid;
-  border-radius: 4px;
+  border-radius: 0.625rem;
   /* margin: 0 1rem; */
   width: fit-content;
   cursor: pointer;
