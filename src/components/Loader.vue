@@ -1,5 +1,5 @@
 <template> 
-    <div class="loading" :class="getFormat()">
+    <div class="loader" :class="getFormat()">
         <img v-if="type == 'logo' || type == null" class="foresight" :class="getSize()" src="@/assets/images/pokesearch-logo.svg" alt="Pokesearch default logo loader">
         <img v-if="type == 'ball'" class="spinning" :class="getSize()" src="@/assets/images/loading-ball.svg" alt="Spinning Pokeball loader">
     </div>
@@ -11,12 +11,12 @@ export default {
   props: {
     type: String,
     size: String,
-    fullPage: String
+    fullPage: Boolean
   },
   methods: {
     getFormat() {
-      if (this.fullPage == null || this.fullPage == 'true') return 'full_page'
-      if (this.fullPage == 'false') return ''
+      if (this.fullPage) return 'full_page'
+      if (this.fullPage == null || !this.fullPage) return ''
     },
     getSize() {
       if (this.size == null) return 'medium'
@@ -29,13 +29,13 @@ export default {
 
 <style scoped lang="css">
   /* Loading styling */
-.loading {
+.loader {
     /* text-align: center;
     margin: 0 auto; */
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 1rem;
+    /* margin: 1rem; */
 }
 
 .full_page {
@@ -43,15 +43,15 @@ export default {
 }
 
 .large {
-  height: 10rem;
+    height: 8rem;
 }
 
 .medium {
-  height: 7rem;
+  height: 4rem;
 }
 
 .small {
-  height: 3rem;
+  height: 2rem;
 }
 
 .foresight {
@@ -187,6 +187,21 @@ export default {
   97.78% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.481, 0.481, 6, 1); }
   98.89% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.063, 0.063, 6, 1); }
   100.00% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 6, 1); }
+}
+
+
+@media screen and (min-width: 25.9375rem) {
+  .large {
+    height: 10rem;
+  }
+
+  .medium {
+    height: 5rem;
+  }
+
+  .small {
+    height: 2.5rem;
+  }
 }
 
 </style>
