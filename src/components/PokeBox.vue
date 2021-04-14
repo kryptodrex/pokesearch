@@ -1,27 +1,36 @@
 <template> 
     <div class="pokeBox">
         <router-link :to="'/pokemon/' + this.dexNum">
+
         <div class="pokeInfo" >
           <span>{{ toUpper(this.name) }}</span>
           <span>#{{ findIndex() }}</span>
         </div>
+          
+        <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(this.name)" @load="setLoaded">
+        <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
         
-        <img class="pokePic" :src="getImageUrl()" :alt="toUpper(this.name)">
         </router-link>
     </div>
 </template>
 
 <script>
+import Loader from '@/components/Loader'
 
 export default {
   name: 'PokeBox',
+  components: {
+    Loader
+  },
   props: {
       name: String,
       dexNum: String
   },
   data () {
     return {
-      index: ''
+      index: '',
+      imgLoadClass: 'loading',
+      loaderClass: ''
     }
   },
   created () {
@@ -46,6 +55,11 @@ export default {
     getImageUrl() {
       var basePath = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/"
       return basePath + this.findIndex() + ".png";
+    },
+
+    setLoaded() {
+      this.imgLoadClass = ''
+      this.loaderClass = 'loaded'
     }
   }
 }
@@ -82,6 +96,13 @@ export default {
   /* margin-top: 1rem; */
   height: 8rem;
 }
+.loading, .loaded {
+  display: none;
+}
+.loaderBall {
+  width: 8rem;
+  margin: 0rem;
+}
 
 /* Viewing on smaller phones, like iPhone SE */
 @media screen and (max-width: 22.25rem) {
@@ -95,10 +116,14 @@ export default {
   .pokeBox {
     padding: 1rem;
     margin: 1rem;
-}
+  }
 
   .pokePic {
     height: 10rem;
+  }
+
+  .loaderBall {
+    width: 10rem;
   }
 }
 
