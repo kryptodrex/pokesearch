@@ -1,24 +1,30 @@
 <template>
     <div class="forward-back">
-        <div class="placeholder" v-if="isLoading"></div>
-        <div class="back-div" v-if="!isLoading">
+        <!-- <div class="placeholder" v-if="isLoading" /> -->
+        <div class="back-div">
             <router-link :to="'/pokemon/' + prevNum">
                 <img class="arrow" id="back-arrow" src="@/assets/images/back.svg" alt="" v-on:click="navigatingTo(prevNum)">
             </router-link>
-            <img class="pokesprite prev" :src="prevPokeData.spriteUrl" :alt="'Sprite of ' + prevPokeData.name">
-            <div class="pokenumname">
+            <div class="placeholder prev" v-if="isLoading">
+                <Loader type="ball" size="small" />
+            </div>
+            <img class="pokesprite prev" :src="prevPokeData.spriteUrl" :alt="'Sprite of ' + prevPokeData.name" v-if="!isLoading">
+            <div class="pokenumname" v-if="!isLoading">
                 <div class="pokenum prev"> #{{ prevPokeData.dexNum }} </div>
                 <div class="pokename prev"> {{ prevPokeData.name }} </div>
             </div>
         </div>
 
-        <div class="forward-div" v-if="!isLoading">
+        <div class="forward-div">
             <div class="spacer"></div>
-            <div class="pokenumname">
+            <div class="pokenumname" v-if="!isLoading">
                 <div class="pokenum next"> #{{ nextPokeData.dexNum }} </div>
                 <div class="pokename next"> {{ nextPokeData.name }} </div>
             </div>
-            <img class="pokesprite next" :src="nextPokeData.spriteUrl" :alt="'Sprite of ' + nextPokeData.name">
+            <img class="pokesprite next" :src="nextPokeData.spriteUrl" :alt="'Sprite of ' + nextPokeData.name" v-if="!isLoading">
+            <div class="placeholder next" v-if="isLoading">
+                <Loader type="ball" size="small" />
+            </div>
             <router-link :to="'/pokemon/' + nextNum">
                 <img class="arrow" id="forward-arrow" src="@/assets/images/forward.svg" alt="" v-on:click="navigatingTo(nextNum)">
             </router-link>
@@ -28,6 +34,7 @@
 
 <script>
 
+import Loader from '@/components/Loader'
 import { RepositoryFactory } from '@/repositories/repositoryFactory';
 
 const pokeApi = RepositoryFactory.get('pokeApi');
@@ -35,6 +42,9 @@ const util = RepositoryFactory.get('util');
 
 export default {
     name: 'DexNavigation',
+    components: {
+        Loader
+    },
     props: {
         prevNum: null,
         nextNum: null
@@ -151,8 +161,10 @@ export default {
 }
 
 .placeholder {
-    height: 2rem;
-    background-color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 3rem;
 }
 
 
@@ -167,6 +179,10 @@ export default {
 @media screen and (min-width: 25.9375rem) {
     .pokenumname {
         flex-direction: row;
+    }
+
+    .placeholder {
+        height: 2rem;
     }
 }
 
