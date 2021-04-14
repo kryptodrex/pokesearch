@@ -1,6 +1,6 @@
 <template>
   <div class="pokepage" :key="pokemon">
-    <Loader v-if="isLoading" />
+    <Loader v-if="isLoading" :full-page="true" />
 
     <DexNavigation v-if="!isLoading" :nextNum="nextNum" :prevNum="prevNum" v-on:navigate="navigateDex($event)" />
 
@@ -12,7 +12,7 @@
 
         <!-- Grab the base name of the Pokémon -->
         <h1 class="pokemon-name" id="pokemon-name">
-          {{ toUpper(speciesInfo.name) }}
+          {{ getName(speciesInfo.names) }}
         </h1>
 
         <!-- Grab the type(s) of the Pokémon -->
@@ -387,6 +387,10 @@
         return util.findIndex(value);
       },
 
+      getName(data) {
+        return this.getEntryForLocale(data).name;
+      },
+
       getTyping(types) {
         if (types.length > 1) {
           return util.toUpper(types[0].type.name) + ' & ' + util.toUpper(types[1].type.name);
@@ -610,7 +614,7 @@
 
 .pokemon-image {
   margin-top: 1rem;
-  height: 10rem;
+  height: 12rem;
 }
 
 /* Type styling */
@@ -929,6 +933,10 @@
 
   .poke-training-box {
     flex-direction: row;
+  }
+
+  .pokemon-image {
+    height: 16rem;
   }
 
   .poke-ab-black:hover { color: #323232;}
