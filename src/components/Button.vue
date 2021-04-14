@@ -1,5 +1,5 @@
 <template> 
-    <div class="button" :class="getFormatting()">
+    <div class="button noselect" :class="getFormatting()">
       <slot></slot>
     </div>
 </template>
@@ -54,6 +54,15 @@ export default {
   width: fit-content;
   cursor: pointer;
   transition: 0.2s;
+}
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
 .white { /* for poke_page only */
