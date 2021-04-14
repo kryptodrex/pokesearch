@@ -8,11 +8,11 @@
       <div class="poke-head">
         <h1 class="pokedex-num">#{{ findIndex(speciesInfo.id) }}</h1>
 
-        <img :src="getPhotoUrl()" alt="" class="pokemon-image" id="poke-img" />
+        <img :src="getPhotoUrl()" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" />
 
         <!-- Grab the base name of the Pokémon -->
         <h1 class="pokemon-name" id="pokemon-name">
-          {{ getName(speciesInfo.names) }}
+          {{ pokeName }}
         </h1>
 
         <!-- Grab the type(s) of the Pokémon -->
@@ -322,6 +322,7 @@
         isLoading: true,
         speciesInfo: null,
         pokeInfo: null,
+        pokeName: null,
         abilityList: [],
         nextNum: null,
         prevNum: null,
@@ -365,6 +366,8 @@
           var { data } = await pokeApi.getAbility(abilityInfo.ability.name);
           this.storeAbilityData(data);
         }
+
+        this.pokeName = this.getEntryForLocale(this.speciesInfo.names).name;
         
         this.isLoading = false;
       },
@@ -388,7 +391,8 @@
       },
 
       getName(data) {
-        return this.getEntryForLocale(data).name;
+        this.pokeName = this.getEntryForLocale(data).name;
+        return this.pokeName;
       },
 
       getTyping(types) {
@@ -572,6 +576,30 @@
         }
         
         return groups;
+      },
+
+      showEasterEgg() {
+        var origName = this.pokeName;
+
+        switch (origName) {
+          case 'Lapras':
+            this.pokeName = 'Joy';
+            break;
+          case 'Charjabug':
+            this.pokeName = 'Strugglebus';
+            break;
+          case 'Omanyte':
+            this.pokeName = 'Lord Helix';
+            break;
+          case 'Farfetch’d':
+            this.pokeName = 'Bird Jesus';
+            break;
+        }
+
+        var that = this;
+        setTimeout(function () {
+            that.pokeName = origName;
+        }, 2000);
       },
 
       navigateDex(event) {
