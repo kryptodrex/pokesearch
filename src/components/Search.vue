@@ -1,19 +1,32 @@
 <template> 
     <div class="search">
       <div class="searchbar">
-        <input class="search-input" type="text" :placeholder="placeholder" v-model="searchValue" v-on:input="waitForTypingToStop" >
-        <div class="clearBtn" v-on:click="clearSearch()" v-if="searchValue.length >= 3">
+        
+        <input class="search-input" type="text" :placeholder="placeholder" v-model="searchValue" v-on:input="waitForTypingToStop" v-if="!hasAutosuggest" >
+        <!-- <vue-autosuggest class="search-input" v-if="hasAutosuggest"
+            :suggestions="filteredSpeciesList"
+            :input-props="{placeholder: placeholder}"
+            @input="waitForTypingToStop"
+            @selected="selectHandler"
+            @click="clickHandler"
+        >   -->
+          <!-- <template slot-scope="{suggestion}">
+            <span class="my-suggestion-item">{{suggestion.item}}</span>
+          </template> -->
+        </vue-autosuggest>
+
+        <div class="clearBtn" v-on:click="clearSearch()" v-if="searchValue.length >= 3 && hasClear">
           <Button size="medium" color="red"> Clear </Button>
         </div>
       </div>
       <div class="loadingSearch" v-if="isLoading">
-        <Loader fullPage="false" />
+        <Loader />
       </div>
     </div>
 </template>
 
 <script>
-
+import { VueAutosuggest } from 'vue-autosuggest';
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
 import Button from '@/components/Button'
@@ -24,10 +37,13 @@ export default {
   name: 'PokeBox',
   components: {
     Loader,
-    Button
+    Button,
+    VueAutosuggest
   },
   props: {
-    placeholder: String
+    placeholder: String,
+    hasClear: Boolean,
+    hasAutosuggest: Boolean
   },
   data() {
     return {
@@ -111,7 +127,7 @@ export default {
   flex-direction: row;
   align-items: center;
   height: fit-content;
-  margin-bottom: 0.5rem;
+  /* margin-bottom: 0.5rem; */
 }
 
 .search-input {
