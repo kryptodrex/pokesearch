@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Loader v-if="isLoading" type="ball" size="small" fullPage="false" />
+    <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
     <div v-if="!isLoading" class="typeEffectiveness">
         <div class="dmg-box" v-for="(type, index) in types" :key="index">
             <span :class="'dmg-type-' + type.name "> {{ getAbbrType(type.name) }} </span>
@@ -135,6 +135,10 @@ export default {
     grid-row-gap: 0.5rem;
 
     margin-bottom: 1.25rem;
+}
+
+.loaderBall {
+  margin: 1rem;
 }
 
 /* Damage Relations Data */
