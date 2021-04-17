@@ -7,6 +7,11 @@ export default {
         return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num}.png`
     },
 
+    getId(url) {
+        var splitUrl = url.split("/");
+        return splitUrl[6];
+    },
+
     findIndex(value) {
         if (value < 10) {
           return '00' + value;
