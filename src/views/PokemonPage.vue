@@ -5,7 +5,7 @@
     <DexNavigation v-if="!isLoading" :nextNum="nextNum" :prevNum="prevNum" v-on:navigate="navigateDex($event)" />
 
     <div class="pokemon-data" v-if="!isLoading">
-      <div class="poke-head">
+      <div id="head" class="poke-head">
         <h1 class="pokedex-num">#{{ findIndex(speciesInfo.id) }}</h1>
 
         <img :src="getPhotoUrl()" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" />
@@ -36,6 +36,7 @@
       </div>
 
       <div
+        id="basic-info"
         class="pokemon-basic-info"
         v-bind:class="'poke-info-' + speciesInfo.color.name"
       >
@@ -81,14 +82,14 @@
         </p>
       </div>
 
-      <div class="typeDefenses" :class="'poke-info-' + speciesInfo.color.name"> 
+      <div id="type-defenses" class="typeDefenses" :class="'poke-info-' + speciesInfo.color.name"> 
         <h3>Type Defenses</h3>
         <p>Effectiveness of each move typing on {{ toUpper(speciesInfo.name) }}</p>
         <TypeEffectiveness :typing="pokeInfo.types" />
       </div>
 
       <!-- Pokemon Training Info Box -->
-      <div class="pokemon-training" :class="'poke-info-' + speciesInfo.color.name">
+      <div id="training" class="pokemon-training" :class="'poke-info-' + speciesInfo.color.name">
         <h3>Training</h3>
         <div class="poke-training-box">
           <div class="poke-evs-all">
@@ -160,6 +161,7 @@
 
       <!-- Pokemon Stats Info Box -->
       <div
+        id="stats"
         class="pokemon-stats"
         v-bind:class="'poke-info-' + speciesInfo.color.name"
       >
@@ -263,6 +265,7 @@
 
       <!-- Pokemon Breeding Info Box -->
       <div
+        id="breeding"
         class="pokemon-breeding"
         v-bind:class="'poke-info-' + speciesInfo.color.name"
       >
@@ -281,7 +284,7 @@
         </p>
       </div>
 
-      <div class="evoChain" :class="'poke-info-' + speciesInfo.color.name"> 
+      <div id="evolutions" class="evoChain" :class="'poke-info-' + speciesInfo.color.name"> 
         <h3>Evolution Chain</h3>
         <EvolutionChain :chain="getId(speciesInfo.evolution_chain.url)" />
       </div>
@@ -962,7 +965,7 @@
   .pokemon-data {
     margin: 0 auto;
     padding: 0;
-    /* max-width: 46.875rem; */
+    max-width: 46.875rem;
     display: flex;
     flex-direction: column;
   }
