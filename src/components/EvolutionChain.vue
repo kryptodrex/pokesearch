@@ -2,7 +2,7 @@
   <div>
     <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
     <div v-if="!isLoading" class="evolutionChain">
-        {{ evoChainData }}
+        {{ evoDetails }}
     </div>
   </div>
 </template>
@@ -19,12 +19,12 @@ export default {
       Loader
   },
   props: {
-    chain: Number
+    chain: String
   },
   data() {
     return {
         isLoading: false,
-        evoChainData: []
+        evoDetails: []
     };
   },
   created() {
@@ -35,7 +35,9 @@ export default {
         this.isLoading = true;
 
         var { data } = await pokeApi.getEvolutionChain(this.chain);
-        this.evoChainData = data.chain.evolves_to;
+        this.evoDetails = data.chain.evolves_to;
+
+        var { data } = await pokeApi.getPokemonSpecies('typhlosion');
 
         this.isLoading = false;
     },
