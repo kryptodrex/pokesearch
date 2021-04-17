@@ -43,10 +43,7 @@
 
         <p style="margin-bottom: 0"><strong>Abilities:</strong></p>
 
-        <details
-          v-for="(abilityInfo, index) in pokeInfo.abilities"
-          :key="index"
-        >
+        <details v-for="(abilityInfo, index) in pokeInfo.abilities" :key="index" >
           <summary
             :id="'ab-' + abilityInfo.ability.name"
             class="poke-abilities"
@@ -82,19 +79,16 @@
           <strong>Japanese Name:</strong>
           {{ getJapaneseName(speciesInfo.names) }}
         </p>
+      </div>
 
-        <p>
-          <strong>Type Defenses:</strong> Effectiveness of each move typing on
-          {{ toUpper(speciesInfo.name) }}
-        </p>
+      <div class="typeDefenses" :class="'poke-info-' + speciesInfo.color.name"> 
+        <h3>Type Defenses</h3>
+        <p>Effectiveness of each move typing on {{ toUpper(speciesInfo.name) }}</p>
         <TypeEffectiveness :typing="pokeInfo.types" />
       </div>
 
       <!-- Pokemon Training Info Box -->
-      <div
-        class="pokemon-training"
-        v-bind:class="'poke-info-' + speciesInfo.color.name"
-      >
+      <div class="pokemon-training" :class="'poke-info-' + speciesInfo.color.name">
         <h3>Training</h3>
         <div class="poke-training-box">
           <div class="poke-evs-all">
@@ -178,7 +172,7 @@
                 {{ getStats("hp", "base_stat", pokeInfo.stats) }}
               </td>
               <td class="base-stats-c3 base-stat-spatk">
-                <strong>Special Attack:</strong>
+                <strong>Sp. Atk:</strong>
               </td>
               <td class="base-stats-c4">
                 {{ getStats("special-attack", "base_stat", pokeInfo.stats) }}
@@ -192,7 +186,7 @@
                 {{ getStats("attack", "base_stat", pokeInfo.stats) }}
               </td>
               <td class="base-stats-c3 base-stat-spdef">
-                <strong>Special Defense:</strong>
+                <strong>Sp. Def:</strong>
               </td>
               <td class="base-stats-c4">
                 {{ getStats("special-defense", "base_stat", pokeInfo.stats) }}
@@ -241,7 +235,7 @@
             </tr>
             <tr>
               <td class="base-stats-m-c1 base-stat-spatk">
-                <strong>Special Attack:</strong>
+                <strong>Sp. Atk:</strong>
               </td>
               <td class="base-stats-m-c2">
                 {{ getStats("special-attack", "base_stat", pokeInfo.stats) }}
@@ -249,7 +243,7 @@
             </tr>
             <tr>
               <td class="base-stats-m-c1 base-stat-spdef">
-                <strong>Special Defense:</strong>
+                <strong>Sp. Def:</strong>
               </td>
               <td class="base-stats-m-c2">
                 {{ getStats("special-defense", "base_stat", pokeInfo.stats) }}
@@ -287,6 +281,11 @@
         </p>
       </div>
 
+      <div class="evoChain" :class="'poke-info-' + speciesInfo.color.name"> 
+        <h3>Evolution Chain</h3>
+        <EvolutionChain :chain="1" />
+      </div>
+
       <!-- Pokemon Dex Entries Info Box -->
       <!-- <div class="pokemon-generation-dex-entries" v-bind:class="'poke-info' + speciesInfo.color.name">
                 COMING SOON
@@ -301,6 +300,7 @@
   import Loader from '@/components/Loader';
   import TypeEffectiveness from '@/components/TypeEffectiveness';
   import DexNavigation from '@/components/DexNavigation';
+  import EvolutionChain from '@/components/EvolutionChain';
   
   const pokeApi = RepositoryFactory.get('pokeApi');
   const util = RepositoryFactory.get('util');
@@ -314,7 +314,8 @@
     components: {
       Loader,
       TypeEffectiveness,
-      DexNavigation
+      DexNavigation,
+      EvolutionChain
     },
     data() {
       return {
@@ -377,9 +378,7 @@
       },
 
       formatText(text) {
-        var rem1 = text.replace('/\n/', ' ').trim()
-        var rem2 = text.replace('/\f/', ' ').trim()
-        return rem2;
+        return text.trim().replace('/\s+/', '');
       },
 
       getPhotoUrl() {
@@ -639,6 +638,11 @@
 </script>
 
 <style scoped lang="css">
+
+.poke-head {
+  max-width: 46.875rem;
+  margin: 0 auto;
+}
 
 .pokemon-image {
   margin-top: 1rem;
@@ -954,7 +958,7 @@
   .pokemon-data {
     margin: 0 auto;
     padding: 0;
-    max-width: 46.875rem;
+    /* max-width: 46.875rem; */
     display: flex;
     flex-direction: column;
   }
