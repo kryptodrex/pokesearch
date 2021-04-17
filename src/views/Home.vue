@@ -4,8 +4,8 @@
     <div class="content">
 
       <div class="filterBtns">
-        <div class="genBtns" v-for="gen in generations" :key="gen.name" v-on:click="changeGeneration(gen.name)">
-          <Button size="medium" color="red"> {{ getGeneration(gen.name) }} </Button>
+        <div class="genBtns" v-for="gen in generations" :key="gen.name" v-on:click="changeGeneration(gen.name)" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
+          <Button size="medium" color="red" > {{ getGeneration(gen.name) }} </Button>
         </div>
       </div>
 
@@ -22,7 +22,7 @@
 
     <!-- <Loader v-if="isLoading" /> -->
     
-    <div class="loadMore" v-on:click="getNextGen('generation-ii')">
+    <div class="loadMore" v-on:click="getNextGen('generation-ii')" :aria-label="'Click to load ' +  getGeneration(nextGen) + ' Pokémon'">
       <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen != null && !searching"> Load {{ getGeneration(nextGen) }} </Button>
       <Loader v-if="isLoading" size="large" :full-page="true" />
     </div>
