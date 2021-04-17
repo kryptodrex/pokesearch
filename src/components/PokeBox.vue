@@ -81,7 +81,7 @@ export default {
     transition: 0.2s;
 }
 
-.pokeBox:hover {
+.pokeBox:hover, .pokeBox:focus {
   box-shadow: 0px 3px 2px #757575;
   transition: 0.2s;
 }
