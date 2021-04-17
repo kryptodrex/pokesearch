@@ -1,5 +1,5 @@
 <template> 
-    <div class="button noselect" :class="getFormatting()">
+    <div tabindex="0" class="button" :class="getFormatting()">
       <slot></slot>
     </div>
 </template>
@@ -55,42 +55,45 @@ export default {
   cursor: pointer;
   transition: 0.2s;
 }
-.noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
-}
 
-.white { /* for poke_page only */
+.white {
     background-color: #f1f1f1;
     border-color: #f1f1f1;
     color: rgb(201, 38, 63);
 }
 
-.red { /* for poke_page only */
+.grey {
+    background-color: #f1f1f1;
+    border-color: rgb(201, 38, 63);
+    color: rgb(201, 38, 63);
+}
+
+.red { 
     background-color: rgb(201, 38, 63);
     border-color: rgb(201, 38, 63);
     color: #f1f1f1;
 }
 
-.button:hover, .button:focus { /* for poke_page only */
+.button:hover, .button:focus { 
     border: 0.2rem solid;
     transition: 0.2s;
 }
 
-.white:hover, .white:focus { /* for poke_page only */
+.white:hover, .white:focus {
     border-color: #f1f1f1;
     background-color: #4A4A4A;
     color: #f1f1f1;
 }
 
-.red:hover, .red:focus { /* for poke_page only */
-    border-color: #f1f1f1;
-    background-color: #4A4A4A;
+.red:hover, .red:focus {
+    background-color: #f1f1f1;
+    border-color: rgb(201, 38, 63);
+    color: rgb(201, 38, 63);
+}
+
+.grey:hover, .grey:focus {
+    background-color: rgb(201, 38, 63);
+    border-color: rgb(201, 38, 63);
     color: #f1f1f1;
 }
 
