@@ -11,11 +11,6 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '*',
-      name: 'home',
-      component: Home
-    },
-    {
       path: '/pokemon',
       name: 'homePokemon',
       component: Home
@@ -29,6 +24,29 @@ export default new Router({
       path: '/lost-in-the-tall-grass',
       name: 'gotLost',
       component: NotFound
+    },
+    {
+      path: '/',
+      name: 'home',
+      component: Home
+    },
+    {
+      path: '*',
+      name: 'default',
+      component: Home
     }
   ]
+  // scrollBehavior (to, from, savedPosition) {
+  //   if (to.hash) {
+  //     return {
+  //       selector: to.hash,
+  //       behavior: 'smooth'
+  //       // , offset: { x: 0, y: 10 }
+  //     }
+  //   } else if (savedPosition) {
+  //     return savedPosition
+  //   } else {
+  //     return { x: 0, y: 0 }
+  //   }
+  // }
 })
