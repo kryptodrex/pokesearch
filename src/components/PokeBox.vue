@@ -1,14 +1,17 @@
 <template> 
     <div class="pokeBox" :id="dexNum">
-        <router-link :to="'/pokemon/' + this.dexNum">
+    <!-- <div class="pokeBox" :class="speciesData.color" :id="dexNum"> -->
+        <router-link :to="'/pokemon/' + dexNum">
 
-        <div class="pokeInfo" >
-          <span>{{ toUpper(this.name) }}</span>
-          <span>#{{ findIndex() }}</span>
-        </div>
+          <div class="pokeInfo" >
+            <span>{{ toUpper(name) }}</span>
+            <!-- <span>{{ speciesData.name }}</span> -->
+            <span>#{{ findIndex() }}</span>
+          </div>
+            
+          <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(name)" @load="setLoaded">
           
-        <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(this.name)" @load="setLoaded">
-        <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
+          <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
         
         </router-link>
     </div>
@@ -16,6 +19,10 @@
 
 <script>
 import Loader from '@/components/Loader'
+import { RepositoryFactory } from '@/repositories/repositoryFactory';
+
+const pokeApi = RepositoryFactory.get('pokeApi');
+const util = RepositoryFactory.get('util');
 
 export default {
   name: 'PokeBox',
@@ -29,17 +36,34 @@ export default {
   data () {
     return {
       index: '',
+      imgUrl: '',
       imgLoadClass: 'loading',
-      loaderClass: ''
+      loaderClass: '',
+      isLoading: false
     }
   },
   created () {
-    this.findIndex();
+    this.fetch();
   },
   methods: {
+
+    async fetch() {
+
+      // this.isLoading = true;
+
+      this.findIndex();
+
+      // var { data } = await pokeApi.getPokemonSpecies(this.dexNum);
+      // this.speciesData = {
+      //   name: this.getEntryForLocale(data.names).name,
+      //   color: data.color
+      // }
+
+      // this.isLoading = false;
+    },
+
     toUpper(name) {
-        var pokename = name[0].toUpperCase() + name.slice(1);
-        return pokename;
+        return util.toUpper(name);
     },
 
     findIndex() {
@@ -60,7 +84,21 @@ export default {
     setLoaded() {
       this.imgLoadClass = ''
       this.loaderClass = 'loaded'
-    }
+    },
+
+    getEntryForLocale(data) {
+        var entry;
+
+        if (entry == null) {
+          data.forEach(item => {
+            if (item.language.name == 'en') {
+              entry = item;
+            }
+          })
+        }
+
+        return entry;
+      }
   }
 }
 
@@ -96,12 +134,46 @@ export default {
   /* margin-top: 1rem; */
   height: 8rem;
 }
+
 .loading, .loaded {
   display: none;
 }
 .loaderBall {
   width: 8rem;
   margin: 0rem;
+}
+
+
+/* Pokemon colors */
+.black {
+  color: #323232;
+}
+.blue {
+  color: #3482de;
+}
+.brown {
+  color: #af891f;
+}
+.gray {
+  color: #707070;
+}
+.green {
+  color: #64a743;
+}
+.pink {
+  color: #e97698;
+}
+.purple {
+  color: #7c63b8;
+}
+.red {
+  color: #ef4036;
+}
+.white {
+  color: #aaaaaa;
+}
+.yellow {
+  color: #f8d030;
 }
 
 /* Viewing on smaller phones, like iPhone SE */
