@@ -2,7 +2,7 @@
     <div class="forward-back">
         <!-- <div class="placeholder" v-if="isLoading" /> -->
         <div class="back-div">
-            <router-link :to="'/pokemon/' + prevNum">
+            <router-link aria-label="Navigate back in dex" :to="'/pokemon/' + prevNum">
                 <img class="arrow" id="back-arrow" src="@/assets/images/back.svg" alt="" v-on:click="navigatingTo(prevNum)">
             </router-link>
             <div class="placeholder prev" v-if="isLoading">
@@ -25,7 +25,7 @@
             <div class="placeholder next" v-if="isLoading">
                 <Loader type="ball" size="small" />
             </div>
-            <router-link :to="'/pokemon/' + nextNum">
+            <router-link aria-label="Navigate forward in dex" :to="'/pokemon/' + nextNum">
                 <img class="arrow" id="forward-arrow" src="@/assets/images/forward.svg" alt="" v-on:click="navigatingTo(nextNum)">
             </router-link>
         </div>
