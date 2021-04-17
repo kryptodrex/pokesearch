@@ -48,7 +48,7 @@ export default {
   justify-content: center;
   font-weight: bold;
   font-size: 1.1rem;
-  border: 0.2rem solid;
+  border: 2px solid;
   border-radius: 0.625rem;
   /* margin: 0 1rem; */
   width: fit-content;
@@ -75,7 +75,7 @@ export default {
 }
 
 .button:hover, .button:focus { 
-    border: 0.2rem solid;
+    border: 2px solid;
     transition: 0.2s;
 }
 
