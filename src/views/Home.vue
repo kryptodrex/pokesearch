@@ -5,7 +5,8 @@
 
       <div class="filterBtns">
         <div class="genBtns" v-for="gen in generations" :key="gen.name" v-on:click="changeGeneration(gen.name)" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
-          <Button size="medium" color="red" > {{ getGeneration(gen.name) }} </Button>
+          <Button size="medium" color="red" v-if="gen.name != genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <Button size="medium" color="grey" v-if="gen.name == genToSearch" > {{ getGeneration(gen.name) }} </Button>
         </div>
       </div>
 
@@ -30,7 +31,8 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
+import router from '@/router';
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import PokeBox from '@/components/PokeBox'
 import Loader from '@/components/Loader';
@@ -54,8 +56,8 @@ export default {
       searching: false,
       pokeInfo: [],
       generations: [],
-      genToSearch: null,
-      nextGen: null,
+      genToSearch: router.currentRoute.query.gen,
+      nextGen: 'generation-ii',
       limit: 30,
       offset: 0,
       disable: false,
@@ -73,8 +75,12 @@ export default {
 
     changeGeneration(gen) {
       this.genToSearch = gen;
-      this.pokeInfo = [];
-      this.getPokemon();
+      var currentRoute = this.$router.currentRoute
+      if (currentRoute.query.gen != gen) {
+        this.pokeInfo = [];
+        this.$router.push({name: "homePokemon", query: {gen: gen}});
+        this.getPokemon();
+      }
     },
 
     async getPokemon() {
@@ -82,8 +88,9 @@ export default {
 
       var { data } = await pokeApi.getAllGenerations();
       this.generations = data.results;
-      // var latestGen = this.generations[this.generations.length - 1].name;
-      var latestGen = 'generation-i';
+
+      var latestGen = this.generations[this.generations.length - 1].name;
+      // var latestGen = 'generation-i';
 
       if (this.genToSearch == null) this.genToSearch = latestGen;
 
@@ -132,15 +139,14 @@ export default {
     },
 
     getIndex(url) {
-      var splitUrl = url.split("/");
-      return splitUrl[6];
+      return util.getId(url);
     },
 
     getGeneration(gen) {
-      var split = gen.split("-");
-      return 'Gen ' + split[1].toUpperCase();
-      // var { data } = await pokeApi.getGeneration(gen);
-      // this.generation = data.names[0].name;
+      if (gen != null) {
+        var split = gen.split("-");
+        return 'Gen ' + split[1].toUpperCase();
+      } else return ''
     }
 
     // async getPokemon() {
