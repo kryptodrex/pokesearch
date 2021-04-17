@@ -82,7 +82,7 @@ body {
 input {
     -webkit-appearance: none;
     -moz-appearance: none;
-    outline:none;
+    outline: none;
     font-family: 'QSReg', Arial, Helvetica, sans-serif;
     border: 1px solid transparent;
     border-radius: 4px;
@@ -92,6 +92,10 @@ input {
 }
 input[type="submit"]{
     font-family: 'QSMed', Arial, Helvetica, sans-serif;
+}
+
+summary {
+  outline: none;
 }
 
 a {
