@@ -283,7 +283,7 @@
 
       <div class="evoChain" :class="'poke-info-' + speciesInfo.color.name"> 
         <h3>Evolution Chain</h3>
-        <EvolutionChain :chain="1" />
+        <EvolutionChain :chain="getId(speciesInfo.evolution_chain.url)" />
       </div>
 
       <!-- Pokemon Dex Entries Info Box -->
@@ -609,6 +609,10 @@
       checkNull(data) {
         if (data == null) return true;
         else return false
+      },
+
+      getId(url) {
+        return util.getId(url);
       },
 
       getEntryForLocale(data) {
