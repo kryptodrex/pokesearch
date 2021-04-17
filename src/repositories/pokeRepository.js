@@ -39,6 +39,10 @@ export default {
     return Repository.get(`/pokemon-species/${pokemon}`);
   },
 
+  getEvolutionChain(id) {
+    return Repository.get(`/evolution-chain/${id}`);
+  },
+
   getAllGenerations() {
     if (allGens.length == 0) {
       allGens = Repository.get(`/generation`);
