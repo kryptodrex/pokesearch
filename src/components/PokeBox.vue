@@ -1,5 +1,5 @@
 <template> 
-    <div class="pokeBox">
+    <div class="pokeBox" :id="dexNum">
         <router-link :to="'/pokemon/' + this.dexNum">
 
         <div class="pokeInfo" >
