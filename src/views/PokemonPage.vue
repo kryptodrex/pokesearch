@@ -82,7 +82,7 @@
         </p>
       </div>
 
-      <div id="type-defenses" class="typeDefenses" :class="'poke-info-' + speciesInfo.color.name"> 
+      <div id="type-defenses" class="typeDefenses" :class="'poke-info-' + speciesInfo.color.name">
         <h3>Type Defenses</h3>
         <p>Effectiveness of each move typing on {{ toUpper(speciesInfo.name) }}</p>
         <TypeEffectiveness :typing="pokeInfo.types" />
@@ -284,10 +284,10 @@
         </p>
       </div>
 
-      <div id="evolutions" class="evoChain" :class="'poke-info-' + speciesInfo.color.name"> 
+      <!-- <div id="evolutions" class="evoChain" :class="'poke-info-' + speciesInfo.color.name">
         <h3>Evolution Chain</h3>
         <EvolutionChain :chain="getId(speciesInfo.evolution_chain.url)" />
-      </div>
+      </div> -->
 
       <!-- Pokemon Dex Entries Info Box -->
       <!-- <div class="pokemon-generation-dex-entries" v-bind:class="'poke-info' + speciesInfo.color.name">
@@ -298,350 +298,345 @@
 </template>
 
 <script>
-  import router from '@/router';
-  import { RepositoryFactory } from '@/repositories/repositoryFactory';
-  import Loader from '@/components/Loader';
-  import TypeEffectiveness from '@/components/TypeEffectiveness';
-  import DexNavigation from '@/components/DexNavigation';
-  import EvolutionChain from '@/components/EvolutionChain';
-  
-  const pokeApi = RepositoryFactory.get('pokeApi');
-  const util = RepositoryFactory.get('util');
+import router from '@/router'
+import { RepositoryFactory } from '@/repositories/repositoryFactory'
+import Loader from '@/components/Loader'
+import TypeEffectiveness from '@/components/TypeEffectiveness'
+import DexNavigation from '@/components/DexNavigation'
+import EvolutionChain from '@/components/EvolutionChain'
 
-  export default {
+const pokeApi = RepositoryFactory.get('pokeApi')
+const util = RepositoryFactory.get('util')
 
-    name: 'PokePage',
-    // title () {
-    //   return `${value} - PokéSearch`
-    // },
-    components: {
-      Loader,
-      TypeEffectiveness,
-      DexNavigation,
-      EvolutionChain
-    },
-    data() {
-      return {
-        pokemon: router.currentRoute.params.name,
-        isLoading: true,
-        speciesInfo: null,
-        pokeInfo: null,
-        pokeName: null,
-        abilityList: [],
-        nextNum: null,
-        prevNum: null,
-        navigating: false,
-        locales: []
-      };
-    },
-    mounted () {
-      this.fetch()
-      this.locales = util.getUserLocales()
-    },
-    updated() {
-      if (this.navigating) {
-        this.fetch();
-        this.navigating = false;
-      }
-    },
-    methods: {
-      async fetch () {
-        this.isLoading = true;
+export default {
 
-        var { data } = await pokeApi.getPokemonSpecies(this.pokemon);
-        this.speciesInfo = data;
-        
-        var { data } = await pokeApi.getPokemon(this.pokemon);
-        this.pokeInfo = data;
-
-        var { data } = await pokeApi.getCurrentTotalPokemon();
-        this.totalPokemon = data.count;
-
-        // Set the prev Pokedex num and next Pokedex num
-        if ((this.speciesInfo.id - 1) < 1) this.prevNum = this.totalPokemon; 
-        else this.prevNum = this.speciesInfo.id - 1;
-        if ((this.speciesInfo.id + 1) > this.totalPokemon) this.nextNum = 1;
-        else this.nextNum = this.speciesInfo.id + 1;
-
-        // Get the details for abilities of Pokemon
-        this.abilityList = [];
-        for (var i = 0; i < this.pokeInfo.abilities.length; i++) {
-          var abilityInfo = this.pokeInfo.abilities[i];
-          var { data } = await pokeApi.getAbility(abilityInfo.ability.name);
-          this.storeAbilityData(data);
-        }
-
-        this.pokeName = this.getEntryForLocale(this.speciesInfo.names).name;
-        
-        this.isLoading = false;
-      },
-
-      toUpper(value) {
-        return util.toUpper(value);
-      },
-
-      formatText(text) {
-        return text.trim().replace('/\s+/', '');
-      },
-
-      getPhotoUrl() {
-        return util.getPokemonImageUrl(util.findIndex(this.speciesInfo.id))
-      },
-
-      findIndex(value) {
-        return util.findIndex(value);
-      },
-
-      getName(data) {
-        this.pokeName = this.getEntryForLocale(data).name;
-        return this.pokeName;
-      },
-
-      getTyping(types) {
-        if (types.length > 1) {
-          return util.toUpper(types[0].type.name) + ' & ' + util.toUpper(types[1].type.name);
-        } else {
-          return util.toUpper(types[0].type.name)
-        }
-      },
-
-      getGeneration(gen) {
-        var split = gen.split("-");
-        return util.toUpper(split[0]) + ' ' + split[1].toUpperCase();
-      },
-
-      getFlavorText(data) {
-        return this.getEntryForLocale(data).flavor_text;
-      },
-
-      storeAbilityData(data) {
-
-        var effectEntry = this.getEntryForLocale(data.effect_entries)
-        var flavorTextEntry = this.getEntryForLocale(data.flavor_text_entries)
-
-        var shortDesc, longDesc, flavorText;
-
-        if (this.checkNull(effectEntry)) {
-          shortDesc = null
-          longDesc = null
-        } else {
-          shortDesc = effectEntry.short_effect
-          longDesc = effectEntry.effect
-        }
-
-        if (this.checkNull(flavorTextEntry)) flavorText = null; else flavorText = flavorTextEntry.flavor_text
-
-        this.abilityList.push({
-          name: data.name,
-          names: data.names,
-          short_desc: shortDesc,
-          long_desc: longDesc,
-          flavor_text: flavorText
-        })
-
-      },
-
-      getAbilityName(info, num) {
-        var ability = this.abilityList[num];
-        var name = this.getEntryForLocale(ability.names).name
-        if (info.is_hidden) {
-          return name + ' (hidden)'
-        } else {
-          return name
-        }
-      },
-
-      getAbilityDesc(num) {
-        if (this.abilityList[num].short_desc != null) {
-          return this.abilityList[num].short_desc
-        } else {
-          return this.abilityList[num].flavor_text
-        }
-      },
-
-      getSpecies(data) {
-        return this.getEntryForLocale(data).genus;
-      },
-
-      getWeight(data) {
-        var weight_metric = data / 10;
-        var weight_us = Math.round(weight_metric * 2.20462262185);
-        return weight_metric + ' kg  |  ' + weight_us + ' lbs';
-      },
-
-      getHeight(data) {
-        var height_metric = data / 10;
-
-        var inches = height_metric * 39.37007874;
-        var feet = Math.floor(inches / 12);
-
-        var inches_r = Math.round(inches % 12);
-
-        return height_metric + ' m  |  ' + feet + " ft " + inches_r + ' in';
-      },
-
-      getJapaneseName(data) {
-        var japaneseName = '';
-        for (var i = 0; i < data.length; i++) {
-          var entry = data[i];
-          if (entry.language.name == 'ja') {
-            japaneseName += entry.name;
-          }
-        }
-        for (var i = 0; i < data.length; i++) {
-          var entry = data[i];
-          if (entry.language.name == 'roomaji') {
-            japaneseName += ' (' + entry.name + ')';
-          }
-        }
-
-        return japaneseName
-      },
-
-      getStats(name, type, stats) {
-        for (var i = 0; i < stats.length; i++) {
-          switch (type) {
-            case 'base_stat':
-              if (stats[i].stat.name == name) {
-                return stats[i].base_stat;
-              }
-              break;
-
-            case 'effort': 
-              if (stats[i].stat.name == name) {
-                return stats[i].effort;
-              }
-              break;
-          }
-        }
-      },
-
-      getGenderRate(rate) {
-
-        if (rate >= 0) {
-          var f_rate = (rate / 8) * 100;
-          var m_rate = 100 - f_rate;
-
-          if (f_rate == 100) {
-            return '100% Female';
-          } else if (m_rate == 100) {
-            return '100% Male';
-          } else {
-            return m_rate + '% Male, ' + f_rate + '% Female'
-          }
-        } else {
-          return 'Genderless'
-        }
-      },
-
-      calcHatching(data) {
-        var egg_walk_amt = data * 256;
-        return data + ' egg cycles (' + egg_walk_amt + ' steps)';
-      },
-
-      getEggGroups(data) {
-
-        var groups = "";
-
-        for (var i = 0; i < data.length; i++) {
-
-          if (i > 0 && i <= data.length) {
-            groups += ' & '
-          }
-
-          switch (data[i].name) {
-            case 'no-eggs':
-                groups += 'Undiscovered';
-                break;
-            case 'water1':
-                groups += 'Water 1';
-                break;
-            case 'water2':
-                groups += 'Water 2';
-                break;
-            case 'water3':
-                groups += 'Water 3';
-                break;
-            case 'humanshape':
-                groups += 'Human-Like';
-                break;
-            case 'indeterminate':
-                groups += 'Amorphous';
-                break;
-            case 'ground':
-                groups += 'Field';
-                break;
-            default:
-                groups += util.toUpper(data[i].name);
-                break;
-          }
-        }
-        
-        return groups;
-      },
-
-      showEasterEgg() {
-        var origName = this.pokeName;
-
-        switch (origName) {
-          case 'Lapras':
-            this.pokeName = 'Joy';
-            break;
-          case 'Charjabug':
-            this.pokeName = 'Strugglebus';
-            break;
-          case 'Omanyte':
-            this.pokeName = 'Lord Helix';
-            break;
-          case 'Farfetch’d':
-            this.pokeName = 'Bird Jesus';
-            break;
-        }
-
-        var that = this;
-        setTimeout(function () {
-            that.pokeName = origName;
-        }, 2000);
-      },
-
-      navigateDex(event) {
-        this.pokemon = event;
-        this.navigating = true;
-      },
-
-      checkNull(data) {
-        if (data == null) return true;
-        else return false
-      },
-
-      getId(url) {
-        return util.getId(url);
-      },
-
-      getEntryForLocale(data) {
-        var entry;
-        // this.locales.forEach(lang => {
-        //   data.forEach(item => {
-        //     if (item.language.name == lang) {
-        //       entry = item;
-        //     }
-        //   })
-          
-        // })
-
-        if (entry == null) {
-          data.forEach(item => {
-            if (item.language.name == 'en') {
-              entry = item;
-            }
-          })
-        }
-
-        return entry;
-      }
+  name: 'PokePage',
+  // title () {
+  //   return `${value} - PokéSearch`
+  // },
+  components: {
+    Loader,
+    TypeEffectiveness,
+    DexNavigation,
+    EvolutionChain
+  },
+  data () {
+    return {
+      pokemon: router.currentRoute.params.name,
+      isLoading: true,
+      speciesInfo: null,
+      pokeInfo: null,
+      pokeName: null,
+      abilityList: [],
+      nextNum: null,
+      prevNum: null,
+      navigating: false,
+      locales: []
     }
+  },
+  mounted () {
+    this.fetch()
+    this.locales = util.getUserLocales()
+  },
+  updated () {
+    if (this.navigating) {
+      this.fetch()
+      this.navigating = false
+    }
+  },
+  methods: {
+    async fetch () {
+      this.isLoading = true
 
+      var { data } = await pokeApi.getPokemonSpecies(this.pokemon)
+      this.speciesInfo = data
+
+      var { data } = await pokeApi.getPokemon(this.pokemon)
+      this.pokeInfo = data
+
+      var { data } = await pokeApi.getCurrentTotalPokemon()
+      this.totalPokemon = data.count
+
+      // Set the prev Pokedex num and next Pokedex num
+      if ((this.speciesInfo.id - 1) < 1) this.prevNum = this.totalPokemon
+      else this.prevNum = this.speciesInfo.id - 1
+      if ((this.speciesInfo.id + 1) > this.totalPokemon) this.nextNum = 1
+      else this.nextNum = this.speciesInfo.id + 1
+
+      // Get the details for abilities of Pokemon
+      this.abilityList = []
+      for (var i = 0; i < this.pokeInfo.abilities.length; i++) {
+        var abilityInfo = this.pokeInfo.abilities[i]
+        var { data } = await pokeApi.getAbility(abilityInfo.ability.name)
+        this.storeAbilityData(data)
+      }
+
+      this.pokeName = this.getEntryForLocale(this.speciesInfo.names).name
+
+      this.isLoading = false
+    },
+
+    toUpper (value) {
+      return util.toUpper(value)
+    },
+
+    formatText (text) {
+      return text.trim().replace('/\s+/', '')
+    },
+
+    getPhotoUrl () {
+      return util.getPokemonImageUrl(util.findIndex(this.speciesInfo.id))
+    },
+
+    findIndex (value) {
+      return util.findIndex(value)
+    },
+
+    getName (data) {
+      this.pokeName = this.getEntryForLocale(data).name
+      return this.pokeName
+    },
+
+    getTyping (types) {
+      if (types.length > 1) {
+        return util.toUpper(types[0].type.name) + ' & ' + util.toUpper(types[1].type.name)
+      } else {
+        return util.toUpper(types[0].type.name)
+      }
+    },
+
+    getGeneration (gen) {
+      var split = gen.split('-')
+      return util.toUpper(split[0]) + ' ' + split[1].toUpperCase()
+    },
+
+    getFlavorText (data) {
+      return this.getEntryForLocale(data).flavor_text
+    },
+
+    storeAbilityData (data) {
+      var effectEntry = this.getEntryForLocale(data.effect_entries)
+      var flavorTextEntry = this.getEntryForLocale(data.flavor_text_entries)
+
+      var shortDesc, longDesc, flavorText
+
+      if (this.checkNull(effectEntry)) {
+        shortDesc = null
+        longDesc = null
+      } else {
+        shortDesc = effectEntry.short_effect
+        longDesc = effectEntry.effect
+      }
+
+      if (this.checkNull(flavorTextEntry)) flavorText = null; else flavorText = flavorTextEntry.flavor_text
+
+      this.abilityList.push({
+        name: data.name,
+        names: data.names,
+        short_desc: shortDesc,
+        long_desc: longDesc,
+        flavor_text: flavorText
+      })
+    },
+
+    getAbilityName (info, num) {
+      var ability = this.abilityList[num]
+      var name = this.getEntryForLocale(ability.names).name
+      if (info.is_hidden) {
+        return name + ' (hidden)'
+      } else {
+        return name
+      }
+    },
+
+    getAbilityDesc (num) {
+      if (this.abilityList[num].short_desc != null) {
+        return this.abilityList[num].short_desc
+      } else {
+        return this.abilityList[num].flavor_text
+      }
+    },
+
+    getSpecies (data) {
+      return this.getEntryForLocale(data).genus
+    },
+
+    getWeight (data) {
+      var weight_metric = data / 10
+      var weight_us = Math.round(weight_metric * 2.20462262185)
+      return weight_metric + ' kg  |  ' + weight_us + ' lbs'
+    },
+
+    getHeight (data) {
+      var height_metric = data / 10
+
+      var inches = height_metric * 39.37007874
+      var feet = Math.floor(inches / 12)
+
+      var inches_r = Math.round(inches % 12)
+
+      return height_metric + ' m  |  ' + feet + ' ft ' + inches_r + ' in'
+    },
+
+    getJapaneseName (data) {
+      var japaneseName = ''
+      for (var i = 0; i < data.length; i++) {
+        var entry = data[i]
+        if (entry.language.name == 'ja') {
+          japaneseName += entry.name
+        }
+      }
+      for (var i = 0; i < data.length; i++) {
+        var entry = data[i]
+        if (entry.language.name == 'roomaji') {
+          japaneseName += ' (' + entry.name + ')'
+        }
+      }
+
+      return japaneseName
+    },
+
+    getStats (name, type, stats) {
+      for (var i = 0; i < stats.length; i++) {
+        switch (type) {
+          case 'base_stat':
+            if (stats[i].stat.name == name) {
+              return stats[i].base_stat
+            }
+            break
+
+          case 'effort':
+            if (stats[i].stat.name == name) {
+              return stats[i].effort
+            }
+            break
+        }
+      }
+    },
+
+    getGenderRate (rate) {
+      if (rate >= 0) {
+        var f_rate = (rate / 8) * 100
+        var m_rate = 100 - f_rate
+
+        if (f_rate == 100) {
+          return '100% Female'
+        } else if (m_rate == 100) {
+          return '100% Male'
+        } else {
+          return m_rate + '% Male, ' + f_rate + '% Female'
+        }
+      } else {
+        return 'Genderless'
+      }
+    },
+
+    calcHatching (data) {
+      var egg_walk_amt = data * 256
+      return data + ' egg cycles (' + egg_walk_amt + ' steps)'
+    },
+
+    getEggGroups (data) {
+      var groups = ''
+
+      for (var i = 0; i < data.length; i++) {
+        if (i > 0 && i <= data.length) {
+          groups += ' & '
+        }
+
+        switch (data[i].name) {
+          case 'no-eggs':
+            groups += 'Undiscovered'
+            break
+          case 'water1':
+            groups += 'Water 1'
+            break
+          case 'water2':
+            groups += 'Water 2'
+            break
+          case 'water3':
+            groups += 'Water 3'
+            break
+          case 'humanshape':
+            groups += 'Human-Like'
+            break
+          case 'indeterminate':
+            groups += 'Amorphous'
+            break
+          case 'ground':
+            groups += 'Field'
+            break
+          default:
+            groups += util.toUpper(data[i].name)
+            break
+        }
+      }
+
+      return groups
+    },
+
+    showEasterEgg () {
+      var origName = this.pokeName
+
+      switch (origName) {
+        case 'Lapras':
+          this.pokeName = 'Joy'
+          break
+        case 'Charjabug':
+          this.pokeName = 'Strugglebus'
+          break
+        case 'Omanyte':
+          this.pokeName = 'Lord Helix'
+          break
+        case 'Farfetch’d':
+          this.pokeName = 'Bird Jesus'
+          break
+      }
+
+      var that = this
+      setTimeout(function () {
+        that.pokeName = origName
+      }, 2000)
+    },
+
+    navigateDex (event) {
+      this.pokemon = event
+      this.navigating = true
+    },
+
+    checkNull (data) {
+      if (data == null) return true
+      else return false
+    },
+
+    getId (url) {
+      return util.getId(url)
+    },
+
+    getEntryForLocale (data) {
+      var entry
+      // this.locales.forEach(lang => {
+      //   data.forEach(item => {
+      //     if (item.language.name == lang) {
+      //       entry = item;
+      //     }
+      //   })
+
+      // })
+
+      if (entry == null) {
+        data.forEach(item => {
+          if (item.language.name == 'en') {
+            entry = item
+          }
+        })
+      }
+
+      return entry
+    }
   }
+
+}
 </script>
 
 <style scoped lang="css">

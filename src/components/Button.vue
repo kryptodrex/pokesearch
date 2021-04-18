@@ -1,4 +1,4 @@
-<template> 
+<template>
     <div tabindex="0" class="button" :class="getFormatting()">
       <slot></slot>
     </div>
@@ -13,20 +13,19 @@ export default {
     color: String
   },
   methods: {
-    getFormatting() {
+    getFormatting () {
       if (this.size != null && this.color != null) {
-        return this.size + ' ' + this.color;
+        return this.size + ' ' + this.color
       } else if (this.size == null && this.color != null) {
-        return this.color;
+        return this.color
       } else if (this.size != null && this.color == null) {
-        return this.size;
+        return this.size
       }
     }
   }
 }
 
 </script>
-
 
 <style scoped lang="css">
 
@@ -68,13 +67,13 @@ export default {
     color: rgb(201, 38, 63);
 }
 
-.red { 
+.red {
     background-color: rgb(201, 38, 63);
     border-color: rgb(201, 38, 63);
     color: #f1f1f1;
 }
 
-.button:hover, .button:focus { 
+.button:hover, .button:focus {
     border: 2px solid;
     transition: 0.2s;
 }
@@ -103,5 +102,5 @@ export default {
     /* margin: 0 1rem; */
   }
 }
-  
+
 </style>

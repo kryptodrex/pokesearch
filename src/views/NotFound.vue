@@ -9,22 +9,22 @@
 </template>
 
 <script>
-import router from '@/router';
-import Button from '@/components/Button';
+import router from '@/router'
+import Button from '@/components/Button'
 
 export default {
   name: 'NotFound',
   components: {
-      Button
+    Button
   },
-  created() {
-      this.getAlternatives();
+  created () {
+    this.getAlternatives()
   },
   methods: {
-      getAlternatives() {
-          var prevRoute = router;
-          console.log(prevRoute);
-      }
+    getAlternatives () {
+      var prevRoute = router
+      console.log(prevRoute)
+    }
   }
 
 }

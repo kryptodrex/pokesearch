@@ -1,4 +1,4 @@
-<template> 
+<template>
     <div class="pokeBox" :id="dexNum">
     <!-- <div class="pokeBox" :class="speciesData.color" :id="dexNum"> -->
         <router-link :to="'/pokemon/' + dexNum">
@@ -8,21 +8,21 @@
             <!-- <span>{{ speciesData.name }}</span> -->
             <span>#{{ findIndex() }}</span>
           </div>
-            
+
           <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(name)" @load="setLoaded">
-          
+
           <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
-        
+
         </router-link>
     </div>
 </template>
 
 <script>
 import Loader from '@/components/Loader'
-import { RepositoryFactory } from '@/repositories/repositoryFactory';
+import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
-const pokeApi = RepositoryFactory.get('pokeApi');
-const util = RepositoryFactory.get('util');
+const pokeApi = RepositoryFactory.get('pokeApi')
+const util = RepositoryFactory.get('util')
 
 export default {
   name: 'PokeBox',
@@ -30,8 +30,8 @@ export default {
     Loader
   },
   props: {
-      name: String,
-      dexNum: String
+    name: String,
+    dexNum: String
   },
   data () {
     return {
@@ -43,15 +43,14 @@ export default {
     }
   },
   created () {
-    this.fetch();
+    this.fetch()
   },
   methods: {
 
-    async fetch() {
-
+    async fetch () {
       // this.isLoading = true;
 
-      this.findIndex();
+      this.findIndex()
 
       // var { data } = await pokeApi.getPokemonSpecies(this.dexNum);
       // this.speciesData = {
@@ -62,48 +61,47 @@ export default {
       // this.isLoading = false;
     },
 
-    toUpper(name) {
-        return util.toUpper(name);
+    toUpper (name) {
+      return util.toUpper(name)
     },
 
-    findIndex() {
+    findIndex () {
       if (this.dexNum < 10) {
-        return '00' + this.dexNum;
+        return '00' + this.dexNum
       } else if (this.dexNum < 100) {
-        return '0' + this.dexNum;
+        return '0' + this.dexNum
       } else {
-        return this.dexNum;
+        return this.dexNum
       }
     },
 
-    getImageUrl() {
-      var basePath = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/"
-      return basePath + this.findIndex() + ".png";
+    getImageUrl () {
+      var basePath = 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'
+      return basePath + this.findIndex() + '.png'
     },
 
-    setLoaded() {
+    setLoaded () {
       this.imgLoadClass = ''
       this.loaderClass = 'loaded'
     },
 
-    getEntryForLocale(data) {
-        var entry;
+    getEntryForLocale (data) {
+      var entry
 
-        if (entry == null) {
-          data.forEach(item => {
-            if (item.language.name == 'en') {
-              entry = item;
-            }
-          })
-        }
-
-        return entry;
+      if (entry == null) {
+        data.forEach(item => {
+          if (item.language.name == 'en') {
+            entry = item
+          }
+        })
       }
+
+      return entry
+    }
   }
 }
 
 </script>
-
 
 <style scoped lang="css">
 
@@ -142,7 +140,6 @@ export default {
   width: 8rem;
   margin: 0rem;
 }
-
 
 /* Pokemon colors */
 .black {

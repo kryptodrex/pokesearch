@@ -14,7 +14,7 @@
         <Search placeholder="Start typing a name..." v-on:searching="setSearchedPokemon($event)" :hasClear="true" />
         <p class="error" v-if="pokeInfo.length == 0 && !isLoading">No matching Pokémon found!</p>
       </div>
-      
+
       <div class="pokeBoxes">
         <PokeBox v-for="(poke, index) in sortedPokeInfo" :key="index" :dexNum="getIndex(poke.url)" :name="poke.name" />
       </div>
@@ -22,7 +22,7 @@
     </div>
 
     <!-- <Loader v-if="isLoading" /> -->
-    
+
     <div class="loadMore" v-on:click="getNextGen('generation-ii')" :aria-label="'Click to load ' +  getGeneration(nextGen) + ' Pokémon'">
       <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen != null && !searching"> Load {{ getGeneration(nextGen) }} </Button>
       <Loader v-if="isLoading" size="large" :full-page="true" />
@@ -32,15 +32,15 @@
 
 <script>
 
-import router from '@/router';
+import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import PokeBox from '@/components/PokeBox'
-import Loader from '@/components/Loader';
-import Button from '@/components/Button';
-import Search from '@/components/Search';
+import Loader from '@/components/Loader'
+import Button from '@/components/Button'
+import Search from '@/components/Search'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
-const util = RepositoryFactory.get('util');
+const util = RepositoryFactory.get('util')
 
 export default {
   name: 'Home',
@@ -66,38 +66,38 @@ export default {
   },
   created () {
     this.fetch()
-    this.locales = util.getUserLocales();
+    this.locales = util.getUserLocales()
   },
   methods: {
     fetch () {
       this.getPokemon()
     },
 
-    changeGeneration(gen) {
-      this.genToSearch = gen;
+    changeGeneration (gen) {
+      this.genToSearch = gen
       var currentRoute = this.$router.currentRoute
       if (currentRoute.query.gen != gen) {
-        this.pokeInfo = [];
-        this.$router.push({name: "homePokemon", query: {gen: gen}});
-        this.getPokemon();
+        this.pokeInfo = []
+        this.$router.push({ name: 'homePokemon', query: { gen: gen } })
+        this.getPokemon()
       }
     },
 
-    async getPokemon() {
+    async getPokemon () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getAllGenerations();
-      this.generations = data.results;
+      var { data } = await pokeApi.getAllGenerations()
+      this.generations = data.results
 
-      var latestGen = this.generations[this.generations.length - 1].name;
+      var latestGen = this.generations[this.generations.length - 1].name
       // var latestGen = 'generation-i';
 
-      if (this.genToSearch == null) this.genToSearch = latestGen;
+      if (this.genToSearch == null) this.genToSearch = latestGen
 
-      this.nextGen = this.setNextGen();
+      this.nextGen = this.setNextGen()
 
-      var { data } = await pokeApi.getGeneration(this.genToSearch);
-      
+      var { data } = await pokeApi.getGeneration(this.genToSearch)
+
       data.pokemon_species.forEach(species => {
         this.pokeInfo = this.pokeInfo.concat([{
           name: species.name,
@@ -109,26 +109,24 @@ export default {
       this.isLoading = false
     },
 
-    getNextGen() {
+    getNextGen () {
       this.genToSearch = this.nextGen
       this.getPokemon()
     },
 
-    setSearchedPokemon(e) {
-      this.searching = true;
+    setSearchedPokemon (e) {
+      this.searching = true
 
       if (e[0] == 'clear') {
-        this.searching = false;
-        this.pokeInfo = [];
-        this.fetch();
+        this.searching = false
+        this.pokeInfo = []
+        this.fetch()
       } else {
         this.pokeInfo = e
       }
-
-      
     },
 
-    setNextGen() {
+    setNextGen () {
       for (var i = 0; i < this.generations.length; i++) {
         if (this.generations[i].name == this.genToSearch) {
           var nextgen = this.generations[i + 1]
@@ -138,14 +136,14 @@ export default {
       }
     },
 
-    getIndex(url) {
-      return util.getId(url);
+    getIndex (url) {
+      return util.getId(url)
     },
 
-    getGeneration(gen) {
+    getGeneration (gen) {
       if (gen != null) {
-        var split = gen.split("-");
-        return 'Gen ' + split[1].toUpperCase();
+        var split = gen.split('-')
+        return 'Gen ' + split[1].toUpperCase()
       } else return ''
     }
 
@@ -169,13 +167,13 @@ export default {
   },
 
   computed: {
-    sortedPokeInfo() {
+    sortedPokeInfo () {
       let tempPokeInfo = this.pokeInfo
 
-      tempPokeInfo.sort(function (a,b) {
-        return a.index - b.index;
+      tempPokeInfo.sort(function (a, b) {
+        return a.index - b.index
       })
-          
+
       return tempPokeInfo
     }
   }
@@ -213,7 +211,6 @@ export default {
   align-items: center;
 }
 
-
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
   .filterBtns {
@@ -225,4 +222,3 @@ export default {
 }
 
 </style>
-

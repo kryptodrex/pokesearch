@@ -9,14 +9,14 @@
 </template>
 
 <script>
-import { RepositoryFactory } from '@/repositories/repositoryFactory';
+import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
-const util = RepositoryFactory.get('util');
+const util = RepositoryFactory.get('util')
 
 export default {
   name: 'App',
   mounted () {
-    util.setUserLocales();
+    util.setUserLocales()
     console.log(util.getUserLocales())
   }
 }

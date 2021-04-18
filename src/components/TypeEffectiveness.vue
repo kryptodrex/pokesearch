@@ -11,119 +11,116 @@
 </template>
 
 <script>
-import { RepositoryFactory } from '@/repositories/repositoryFactory';
+import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
 
-const pokeApi = RepositoryFactory.get("pokeApi");
+const pokeApi = RepositoryFactory.get('pokeApi')
 
 const damageMap = {
-    double_damage_from: 2,
-    half_damage_from: 0.5,
-    no_damage_from: 0
+  double_damage_from: 2,
+  half_damage_from: 0.5,
+  no_damage_from: 0
 }
 
 const DamageRepo = {
-    get: dmg => damageMap[dmg]
-};
+  get: dmg => damageMap[dmg]
+}
 
 export default {
-  name: "TypeEffectiveness",
+  name: 'TypeEffectiveness',
   components: {
-      Loader
+    Loader
   },
   props: {
-    typing: Array, // 'typing' is passed in as an Array to the component
+    typing: Array // 'typing' is passed in as an Array to the component
   },
-  data() {
+  data () {
     return {
-        isLoading: false,
-        types: [],
-        typingData: [],
-        doubleDmgList: [],
-        halfDmgList: [],
-        noDmgList: [],
-        damageRelations: [],
-    };
+      isLoading: false,
+      types: [],
+      typingData: [],
+      doubleDmgList: [],
+      halfDmgList: [],
+      noDmgList: [],
+      damageRelations: []
+    }
   },
-  created() {
-    this.fetch();
+  created () {
+    this.fetch()
   },
   methods: {
-    async fetch() {
-        this.isLoading = true;
+    async fetch () {
+      this.isLoading = true
 
-        var { data } = await pokeApi.getAllTypes();
-        this.types = data.results;
+      var { data } = await pokeApi.getAllTypes()
+      this.types = data.results
 
-        this.types = this.types.filter((item) => {
-          if (item.name != 'unknown' && item.name != 'shadow') return item
+      this.types = this.types.filter((item) => {
+        if (item.name != 'unknown' && item.name != 'shadow') return item
+      })
+
+      var { data } = await pokeApi.getType(this.typing[0].type.name)
+      this.typingData.push(data.damage_relations)
+
+      if (this.typing.length > 1) {
+        var { data } = await pokeApi.getType(this.typing[1].type.name)
+        this.typingData.push(data.damage_relations)
+      }
+
+      this.storeDamageRelations()
+
+      this.isLoading = false
+    },
+
+    getAbbrType (name) {
+      return name.substring(0, 3).toUpperCase()
+    },
+
+    storeDamageRelations () {
+      this.typingData.forEach(data => {
+        data.double_damage_from.forEach(type => {
+          this.damageRelations = this.damageRelations.concat({
+            name: type.name,
+            damage: DamageRepo.get('double_damage_from')
+          })
         })
-        
-        var { data } = await pokeApi.getType(this.typing[0].type.name);
-            this.typingData.push(data.damage_relations);
 
-        if (this.typing.length > 1) {
-            var { data } = await pokeApi.getType(this.typing[1].type.name);
-            this.typingData.push(data.damage_relations);
+        data.half_damage_from.forEach(type => {
+          this.damageRelations = this.damageRelations.concat({
+            name: type.name,
+            damage: DamageRepo.get('half_damage_from')
+          })
+        })
+
+        data.no_damage_from.forEach(type => {
+          this.damageRelations = this.damageRelations.concat({
+            name: type.name,
+            damage: DamageRepo.get('no_damage_from')
+          })
+        })
+      })
+    },
+
+    getDamageAmount (type) {
+      var damageAmt = 1
+
+      this.damageRelations.forEach(data => {
+        if (data.name == type) {
+          damageAmt *= data.damage
         }
+      })
 
-        this.storeDamageRelations();
-
-        this.isLoading = false;
-    },
-
-    getAbbrType(name) {
-        return name.substring(0,3).toUpperCase();
-    },
-
-    storeDamageRelations() {
-        this.typingData.forEach( data => {
-
-            data.double_damage_from.forEach( type => {
-                this.damageRelations = this.damageRelations.concat({
-                    name: type.name,
-                    damage: DamageRepo.get('double_damage_from')
-                })
-            })
-
-            data.half_damage_from.forEach( type => {
-                this.damageRelations = this.damageRelations.concat({
-                    name: type.name,
-                    damage: DamageRepo.get('half_damage_from')
-                })
-            })
-
-            data.no_damage_from.forEach( type => {
-                this.damageRelations = this.damageRelations.concat({
-                    name: type.name,
-                    damage: DamageRepo.get('no_damage_from')
-                })
-            })
-        })
-    },
-
-    getDamageAmount(type) {
-        
-        var damageAmt = 1;
-
-        this.damageRelations.forEach( data => {
-            if (data.name == type) {
-                damageAmt *= data.damage;
-            }
-        })
-
-        if (damageAmt == 0.5) {
-            return '½'
-        } else if (damageAmt == 0.25) {
-            return '¼'
-        } else {
-            return damageAmt.toString();
-        }
-
+      if (damageAmt == 0.5) {
+        return '½'
+      } else if (damageAmt == 0.25) {
+        return '¼'
+      } else {
+        return damageAmt.toString()
+      }
     }
 
-  },
-};
+  }
+}
 </script>
 
 <style scoped lang="css">
@@ -284,7 +281,5 @@ export default {
         margin-bottom: 1.25rem;
     }
 }
-
-
 
 </style>

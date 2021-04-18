@@ -35,59 +35,59 @@
 <script>
 
 import Loader from '@/components/Loader'
-import { RepositoryFactory } from '@/repositories/repositoryFactory';
+import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
-const pokeApi = RepositoryFactory.get('pokeApi');
-const util = RepositoryFactory.get('util');
+const pokeApi = RepositoryFactory.get('pokeApi')
+const util = RepositoryFactory.get('util')
 
 export default {
-    name: 'DexNavigation',
-    components: {
-        Loader
-    },
-    props: {
-        prevNum: null,
-        nextNum: null
-    },
-    data() {
-        return {
-            isLoading: false,
-            nextPokeData: null,
-            prevPokeData: null
-        }
-    },
-    created() {
-        this.fetch();
-    },
-    methods: {
-        async fetch() {
-            this.isLoading = true;
-
-            var { data } = await pokeApi.getPokemon(this.prevNum);
-            this.prevPokeData = {
-                name: util.toUpper(data.species.name),
-                dexNum: this.findIndex(this.prevNum),
-                spriteUrl: data.sprites.front_default
-            }
-
-            var { data } = await pokeApi.getPokemon(this.nextNum);
-            this.nextPokeData = {
-                name: util.toUpper(data.species.name),
-                dexNum: this.findIndex(this.nextNum),
-                spriteUrl: data.sprites.front_default
-            }
-
-            this.isLoading = false;
-        },
-
-        findIndex(value) {
-            return util.findIndex(value);
-        },
-
-        navigatingTo(value) {
-            this.$emit('navigate', value);
-        }
+  name: 'DexNavigation',
+  components: {
+    Loader
+  },
+  props: {
+    prevNum: null,
+    nextNum: null
+  },
+  data () {
+    return {
+      isLoading: false,
+      nextPokeData: null,
+      prevPokeData: null
     }
+  },
+  created () {
+    this.fetch()
+  },
+  methods: {
+    async fetch () {
+      this.isLoading = true
+
+      var { data } = await pokeApi.getPokemon(this.prevNum)
+      this.prevPokeData = {
+        name: util.toUpper(data.species.name),
+        dexNum: this.findIndex(this.prevNum),
+        spriteUrl: data.sprites.front_default
+      }
+
+      var { data } = await pokeApi.getPokemon(this.nextNum)
+      this.nextPokeData = {
+        name: util.toUpper(data.species.name),
+        dexNum: this.findIndex(this.nextNum),
+        spriteUrl: data.sprites.front_default
+      }
+
+      this.isLoading = false
+    },
+
+    findIndex (value) {
+      return util.findIndex(value)
+    },
+
+    navigatingTo (value) {
+      this.$emit('navigate', value)
+    }
+  }
 }
 </script>
 
@@ -166,7 +166,6 @@ export default {
     justify-content: center;
     height: 3rem;
 }
-
 
 /* Viewing on smaller phones, like iPhone SE */
 @media screen and (max-width: 22.25rem) {

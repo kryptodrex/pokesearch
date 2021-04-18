@@ -15,39 +15,39 @@
 </template>
 
 <script>
-import router from '@/router';
-import Button from '@/components/Button';
+import router from '@/router'
+import Button from '@/components/Button'
 import Search from '@/components/Search'
 
 export default {
   name: 'Header',
   components: {
-      Button,
-      Search
+    Button,
+    Search
   },
-  data() {
-      return {
-          isHomeRoute: false
-      }
+  data () {
+    return {
+      isHomeRoute: false
+    }
   },
   methods: {
-      setSearchedPokemon(e) {
-          console.log(e);
-      }
+    setSearchedPokemon (e) {
+      console.log(e)
+    }
   },
   computed: {
-        isHome() {
-            var route = router.currentRoute.name
-            // console.log(route)
-            if (route == 'home') return true
-            else return false
-      }
+    isHome () {
+      var route = router.currentRoute.name
+      // console.log(route)
+      if (route == 'home') return true
+      else return false
+    }
   },
   watch: {
-    $route: function (to, from){
-        if (to.name == 'home') this.isHomeRoute = true;
-            else this.isHomeRoute = false;
-        }
+    $route: function (to, from) {
+      if (to.name == 'home') this.isHomeRoute = true
+      else this.isHomeRoute = false
+    }
   }
 }
 </script>
@@ -98,7 +98,6 @@ header {
     margin-right: 0.5rem;
 }
 
-
 @media screen and (max-width: 22.25rem) {
     .header-text {
         width: 100%;
@@ -110,13 +109,12 @@ header {
         height: 2rem;
         margin: 0 0 0.2rem 0;
     }
-    
+
     .header-pokepage {
         display: flex;
         flex-direction: column;
     }
 }
-
 
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
