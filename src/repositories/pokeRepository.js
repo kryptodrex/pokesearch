@@ -66,6 +66,10 @@ export default {
 
   getType (type) {
     return Repository.get(`/type/${type}`)
+  },
+
+  getLocation (loc) {
+    return Repository.get(`/location/${loc}`)
   }
 
 }
