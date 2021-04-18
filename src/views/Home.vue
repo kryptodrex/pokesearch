@@ -4,9 +4,9 @@
     <div class="content">
 
       <div class="filterBtns">
-        <div class="genBtns" v-for="gen in generations" :key="gen.name" v-on:click="changeGeneration(gen.name)" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
-          <Button size="medium" color="red" v-if="gen.name != genToSearch" > {{ getGeneration(gen.name) }} </Button>
-          <Button size="medium" color="grey" v-if="gen.name == genToSearch" > {{ getGeneration(gen.name) }} </Button>
+        <div class="genBtns" v-for="gen in generations" :key="getIndex(gen.url)" v-on:click="changeGeneration(getIndex(gen.url))" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
+          <Button size="medium" color="red" v-if="getIndex(gen.url) != genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <Button size="medium" color="grey" v-if="getIndex(gen.url) == genToSearch" > {{ getGeneration(gen.name) }} </Button>
         </div>
       </div>
 
@@ -21,10 +21,8 @@
 
     </div>
 
-    <!-- <Loader v-if="isLoading" /> -->
-
-    <div class="loadMore" v-on:click="getNextGen('generation-ii')" :aria-label="'Click to load ' +  getGeneration(nextGen) + ' Pokémon'">
-      <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen != null && !searching"> Load {{ getGeneration(nextGen) }} </Button>
+    <div class="loadMore" v-on:click="getNextGen()" :aria-label="'Click to load ' +  getGeneration(nextGen.name) + ' Pokémon'" v-if="nextGen != null">
+      <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen != null && !searching"> Load {{ getGeneration(nextGen.name) }} </Button>
       <Loader v-if="isLoading" size="large" :full-page="true" />
     </div>
   </div>
@@ -57,17 +55,25 @@ export default {
       pokeInfo: [],
       generations: [],
       genToSearch: router.currentRoute.query.gen,
-      nextGen: 'generation-ii',
+      nextGen: {name: 'generation-ii'},
       limit: 30,
       offset: 0,
       disable: false,
-      locales: []
+      locales: [],
+      navigating: false
     }
   },
   created () {
     this.fetch()
     this.locales = util.getUserLocales()
   },
+  // updated () {
+  //   if (this.navigating) {
+  //     this.pokeInfo = []
+  //     this.fetch()
+  //     this.navigating = false
+  //   }
+  // },
   methods: {
     fetch () {
       this.getPokemon()
@@ -89,7 +95,7 @@ export default {
       var { data } = await pokeApi.getAllGenerations()
       this.generations = data.results
 
-      var latestGen = this.generations[this.generations.length - 1].name
+      var latestGen = this.getIndex(this.generations[this.generations.length - 1].url)
       // var latestGen = 'generation-i';
 
       if (this.genToSearch == null) this.genToSearch = latestGen
@@ -110,7 +116,7 @@ export default {
     },
 
     getNextGen () {
-      this.genToSearch = this.nextGen
+      this.genToSearch = this.getIndex(this.nextGen.url)
       this.getPokemon()
     },
 
@@ -128,10 +134,10 @@ export default {
 
     setNextGen () {
       for (var i = 0; i < this.generations.length; i++) {
-        if (this.generations[i].name == this.genToSearch) {
+        if (this.getIndex(this.generations[i].url) == this.genToSearch) {
           var nextgen = this.generations[i + 1]
           if (nextgen == null) return null
-          else return nextgen.name
+          else return nextgen
         }
       }
     },
@@ -177,6 +183,13 @@ export default {
       return tempPokeInfo
     }
   }
+
+  // watch: {
+  //   $route: function (from, to) {
+  //     this.genToSearch = to.query.gen
+  //     this.navigating = true
+  //   }
+  // }
 }
 </script>
 
