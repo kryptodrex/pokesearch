@@ -4,8 +4,9 @@
     <div class="content">
 
       <div class="filterBtns">
-        <div class="genBtns" v-for="gen in generations" :key="gen.name" v-on:click="changeGeneration(gen.name)">
-          <Button size="medium" color="red"> {{ getGeneration(gen.name) }} </Button>
+        <div class="genBtns" v-for="gen in generations" :key="gen.name" v-on:click="changeGeneration(gen.name)" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
+          <Button size="medium" color="red" v-if="gen.name != genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <Button size="medium" color="grey" v-if="gen.name == genToSearch" > {{ getGeneration(gen.name) }} </Button>
         </div>
       </div>
 
@@ -13,7 +14,7 @@
         <Search placeholder="Start typing a name..." v-on:searching="setSearchedPokemon($event)" :hasClear="true" />
         <p class="error" v-if="pokeInfo.length == 0 && !isLoading">No matching Pokémon found!</p>
       </div>
-      
+
       <div class="pokeBoxes">
         <PokeBox v-for="(poke, index) in sortedPokeInfo" :key="index" :dexNum="getIndex(poke.url)" :name="poke.name" />
       </div>
@@ -21,8 +22,8 @@
     </div>
 
     <!-- <Loader v-if="isLoading" /> -->
-    
-    <div class="loadMore" v-on:click="getNextGen('generation-ii')">
+
+    <div class="loadMore" v-on:click="getNextGen('generation-ii')" :aria-label="'Click to load ' +  getGeneration(nextGen) + ' Pokémon'">
       <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen != null && !searching"> Load {{ getGeneration(nextGen) }} </Button>
       <Loader v-if="isLoading" size="large" :full-page="true" />
     </div>
@@ -30,15 +31,16 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
+import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import PokeBox from '@/components/PokeBox'
-import Loader from '@/components/Loader';
-import Button from '@/components/Button';
-import Search from '@/components/Search';
+import Loader from '@/components/Loader'
+import Button from '@/components/Button'
+import Search from '@/components/Search'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
-const util = RepositoryFactory.get('util');
+const util = RepositoryFactory.get('util')
 
 export default {
   name: 'Home',
@@ -54,8 +56,8 @@ export default {
       searching: false,
       pokeInfo: [],
       generations: [],
-      genToSearch: null,
-      nextGen: null,
+      genToSearch: router.currentRoute.query.gen,
+      nextGen: 'generation-ii',
       limit: 30,
       offset: 0,
       disable: false,
@@ -64,33 +66,38 @@ export default {
   },
   created () {
     this.fetch()
-    this.locales = util.getUserLocales();
+    this.locales = util.getUserLocales()
   },
   methods: {
     fetch () {
       this.getPokemon()
     },
 
-    changeGeneration(gen) {
-      this.genToSearch = gen;
-      this.pokeInfo = [];
-      this.getPokemon();
+    changeGeneration (gen) {
+      this.genToSearch = gen
+      var currentRoute = this.$router.currentRoute
+      if (currentRoute.query.gen != gen) {
+        this.pokeInfo = []
+        this.$router.push({ name: 'homePokemon', query: { gen: gen } })
+        this.getPokemon()
+      }
     },
 
-    async getPokemon() {
+    async getPokemon () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getAllGenerations();
-      this.generations = data.results;
-      // var latestGen = this.generations[this.generations.length - 1].name;
-      var latestGen = 'generation-i';
+      var { data } = await pokeApi.getAllGenerations()
+      this.generations = data.results
 
-      if (this.genToSearch == null) this.genToSearch = latestGen;
+      var latestGen = this.generations[this.generations.length - 1].name
+      // var latestGen = 'generation-i';
 
-      this.nextGen = this.setNextGen();
+      if (this.genToSearch == null) this.genToSearch = latestGen
 
-      var { data } = await pokeApi.getGeneration(this.genToSearch);
-      
+      this.nextGen = this.setNextGen()
+
+      var { data } = await pokeApi.getGeneration(this.genToSearch)
+
       data.pokemon_species.forEach(species => {
         this.pokeInfo = this.pokeInfo.concat([{
           name: species.name,
@@ -102,26 +109,24 @@ export default {
       this.isLoading = false
     },
 
-    getNextGen() {
+    getNextGen () {
       this.genToSearch = this.nextGen
       this.getPokemon()
     },
 
-    setSearchedPokemon(e) {
-      this.searching = true;
+    setSearchedPokemon (e) {
+      this.searching = true
 
       if (e[0] == 'clear') {
-        this.searching = false;
-        this.pokeInfo = [];
-        this.fetch();
+        this.searching = false
+        this.pokeInfo = []
+        this.fetch()
       } else {
         this.pokeInfo = e
       }
-
-      
     },
 
-    setNextGen() {
+    setNextGen () {
       for (var i = 0; i < this.generations.length; i++) {
         if (this.generations[i].name == this.genToSearch) {
           var nextgen = this.generations[i + 1]
@@ -131,16 +136,15 @@ export default {
       }
     },
 
-    getIndex(url) {
-      var splitUrl = url.split("/");
-      return splitUrl[6];
+    getIndex (url) {
+      return util.getId(url)
     },
 
-    getGeneration(gen) {
-      var split = gen.split("-");
-      return 'Gen ' + split[1].toUpperCase();
-      // var { data } = await pokeApi.getGeneration(gen);
-      // this.generation = data.names[0].name;
+    getGeneration (gen) {
+      if (gen != null) {
+        var split = gen.split('-')
+        return 'Gen ' + split[1].toUpperCase()
+      } else return ''
     }
 
     // async getPokemon() {
@@ -163,13 +167,13 @@ export default {
   },
 
   computed: {
-    sortedPokeInfo() {
+    sortedPokeInfo () {
       let tempPokeInfo = this.pokeInfo
 
-      tempPokeInfo.sort(function (a,b) {
-        return a.index - b.index;
+      tempPokeInfo.sort(function (a, b) {
+        return a.index - b.index
       })
-          
+
       return tempPokeInfo
     }
   }
@@ -207,7 +211,6 @@ export default {
   align-items: center;
 }
 
-
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
   .filterBtns {
@@ -219,4 +222,3 @@ export default {
 }
 
 </style>
-

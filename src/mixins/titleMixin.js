@@ -1,24 +1,24 @@
 
 function getTitle (vm) {
-    const { title } = vm.$options
-    if (title) {
-        return typeof title === 'function'
-        ? title.call(vm)
-        : title
-    }
+  const { title } = vm.$options
+  if (title) {
+    return typeof title === 'function'
+      ? title.call(vm)
+      : title
+  }
 }
-  
+
 export default {
-    created () {
-        const title = getTitle(this)
-        if (title) {
-            document.title = title
-        }
-    },
-    // updated () {
-    //     const title = getTitle(this)
-    //     if (title) {
-    //         document.title = title
-    //     }
-    // }
+  created () {
+    const title = getTitle(this)
+    if (title) {
+      document.title = title
+    }
+  }
+  // updated () {
+  //     const title = getTitle(this)
+  //     if (title) {
+  //         document.title = title
+  //     }
+  // }
 }

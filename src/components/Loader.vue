@@ -1,4 +1,4 @@
-<template> 
+<template>
     <div class="loader" :class="getFormat()">
         <img v-if="type == 'logo' || type == null" class="foresight" :class="getSize()" src="@/assets/images/pokesearch-logo.svg" alt="Pokesearch default logo loader">
         <img v-if="type == 'ball'" class="spinning" :class="getSize()" src="@/assets/images/loading-ball.svg" alt="Spinning Pokeball loader">
@@ -14,18 +14,17 @@ export default {
     fullPage: Boolean
   },
   methods: {
-    getFormat() {
+    getFormat () {
       if (this.fullPage) return 'full_page'
       if (this.fullPage == null || !this.fullPage) return ''
     },
-    getSize() {
+    getSize () {
       if (this.size == null) return 'medium'
       else return this.size
     }
   }
 }
 </script>
-
 
 <style scoped lang="css">
   /* Loading styling */
@@ -188,7 +187,6 @@ export default {
   98.89% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.063, 0.063, 6, 1); }
   100.00% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 6, 1); }
 }
-
 
 @media screen and (min-width: 25.9375rem) {
   .large {

@@ -9,14 +9,14 @@
 </template>
 
 <script>
-import { RepositoryFactory } from '@/repositories/repositoryFactory';
+import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
-const util = RepositoryFactory.get('util');
+const util = RepositoryFactory.get('util')
 
 export default {
   name: 'App',
   mounted () {
-    util.setUserLocales();
+    util.setUserLocales()
     console.log(util.getUserLocales())
   }
 }
@@ -25,6 +25,7 @@ export default {
 <style lang="scss">
 * {
   box-sizing: border-box;
+  outline: none;
   // cursor: url('assets/images/logo.svg'), auto !important;
 }
 
@@ -79,10 +80,20 @@ body {
   margin: 0.5rem;
 }
 
+.button {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
 input {
     -webkit-appearance: none;
     -moz-appearance: none;
-    outline:none;
+    outline: none;
     font-family: 'QSReg', Arial, Helvetica, sans-serif;
     border: 1px solid transparent;
     border-radius: 4px;

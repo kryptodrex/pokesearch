@@ -1,5 +1,5 @@
-<template> 
-    <div class="button" :class="getFormatting()">
+<template>
+    <div tabindex="0" class="button" :class="getFormatting()">
       <slot></slot>
     </div>
 </template>
@@ -13,20 +13,19 @@ export default {
     color: String
   },
   methods: {
-    getFormatting() {
+    getFormatting () {
       if (this.size != null && this.color != null) {
-        return this.size + ' ' + this.color;
+        return this.size + ' ' + this.color
       } else if (this.size == null && this.color != null) {
-        return this.color;
+        return this.color
       } else if (this.size != null && this.color == null) {
-        return this.size;
+        return this.size
       }
     }
   }
 }
 
 </script>
-
 
 <style scoped lang="css">
 
@@ -48,7 +47,7 @@ export default {
   justify-content: center;
   font-weight: bold;
   font-size: 1.1rem;
-  border: 0.2rem solid;
+  border: 2px solid;
   border-radius: 0.625rem;
   /* margin: 0 1rem; */
   width: fit-content;
@@ -56,32 +55,44 @@ export default {
   transition: 0.2s;
 }
 
-.white { /* for poke_page only */
+.white {
     background-color: #f1f1f1;
     border-color: #f1f1f1;
     color: rgb(201, 38, 63);
 }
 
-.red { /* for poke_page only */
+.grey {
+    background-color: #f1f1f1;
+    border-color: rgb(201, 38, 63);
+    color: rgb(201, 38, 63);
+}
+
+.red {
     background-color: rgb(201, 38, 63);
     border-color: rgb(201, 38, 63);
     color: #f1f1f1;
 }
 
-.button:hover, .button:focus { /* for poke_page only */
-    border: 0.2rem solid;
+.button:hover, .button:focus {
+    border: 2px solid;
     transition: 0.2s;
 }
 
-.white:hover, .white:focus { /* for poke_page only */
+.white:hover, .white:focus {
     border-color: #f1f1f1;
     background-color: #4A4A4A;
     color: #f1f1f1;
 }
 
-.red:hover, .red:focus { /* for poke_page only */
-    border-color: #f1f1f1;
-    background-color: #4A4A4A;
+.red:hover, .red:focus {
+    background-color: #f1f1f1;
+    border-color: rgb(201, 38, 63);
+    color: rgb(201, 38, 63);
+}
+
+.grey:hover, .grey:focus {
+    background-color: rgb(201, 38, 63);
+    border-color: rgb(201, 38, 63);
     color: #f1f1f1;
 }
 
@@ -91,5 +102,5 @@ export default {
     /* margin: 0 1rem; */
   }
 }
-  
+
 </style>

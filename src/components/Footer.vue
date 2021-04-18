@@ -14,7 +14,7 @@ export default {
 <style scoped lang="css">
 footer {
     width: auto;
-    margin: 0.7rem;
+    /* margin: 0.7rem; */
     margin-top: 1rem;
     border-radius: 0.625rem;
     background-color: #4a4a4a;

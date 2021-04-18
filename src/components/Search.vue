@@ -1,7 +1,7 @@
-<template> 
+<template>
     <div class="search">
       <div class="searchbar">
-        
+
         <input class="search-input" type="text" :placeholder="placeholder" v-model="searchValue" v-on:input="waitForTypingToStop" v-if="!hasAutosuggest" >
         <!-- <vue-autosuggest class="search-input" v-if="hasAutosuggest"
             :suggestions="filteredSpeciesList"
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { VueAutosuggest } from 'vue-autosuggest';
+import { VueAutosuggest } from 'vue-autosuggest'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
 import Button from '@/components/Button'
@@ -45,7 +45,7 @@ export default {
     hasClear: Boolean,
     hasAutosuggest: Boolean
   },
-  data() {
+  data () {
     return {
       isLoading: false,
       searchValue: '',
@@ -54,11 +54,11 @@ export default {
     }
   },
   methods: {
-    async searchPokemon() {
-      this.isLoading = true;
+    async searchPokemon () {
+      this.isLoading = true
 
-      this.speciesList = [];
-      var { data } = await pokeApi.getAllPokemonSpecies();
+      this.speciesList = []
+      var { data } = await pokeApi.getAllPokemonSpecies()
       data.results.forEach(species => {
         this.speciesList.push({
           name: species.name,
@@ -67,38 +67,38 @@ export default {
         })
       })
 
-      this.isLoading = false;
+      this.isLoading = false
 
-      var that = this;
+      var that = this
       this.$emit('searching', that.filteredSpeciesList)
     },
 
-    waitForTypingToStop() {
+    waitForTypingToStop () {
       if (this.searchValue.length >= 3) {
-        clearTimeout(this.timeout);
+        clearTimeout(this.timeout)
 
-        var that = this;
+        var that = this
         this.timeout = setTimeout(function () {
-            that.searchPokemon();
-        }, 800);
+          that.searchPokemon()
+        }, 800)
       }
     },
 
-    clearSearch() {
-      this.searchValue = '';
-      var that = this;
+    clearSearch () {
+      this.searchValue = ''
+      var that = this
       this.$emit('searching', ['clear'])
     },
 
-    getIndex(url) {
-      var splitUrl = url.split("/");
-      return splitUrl[6];
-    },
+    getIndex (url) {
+      var splitUrl = url.split('/')
+      return splitUrl[6]
+    }
   },
   computed: {
-    filteredSpeciesList() {
+    filteredSpeciesList () {
       let tempList = this.speciesList
-      
+
       // Process search input
       if (this.searchValue != '' && this.searchValue) {
         tempList = tempList.filter((item) => {
@@ -108,17 +108,16 @@ export default {
         })
       }
 
-      tempList.sort(function (a,b) {
-        return a.index - b.index;
+      tempList.sort(function (a, b) {
+        return a.index - b.index
       })
-          
+
       return tempList
     }
   }
 }
 
 </script>
-
 
 <style scoped lang="css">
 
@@ -154,7 +153,6 @@ export default {
   margin: 1rem;
 }
 
-
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
   .search-input:hover {
@@ -162,5 +160,5 @@ export default {
     transition: 0.3s;
   }
 }
-  
+
 </style>
