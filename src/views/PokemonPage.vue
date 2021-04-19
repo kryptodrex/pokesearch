@@ -2,7 +2,7 @@
   <div class="pokepage" :key="pokemon">
     <Loader v-if="isLoading" :full-page="true" />
 
-    <DexNavigation v-if="!isLoading" :nextNum="nextNum" :prevNum="prevNum" v-on:navigate="navigateDex($event)" />
+    <DexNavigation v-if="!isLoading" :nextNum="nextNum" :prevNum="prevNum"/>
 
     <div class="pokemon-data" v-if="!isLoading">
       <div id="head" class="poke-head">
@@ -94,37 +94,12 @@
         <div class="poke-training-box">
           <div class="poke-evs-all">
             <h4>EV Yield</h4>
+
             <div class="poke-evs-3">
-              <div class="poke-evs poke-ev-hp">
-                <span>{{ getStats("hp", "effort", pokeInfo.stats) }}</span>
-                <span><strong>HP</strong></span>
-              </div>
-              <div class="poke-evs poke-ev-atk">
-                <span>{{ getStats("attack", "effort", pokeInfo.stats) }}</span>
-                <span><strong>Atk</strong></span>
-              </div>
-              <div class="poke-evs poke-ev-def">
-                <span>{{ getStats("defense", "effort", pokeInfo.stats) }}</span>
-                <span><strong>Def</strong></span>
-              </div>
-            </div>
-            <div class="poke-evs-3">
-              <div class="poke-evs poke-ev-spatk">
-                <span>{{
-                  getStats("special-attack", "effort", pokeInfo.stats)
-                }}</span>
-                <span><strong>Sp.Atk</strong></span>
-              </div>
-              <div class="poke-evs poke-ev-spdef">
-                <span>{{
-                  getStats("special-defense", "effort", pokeInfo.stats)
-                }}</span>
-                <span><strong>Sp.Def</strong></span>
-              </div>
-              <div class="poke-evs poke-ev-speed">
-                <span>{{ getStats("speed", "effort", pokeInfo.stats) }}</span>
-                <span><strong>Speed</strong></span>
-              </div>
+              <span class="poke-evs" v-for="(statInfo, index) in getStats_New(pokeInfo.stats)" :key="index" :class="'poke-ev-' + statInfo.stat_names.short.replace('.','').toLowerCase()">
+                <strong>{{ statInfo.stat_names.short }}</strong>
+                <span>{{ statInfo.effort }}</span>
+              </span>
             </div>
           </div>
 
@@ -166,6 +141,12 @@
         v-bind:class="'poke-info-' + speciesInfo.color.name"
       >
         <h3>Base Stats</h3>
+
+        <!-- <span v-for="(statInfo, index) in getStats_New(pokeInfo.stats)" :key="index" :class="'base-stat-' + statInfo.stat_names.short">
+          <strong>{{ statInfo.stat_names.long }}:</strong>
+          <span>{{ statInfo.base_stat }}</span>
+        </span> -->
+
         <table class="base-stats">
           <tbody>
             <tr class="base-stats-r1">
@@ -284,10 +265,10 @@
         </p>
       </div>
 
-      <!-- <div id="evolutions" class="evoChain" :class="'poke-info-' + speciesInfo.color.name">
+      <div id="evolutions" class="evoChain" :class="'poke-info-' + speciesInfo.color.name">
         <h3>Evolution Chain</h3>
         <EvolutionChain :chain="getId(speciesInfo.evolution_chain.url)" />
-      </div> -->
+      </div>
 
       <!-- Pokemon Dex Entries Info Box -->
       <!-- <div class="pokemon-generation-dex-entries" v-bind:class="'poke-info' + speciesInfo.color.name">
@@ -301,12 +282,25 @@
 import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
-import TypeEffectiveness from '@/components/TypeEffectiveness'
-import DexNavigation from '@/components/DexNavigation'
-import EvolutionChain from '@/components/EvolutionChain'
+import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
+import DexNavigation from '@/components/pokemon/DexNavigation'
+import EvolutionChain from '@/components/pokemon/EvolutionChain'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
+
+const statMap = {
+  hp: {short: 'HP', long: 'HP'},
+  attack: {short: 'Atk', long: 'Attack'},
+  defense: {short: 'Def', long: 'Defense'},
+  special_attack: {short: 'Sp.Atk', long: 'Special Attack'},
+  special_defense: {short: 'Sp.Def', long: 'Special Defense'},
+  speed: {short: 'Speed', long: 'Speed'}
+}
+
+const StatRepo = {
+  get: stat => statMap[stat.replace('-','_')]
+}
 
 export default {
 
@@ -514,6 +508,18 @@ export default {
       }
     },
 
+    getStats_New (stats) {
+      var statArr = [];
+      stats.forEach(stat => {
+        statArr.push({
+          base_stat: stat.base_stat,
+          effort: stat.effort,
+          stat_names: StatRepo.get(stat.stat.name)
+        })
+      })
+      return statArr
+    },
+
     getGenderRate (rate) {
       if (rate >= 0) {
         var f_rate = (rate / 8) * 100
@@ -599,10 +605,10 @@ export default {
       }, 2000)
     },
 
-    navigateDex (event) {
-      this.pokemon = event
-      this.navigating = true
-    },
+    // navigateDex (event) {
+    //   this.pokemon = event
+    //   this.navigating = true
+    // },
 
     checkNull (data) {
       if (data == null) return true
@@ -633,6 +639,13 @@ export default {
       }
 
       return entry
+    }
+  },
+  watch: {
+    $route: function (to, from) {
+      console.log(to.params.name);
+      this.pokemon = to.params.name
+      this.navigating = true
     }
   }
 
@@ -848,8 +861,9 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: center;
-
+  flex-wrap: wrap;
   margin: 0 1rem 1rem;
+  max-width: 15rem;
 }
 
 .poke-evs {
@@ -866,7 +880,7 @@ export default {
   border-radius: 0.625rem;
 
   padding: 0.2rem 0;
-  margin: 0 0.5rem;
+  margin: 0.5rem;
 
   text-align: center;
 }
