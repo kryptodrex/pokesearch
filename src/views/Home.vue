@@ -32,7 +32,7 @@
 
 import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import PokeBox from '@/components/PokeBox'
+import PokeBox from '@/components/pokemon/PokeBox'
 import Loader from '@/components/Loader'
 import Button from '@/components/Button'
 import Search from '@/components/Search'
