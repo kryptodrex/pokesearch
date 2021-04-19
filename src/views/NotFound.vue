@@ -1,7 +1,7 @@
 <template>
   <div class="gotLost">
     <h2>404 Not Found</h2>
-    <p class="">The Pokémon you were searching for couldn't be found...</p>
+    <p class="">Whatever you were searching for couldn't be found...</p>
     <router-link :to="'/'">
         <Button color="red" size="large"> Head back home? </Button>
     </router-link>
