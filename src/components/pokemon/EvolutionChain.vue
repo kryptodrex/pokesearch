@@ -2,7 +2,7 @@
   <div>
     <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
     <div v-if="!isLoading" class="evolutionChain">
-      <div v-if="evoDetails.length > 1">
+      <div class="evoLevels" v-if="evoDetails.length > 1">
         <div class="evoLevel0">
         <PokeBox v-for="(evo, index) in getEvoLevelDetails(0)" :key="index" :dexNum="getId(evo.species.url)" :name="evo.species.name" />
         </div>
@@ -13,9 +13,7 @@
           <PokeBox v-for="(evo, index) in getEvoLevelDetails(2)" :key="index" :dexNum="getId(evo.species.url)" :name="evo.species.name" />
         </div>
       </div>
-      <div class="no-evolutions" v-if="evoDetails.length <= 1">
-        <h4>This Pokémon does not evolve!</h4>
-      </div>
+      <h4 v-if="evoDetails.length <= 1">This Pokémon does not evolve!</h4>
     </div>
   </div>
 </template>
@@ -106,6 +104,12 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.evoLevels {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
 }
 
 .loaderBall {
