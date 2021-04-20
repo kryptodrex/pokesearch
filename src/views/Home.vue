@@ -4,8 +4,10 @@
     <div class="content">
 
       <div class="filterBtns">
-        <div class="genBtns" v-for="gen in generations" :key="getIndex(gen.url)" v-on:click="changeGeneration(getIndex(gen.url))" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
+        <div class="genBtns" v-for="(gen, index) in generations" :key="index" v-on:click="changeGeneration(getIndex(gen.url))" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
+          <!-- Buttons for other unselected generations -->
           <Button size="medium" color="red" v-if="getIndex(gen.url) != genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <!-- Button for selected generation -->
           <Button size="medium" color="grey" v-if="getIndex(gen.url) == genToSearch" > {{ getGeneration(gen.name) }} </Button>
         </div>
       </div>
@@ -201,7 +203,10 @@ export default {
 }
 
 .filterBtns {
-  display: none;
+  display: flex;
+  flex-direction: row;
+  overflow: scroll;
+  margin-bottom: 1rem;
 }
 .genBtns {
   margin: 0 1rem;
@@ -227,10 +232,8 @@ export default {
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
   .filterBtns {
-    display: flex;
-    flex-direction: row;
+    overflow: visible;
     justify-content: center;
-    margin-bottom: 1rem;
   }
 }
 
