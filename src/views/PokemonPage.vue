@@ -134,139 +134,53 @@
         </div>
       </div>
 
-      <!-- Pokemon Stats Info Box -->
-      <div
-        id="stats"
-        class="pokemon-stats"
-        v-bind:class="'poke-info-' + speciesInfo.color.name"
-      >
-        <h3>Base Stats</h3>
+      <div class="statsAndBreeding">
+        <!-- Pokemon Stats Info Box -->
+        <div
+          id="stats"
+          class="pokemon-stats"
+          v-bind:class="'poke-info-' + speciesInfo.color.name"
+        >
+          <h3>Base Stats</h3>
 
-        <!-- <span v-for="(statInfo, index) in getStats_New(pokeInfo.stats)" :key="index" :class="'base-stat-' + statInfo.stat_names.short">
-          <strong>{{ statInfo.stat_names.long }}:</strong>
-          <span>{{ statInfo.base_stat }}</span>
-        </span> -->
+          <table class="base-stats">
+            <tbody>
+              <tr v-for="(statInfo, index) in getStats_New(pokeInfo.stats)" :key="index">
+                <td class="base-stats-c1" :class="'base-stat-' + statInfo.stat_names.short.replace('.','').toLowerCase()">
+                  <strong>{{ statInfo.stat_names.short }}:</strong>
+                </td>
+                <td class="base-stats-c2">{{ statInfo.base_stat }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-        <table class="base-stats">
-          <tbody>
-            <tr class="base-stats-r1">
-              <td class="base-stats-c1 base-stat-hp"><strong>HP:</strong></td>
-              <td class="base-stats-c2">
-                {{ getStats("hp", "base_stat", pokeInfo.stats) }}
-              </td>
-              <td class="base-stats-c3 base-stat-spatk">
-                <strong>Sp. Atk:</strong>
-              </td>
-              <td class="base-stats-c4">
-                {{ getStats("special-attack", "base_stat", pokeInfo.stats) }}
-              </td>
-            </tr>
-            <tr class="base-stats-r2">
-              <td class="base-stats-c1 base-stat-atk">
-                <strong>Attack:</strong>
-              </td>
-              <td class="base-stats-c2">
-                {{ getStats("attack", "base_stat", pokeInfo.stats) }}
-              </td>
-              <td class="base-stats-c3 base-stat-spdef">
-                <strong>Sp. Def:</strong>
-              </td>
-              <td class="base-stats-c4">
-                {{ getStats("special-defense", "base_stat", pokeInfo.stats) }}
-              </td>
-            </tr>
-            <tr class="base-stats-r3">
-              <td class="base-stats-c1 base-stat-def">
-                <strong>Defense:</strong>
-              </td>
-              <td class="base-stats-c2">
-                {{ getStats("defense", "base_stat", pokeInfo.stats) }}
-              </td>
-              <td class="base-stats-c3 base-stat-speed">
-                <strong>Speed:</strong>
-              </td>
-              <td class="base-stats-c4">
-                {{ getStats("speed", "base_stat", pokeInfo.stats) }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <table class="base-stats-mobile">
-          <tbody>
-            <tr>
-              <td class="base-stats-m-c1 base-stat-hp"><strong>HP:</strong></td>
-              <td class="base-stats-m-c2">
-                {{ getStats("hp", "base_stat", pokeInfo.stats) }}
-              </td>
-            </tr>
-            <tr>
-              <td class="base-stats-m-c1 base-stat-atk">
-                <strong>Attack:</strong>
-              </td>
-              <td class="base-stats-m-c2">
-                {{ getStats("attack", "base_stat", pokeInfo.stats) }}
-              </td>
-            </tr>
-            <tr>
-              <td class="base-stats-m-c1 base-stat-def">
-                <strong>Defense:</strong>
-              </td>
-              <td class="base-stats-m-c2">
-                {{ getStats("defense", "base_stat", pokeInfo.stats) }}
-              </td>
-            </tr>
-            <tr>
-              <td class="base-stats-m-c1 base-stat-spatk">
-                <strong>Sp. Atk:</strong>
-              </td>
-              <td class="base-stats-m-c2">
-                {{ getStats("special-attack", "base_stat", pokeInfo.stats) }}
-              </td>
-            </tr>
-            <tr>
-              <td class="base-stats-m-c1 base-stat-spdef">
-                <strong>Sp. Def:</strong>
-              </td>
-              <td class="base-stats-m-c2">
-                {{ getStats("special-defense", "base_stat", pokeInfo.stats) }}
-              </td>
-            </tr>
-            <tr>
-              <td class="base-stats-m-c1 base-stat-speed">
-                <strong>Speed:</strong>
-              </td>
-              <td class="base-stats-m-c2">
-                {{ getStats("speed", "base_stat", pokeInfo.stats) }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- Pokemon Breeding Info Box -->
+        <div
+          id="breeding"
+          class="pokemon-breeding"
+          v-bind:class="'poke-info-' + speciesInfo.color.name"
+        >
+          <h3>Breeding Info</h3>
+          <p>
+            <strong>Gender Rate:</strong>
+            {{ getGenderRate(speciesInfo.gender_rate) }}
+          </p>
+          <p>
+            <strong>Egg-Group(s):</strong>
+            {{ getEggGroups(speciesInfo.egg_groups) }}
+          </p>
+          <p>
+            <strong>Hatching:</strong>
+            {{ calcHatching(speciesInfo.hatch_counter) }}
+          </p>
+        </div>
       </div>
 
-      <!-- Pokemon Breeding Info Box -->
-      <div
-        id="breeding"
-        class="pokemon-breeding"
-        v-bind:class="'poke-info-' + speciesInfo.color.name"
-      >
-        <h3>Breeding Info</h3>
-        <p>
-          <strong>Gender Rate:</strong>
-          {{ getGenderRate(speciesInfo.gender_rate) }}
-        </p>
-        <p>
-          <strong>Egg-Group(s):</strong>
-          {{ getEggGroups(speciesInfo.egg_groups) }}
-        </p>
-        <p>
-          <strong>Hatching:</strong>
-          {{ calcHatching(speciesInfo.hatch_counter) }}
-        </p>
-      </div>
-
+      <!-- Evolution Chain data -->
       <div id="evolutions" class="evoChain" :class="'poke-info-' + speciesInfo.color.name">
-        <h3>Evolution Chain</h3>
+        <!-- <h3>Evolution Chain</h3> -->
+        <h3>Evolutions</h3>
         <EvolutionChain :chain="getId(speciesInfo.evolution_chain.url)" />
       </div>
 
@@ -920,34 +834,29 @@ export default {
   padding-left: 1rem;
 }
 
+
+/* Base Stats & Breeding Box styling */
+
+.statsAndBreeding {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Base Stats info */
 .pokemon-stats > h3 {
   margin-bottom: 0;
 }
 
 .base-stats {
-  display: none;
-  margin-bottom: 1rem;
-  border-spacing: 1rem;
+  display: flex;
+  flex-direction: column;
+  margin: 0.5rem 0 1rem;
+  border-spacing: 0 0.5rem;
 }
-.base-stats-c1,
-.base-stats-c3 {
+.base-stats-c1 {
   text-align: right;
 }
-.base-stats-c2,
-.base-stats-c4 {
-  /* padding-left: 1rem; */
-}
-
-.base-stats-mobile {
-  margin-bottom: 1rem;
-  border-collapse: separate;
-  border-spacing: 0 1rem;
-}
-.base-stats-m-c1 {
-  text-align: right;
-}
-.base-stats-m-c2 {
+.base-stats-c2 {
   padding-left: 1rem;
 }
 
@@ -985,6 +894,20 @@ export default {
 
   .pokemon-image {
     height: 16rem;
+  }
+
+  .statsAndBreeding {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .pokemon-stats {
+    width: 28%;
+  }
+  .base-stats {
+    text-align: center;
+  }
+  .pokemon-breeding {
+    width: 68%;
   }
 
   .poke-ab-black:hover { color: #323232;}
