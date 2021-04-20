@@ -3,7 +3,7 @@
         <!-- <div class="placeholder" v-if="isLoading" /> -->
         <div class="back-div">
             <router-link aria-label="Navigate back in dex" :to="'/pokemon/' + prevNum">
-                <img class="arrow" id="back-arrow" src="@/assets/images/back.svg" alt="" v-on:click="navigatingTo(prevNum)">
+                <img class="arrow" id="back-arrow" src="@/assets/images/back.svg" alt="Back arrow">
             </router-link>
             <div class="placeholder prev" v-if="isLoading">
                 <Loader type="ball" size="small" />
@@ -26,7 +26,7 @@
                 <Loader type="ball" size="small" />
             </div>
             <router-link aria-label="Navigate forward in dex" :to="'/pokemon/' + nextNum">
-                <img class="arrow" id="forward-arrow" src="@/assets/images/forward.svg" alt="" v-on:click="navigatingTo(nextNum)">
+                <img class="arrow" id="forward-arrow" src="@/assets/images/forward.svg" alt="Forward arrow">
             </router-link>
         </div>
     </div>
@@ -82,10 +82,6 @@ export default {
 
     findIndex (value) {
       return util.findIndex(value)
-    },
-
-    navigatingTo (value) {
-      this.$emit('navigate', value)
     }
   }
 }

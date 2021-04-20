@@ -12,6 +12,7 @@
           <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(name)" @load="setLoaded">
 
           <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
+          <!-- <Loader class="pokePic loaderBall" type="ball" size="medium" v-if="getData != null && isLoading" /> -->
 
         </router-link>
     </div>
@@ -31,7 +32,8 @@ export default {
   },
   props: {
     name: String,
-    dexNum: String
+    dexNum: String,
+    // getData: Object
   },
   data () {
     return {
@@ -48,9 +50,18 @@ export default {
   methods: {
 
     async fetch () {
-      // this.isLoading = true;
+      
 
       this.findIndex()
+
+      // if (getData != null) {
+
+      //   this.isLoading = true;
+
+
+
+      //   this.isLoading = false;
+      // }
 
       // var { data } = await pokeApi.getPokemonSpecies(this.dexNum);
       // this.speciesData = {
@@ -58,7 +69,7 @@ export default {
       //   color: data.color
       // }
 
-      // this.isLoading = false;
+      
     },
 
     toUpper (name) {
