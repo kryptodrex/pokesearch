@@ -35,6 +35,13 @@
         </div>
       </div>
 
+      <!-- <div class="alternateForms">
+        <strong>Alternate Forms: </strong>
+        <span class="form" v-for="(form, index) in pokeInfo.forms" :key="index" >
+          {{ form.name }}
+        </span>
+      </div> -->
+
       <div
         id="basic-info"
         class="pokemon-basic-info"
@@ -231,6 +238,7 @@ export default {
   data () {
     return {
       pokemon: router.currentRoute.params.name,
+      form: router.currentRoute.query.form,
       isLoading: true,
       speciesInfo: null,
       pokeInfo: null,

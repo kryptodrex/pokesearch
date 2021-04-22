@@ -7,6 +7,10 @@ export default {
     return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num}.png`
   },
 
+  getPokemonAltFormImageUrl (num, formNum) {
+    return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num}_f${formNum}.png`
+  },
+
   getId (url) {
     var splitUrl = url.split('/')
     return splitUrl[6]
