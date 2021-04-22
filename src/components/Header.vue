@@ -5,6 +5,8 @@
             <img class="logo" src="../assets/images/pokesearch-icon.svg" alt="PokeSearch Logo">
         </router-link>
         <h1 class="site-name">PokéSearch</h1>
+        <h4 class="site-name">&nbsp; beta</h4> 
+        <!-- Take out 'beta' once it is v1.0! -->
     </div>
 
     <!-- <div class="header-search" v-if="!isHomeRoute && !isHome">
@@ -83,9 +85,12 @@ header {
     margin-right: 1rem;
 }
 
+h1 {
+  font-size: 1.7rem;
+}
 .site-name {
     margin: 0;
-    display: none;
+    /* display: none; */
     font-family: 'QSMed', Arial, Helvetica, sans-serif;
 }
 
@@ -119,13 +124,12 @@ header {
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
   header {
-      /* margin: 0.7rem;
-      margin-bottom: 0; */
+    /* margin: 0.7rem;
+    margin-bottom: 0; */
   }
 
-  .site-name {
-        margin: 0;
-        display: block;
-    }
+  h1 {
+    font-size: 2rem;
+  }
 }
 </style>
