@@ -116,6 +116,8 @@ export default {
 
 <style scoped lang="css">
 
+@import '../../styling/colors.css';
+
 .pokeBox {
     border: 2px solid #4A4A4A;
     border-radius: 0.625rem;
