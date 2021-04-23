@@ -3,7 +3,7 @@
     <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
     <div v-if="!isLoading" class="typeEffectiveness">
         <div class="dmg-box" v-for="(type, index) in types" :key="index">
-            <span :class="'dmg-type-' + type.name "> {{ getAbbrType(type.name) }} </span>
+            <span :class="'type-' + type.name "> {{ getAbbrType(type.name) }} </span>
             <span :class="'dmg-num dmg-' + getDamageAmount(type.name)"> {{ getDamageAmount(type.name) }} </span>
         </div>
     </div>
@@ -125,6 +125,8 @@ export default {
 
 <style scoped lang="css">
 
+@import '../../styling/types.css';
+
 .typeEffectiveness {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
@@ -148,7 +150,7 @@ export default {
   padding: 0 0.25rem;
 }
 
-[class*="dmg-type-"] {
+[class*="type-"] {
   min-width: 2.7rem;
   border-radius: 0.625rem 0.625rem 0 0;
   padding: 0.2rem 0;
@@ -158,79 +160,6 @@ export default {
 .dmg-num {
   border-radius: 0 0 0.625rem 0.625rem;
   padding: 0.2rem 0;
-}
-
-.dmg-type-normal {
-  border: 2px solid #a8a878;
-  color: #6d6d4e;
-}
-.dmg-type-fire {
-  border: 2px solid #f08030;
-  color: #9c531f;
-}
-.dmg-type-fighting {
-  border: 2px solid #c03028;
-  color: #7d1f1a;
-}
-.dmg-type-water {
-  border: 2px solid #6890f0;
-  color: #445e9c;
-}
-.dmg-type-flying {
-  border: 2px solid #a890f0;
-  color: #6d5e9c;
-}
-.dmg-type-grass {
-  border: 2px solid #78c850;
-  color: #4e8234;
-}
-.dmg-type-poison {
-  border: 2px solid #a040a0;
-  color: #682a68;
-}
-.dmg-type-electric {
-  border: 2px solid #f8d030;
-  color: #a1871f;
-}
-.dmg-type-ground {
-  border: 2px solid #e0c068;
-  color: #927d44;
-}
-.dmg-type-psychic {
-  border: 2px solid #f85888;
-  color: #a13959;
-}
-.dmg-type-rock {
-  border: 2px solid #b8a038;
-  color: #786824;
-}
-.dmg-type-ice {
-  border: 2px solid #98d8d8;
-  color: #638d8d;
-}
-.dmg-type-bug {
-  border: 2px solid #a8b820;
-  color: #6d7815;
-}
-.dmg-type-dragon {
-  border: 2px solid #7038f8;
-  color: #4924a1;
-}
-.dmg-type-ghost {
-  border: 2px solid #705898;
-  color: #493963;
-}
-.dmg-type-dark {
-  border: 2px solid #705848;
-  color: #49392f;
-}
-.dmg-type-steel {
-  border: 2px solid #b8b8d0;
-  color: #787887;
-}
-.dmg-type-fairy {
-  border: 2px solid #ee99ac;
-  color: #9b6470;
 }
 
 .dmg-0 {
