@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import PokePage from './views/PokemonPage.vue'
+import Pokemon from './views/Pokemon.vue'
 import NotFound from '@/views/NotFound.vue'
 
 Vue.use(Router)
@@ -18,7 +18,7 @@ export default new Router({
     {
       path: '/pokemon/:name',
       name: 'pokePageDirect',
-      component: PokePage
+      component: Pokemon
     },
     {
       path: '/lost-in-the-tall-grass',

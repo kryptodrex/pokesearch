@@ -3,10 +3,10 @@ import './plugins/axios'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import titleMixin from './mixins/titleMixin'
+// import titleMixin from './mixins/titleMixin'
 
 Vue.config.productionTip = false
-Vue.mixin(titleMixin)
+// Vue.mixin(titleMixin)
 
 new Vue({
   router,

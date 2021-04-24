@@ -15,10 +15,4 @@ export default {
       document.title = title
     }
   }
-  // updated () {
-  //     const title = getTitle(this)
-  //     if (title) {
-  //         document.title = title
-  //     }
-  // }
 }

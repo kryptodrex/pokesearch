@@ -1,5 +1,5 @@
 <template>
-  <header class="header-pokepage">
+  <header>
     <div class="header-text">
         <router-link to="/">
             <img class="logo" src="../assets/images/pokesearch-icon.svg" alt="PokeSearch Logo">
@@ -59,20 +59,17 @@ export default {
 header {
     width: auto;
     padding: 1rem;
-    /* margin: 0.2rem; */
-    margin-bottom: 1rem;
+    margin: 0.5rem 0 1rem;
+    /* margin-bottom: 1rem; */
     background-color: rgb(201, 38, 63);
     border-radius: 0.625rem;
     color: white;
 
     display: flex;
     flex-direction: row;
-}
-
-.header-pokepage {
-    display: flex;
     align-items: center;
 }
+
 .header-text {
     flex-grow: 3;
 

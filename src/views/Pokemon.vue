@@ -1,5 +1,5 @@
 <template>
-  <div class="pokepage" :key="pokemon">
+  <div class="pokemonPage" :key="pokemon">
     <Loader v-if="isLoading" :full-page="true" />
 
     <DexNavigation v-if="!isLoading" :nextNum="nextNum" :prevNum="prevNum"/>
@@ -18,7 +18,7 @@
         <!-- Grab the type(s) of the Pokémon -->
         <div class="pokemon-types">
           <div
-            :class="'typing-' + typeInfo.type.name"
+            :class="'type-' + typeInfo.type.name"
             v-for="typeInfo in pokeInfo.types"
             v-bind:key="typeInfo.slot"
           >
@@ -35,8 +35,11 @@
         </div>
       </div>
 
-      <!-- <div class="alternateForms">
+      <!-- <div class="alternateForms" v-if="pokeInfo.forms.length > 1 || speciesInfo.varieties.length > 1">
         <strong>Alternate Forms: </strong>
+        <p>
+          {{ getAlternateForms(speciesInfo.varieties, pokeInfo.forms) }}
+        </p>
         <span class="form" v-for="(form, index) in pokeInfo.forms" :key="index" >
           {{ form.name }}
         </span>
@@ -45,7 +48,7 @@
       <div
         id="basic-info"
         class="pokemon-basic-info"
-        v-bind:class="'poke-info-' + speciesInfo.color.name"
+        v-bind:class="'info-box border-' + speciesInfo.color.name"
       >
         <h3>Pokédex Data</h3>
 
@@ -71,7 +74,7 @@
 
         <p>
           <strong>Color:</strong>
-          <span :class="'poke-color-' + speciesInfo.color.name">
+          <span :class="'color-' + speciesInfo.color.name">
             {{ toUpper(speciesInfo.color.name) }}
           </span>
         </p>
@@ -89,21 +92,21 @@
         </p>
       </div>
 
-      <div id="type-defenses" class="typeDefenses" :class="'poke-info-' + speciesInfo.color.name">
+      <div id="type-defenses" class="typeDefenses" :class="'info-box border-' + speciesInfo.color.name">
         <h3>Type Defenses</h3>
         <p>Effectiveness of each move typing on {{ toUpper(speciesInfo.name) }}</p>
         <TypeEffectiveness :typing="pokeInfo.types" />
       </div>
 
       <!-- Pokemon Training Info Box -->
-      <div id="training" class="pokemon-training" :class="'poke-info-' + speciesInfo.color.name">
+      <div id="training" class="pokemon-training" :class="'info-box border-' + speciesInfo.color.name">
         <h3>Training</h3>
         <div class="poke-training-box">
           <div class="poke-evs-all">
             <h4>EV Yield</h4>
 
             <div class="poke-evs-3">
-              <span class="poke-evs" v-for="(statInfo, index) in getStats_New(pokeInfo.stats)" :key="index" :class="'poke-ev-' + statInfo.stat_names.short.replace('.','').toLowerCase()">
+              <span class="poke-evs" v-for="(statInfo, index) in getStats(pokeInfo.stats)" :key="index" :class="'poke-ev-' + statInfo.stat_names.short.replace('.','').toLowerCase()">
                 <strong>{{ statInfo.stat_names.short }}</strong>
                 <span>{{ statInfo.effort }}</span>
               </span>
@@ -146,13 +149,13 @@
         <div
           id="stats"
           class="pokemon-stats"
-          v-bind:class="'poke-info-' + speciesInfo.color.name"
+          v-bind:class="'info-box border-' + speciesInfo.color.name"
         >
           <h3>Base Stats</h3>
 
           <table class="base-stats">
             <tbody>
-              <tr v-for="(statInfo, index) in getStats_New(pokeInfo.stats)" :key="index">
+              <tr v-for="(statInfo, index) in getStats(pokeInfo.stats)" :key="index">
                 <td class="base-stats-c1" :class="'base-stat-' + statInfo.stat_names.short.replace('.','').toLowerCase()">
                   <strong>{{ statInfo.stat_names.short }}:</strong>
                 </td>
@@ -166,7 +169,7 @@
         <div
           id="breeding"
           class="pokemon-breeding"
-          v-bind:class="'poke-info-' + speciesInfo.color.name"
+          v-bind:class="'info-box border-' + speciesInfo.color.name"
         >
           <h3>Breeding Info</h3>
           <p>
@@ -185,7 +188,7 @@
       </div>
 
       <!-- Evolution Chain data -->
-      <div id="evolutions" class="evoChain" :class="'poke-info-' + speciesInfo.color.name">
+      <div id="evolutions" class="evoChain" :class="'info-box border-' + speciesInfo.color.name">
         <!-- <h3>Evolution Chain</h3> -->
         <h3>Evolutions</h3>
         <EvolutionChain :chain="getId(speciesInfo.evolution_chain.url)" />
@@ -225,10 +228,7 @@ const StatRepo = {
 
 export default {
 
-  name: 'PokePage',
-  // title () {
-  //   return `${value} - PokéSearch`
-  // },
+  name: 'Pokemon',
   components: {
     Loader,
     TypeEffectiveness,
@@ -247,7 +247,8 @@ export default {
       nextNum: null,
       prevNum: null,
       navigating: false,
-      locales: []
+      locales: [],
+      title: ' - Pokémon'
     }
   },
   mounted () {
@@ -288,6 +289,7 @@ export default {
       }
 
       this.pokeName = this.getEntryForLocale(this.speciesInfo.names).name
+      document.title = this.pokeName + this.title // set site title to pokemon name
 
       this.isLoading = false
     },
@@ -308,11 +310,6 @@ export default {
       return util.findIndex(value)
     },
 
-    getName (data) {
-      this.pokeName = this.getEntryForLocale(data).name
-      return this.pokeName
-    },
-
     getTyping (types) {
       if (types.length > 1) {
         return util.toUpper(types[0].type.name) + ' & ' + util.toUpper(types[1].type.name)
@@ -328,6 +325,15 @@ export default {
 
     getFlavorText (data) {
       return this.getEntryForLocale(data).flavor_text
+    },
+
+    getAlternateForms(varieties, forms) {
+
+      var varieties = varieties.filter(variety => {
+        if (item.name != 'unknown' && item.name != 'shadow') return item
+      })
+
+      return varieties.concat(forms)
     },
 
     storeAbilityData (data) {
@@ -412,25 +418,7 @@ export default {
       return japaneseName
     },
 
-    getStats (name, type, stats) {
-      for (var i = 0; i < stats.length; i++) {
-        switch (type) {
-          case 'base_stat':
-            if (stats[i].stat.name == name) {
-              return stats[i].base_stat
-            }
-            break
-
-          case 'effort':
-            if (stats[i].stat.name == name) {
-              return stats[i].effort
-            }
-            break
-        }
-      }
-    },
-
-    getStats_New (stats) {
+    getStats (stats) {
       var statArr = [];
       stats.forEach(stat => {
         statArr.push({
@@ -565,7 +553,6 @@ export default {
   },
   watch: {
     $route: function (to, from) {
-      console.log(to.params.name);
       this.pokemon = to.params.name
       this.navigating = true
     }
@@ -574,7 +561,10 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
+
+@import '../styling/types.css';
+@import '../styling/colors.css';
 
 .poke-head {
   max-width: 46.875rem;
@@ -593,8 +583,7 @@ export default {
   justify-content: center;
 }
 
-[class*="typing-"] {
-  border: 2px solid #68a090;
+[class*="type-"] {
   border-radius: 0.625rem;
 
   padding: 0.2rem 1rem;
@@ -603,82 +592,6 @@ export default {
   text-align: center;
 
   /* cursor: pointer; */
-}
-/* [class*="typing-"]:hover {
-        box-shadow: 0 3px 3px 0 rgba(0,0,0,0.20);
-        transition: 0.3s;
-    } */
-.typing-normal {
-  border: 2px solid #a8a878;
-  color: #6d6d4e;
-}
-.typing-fire {
-  border: 2px solid #f08030;
-  color: #9c531f;
-}
-.typing-fighting {
-  border: 2px solid #c03028;
-  color: #7d1f1a;
-}
-.typing-water {
-  border: 2px solid #6890f0;
-  color: #445e9c;
-}
-.typing-flying {
-  border: 2px solid #a890f0;
-  color: #6d5e9c;
-}
-.typing-grass {
-  border: 2px solid #78c850;
-  color: #4e8234;
-}
-.typing-poison {
-  border: 2px solid #a040a0;
-  color: #682a68;
-}
-.typing-electric {
-  border: 2px solid #f8d030;
-  color: #a1871f;
-}
-.typing-ground {
-  border: 2px solid #e0c068;
-  color: #927d44;
-}
-.typing-psychic {
-  border: 2px solid #f85888;
-  color: #a13959;
-}
-.typing-rock {
-  border: 2px solid #b8a038;
-  color: #786824;
-}
-.typing-ice {
-  border: 2px solid #98d8d8;
-  color: #638d8d;
-}
-.typing-bug {
-  border: 2px solid #a8b820;
-  color: #6d7815;
-}
-.typing-dragon {
-  border: 2px solid #7038f8;
-  color: #4924a1;
-}
-.typing-ghost {
-  border: 2px solid #705898;
-  color: #493963;
-}
-.typing-dark {
-  border: 2px solid #705848;
-  color: #49392f;
-}
-.typing-steel {
-  border: 2px solid #b8b8d0;
-  color: #787887;
-}
-.typing-fairy {
-  border: 2px solid #ee99ac;
-  color: #9b6470;
 }
 
 /* Info styling */
@@ -689,74 +602,13 @@ export default {
   margin: 0 1rem;
 }
 
-[class*="poke-info-"] {
-  border: 2px solid #4a4a4a;
+.info-box {
   border-radius: 0.625rem;
   padding: 0 1rem;
   margin: 1rem 0;
   text-align: left;
 }
-.poke-info-black {
-  border: 2px solid #323232;
-}
-.poke-info-blue {
-  border: 2px solid #3482de;
-}
-.poke-info-brown {
-  border: 2px solid #af891f;
-}
-.poke-info-gray {
-  border: 2px solid #707070;
-}
-.poke-info-green {
-  border: 2px solid #64a743;
-}
-.poke-info-pink {
-  border: 2px solid #e97698;
-}
-.poke-info-purple {
-  border: 2px solid #7c63b8;
-}
-.poke-info-red {
-  border: 2px solid #ef4036;
-}
-.poke-info-white {
-  border: 2px solid #e3e3e3;
-}
-.poke-info-yellow {
-  border: 2px solid #f8d030;
-}
 
-.poke-color-black {
-  color: #323232;
-}
-.poke-color-blue {
-  color: #3482de;
-}
-.poke-color-brown {
-  color: #af891f;
-}
-.poke-color-gray {
-  color: #707070;
-}
-.poke-color-green {
-  color: #64a743;
-}
-.poke-color-pink {
-  color: #e97698;
-}
-.poke-color-purple {
-  color: #7c63b8;
-}
-.poke-color-red {
-  color: #ef4036;
-}
-.poke-color-white {
-  color: #aaaaaa;
-}
-.poke-color-yellow {
-  color: #f8d030;
-}
 
 /* Pokedex Data */
 .poke-abilities {

@@ -6,6 +6,7 @@ var totalPokemon = {
 
 var allSpecies = []
 var allGens = []
+var allTypes = []
 
 export default {
 
@@ -24,6 +25,10 @@ export default {
 
   getPokemon (pokemon) {
     return Repository.get(`/pokemon/${pokemon}`)
+  },
+
+  getPokemonForm (pokemon) {
+    return Repository.get(`/pokemon-form/${pokemon}`)
   },
 
   getAllPokemonSpecies () {
@@ -61,7 +66,12 @@ export default {
   },
 
   getAllTypes () {
-    return Repository.get(`/type?limit=100`)
+    if (allTypes.length == 0) {
+      allTypes = Repository.get(`/type?limit=100`)
+      return allTypes
+    } else {
+      return allTypes
+    }
   },
 
   getType (type) {

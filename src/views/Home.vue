@@ -62,20 +62,15 @@ export default {
       offset: 0,
       disable: false,
       locales: [],
-      navigating: false
+      navigating: false,
+      title: 'PokéSearch'
     }
   },
-  created () {
+  mounted () {
+    document.title = this.title
     this.fetch()
     this.locales = util.getUserLocales()
   },
-  // updated () {
-  //   if (this.navigating) {
-  //     this.pokeInfo = []
-  //     this.fetch()
-  //     this.navigating = false
-  //   }
-  // },
   methods: {
     fetch () {
       this.getPokemon()

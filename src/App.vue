@@ -29,6 +29,10 @@ export default {
   // cursor: url('assets/images/logo.svg'), auto !important;
 }
 
+html {
+  height: 100%;
+}
+
 /* Font Declaration */
 @font-face {
     font-family: 'QSBold';
@@ -67,6 +71,9 @@ export default {
   color: #2c3e50;
   font-size: 1.1rem;
   line-height: 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 main {
@@ -74,10 +81,14 @@ main {
   flex-direction: column;
   text-align: center;
   margin: 0 auto;
+  width: 100%;
+  flex-grow: 1;
 }
 
 body {
-  margin: 0.5rem;
+  margin: 0;
+  padding: 0 0.5rem;
+  height: 100%;
 }
 
 .button {
