@@ -27,6 +27,10 @@ export default {
     return Repository.get(`/pokemon/${pokemon}`)
   },
 
+  getPokemonForm (pokemon) {
+    return Repository.get(`/pokemon-form/${pokemon}`)
+  },
+
   getAllPokemonSpecies () {
     if (allSpecies.length == 0) {
       allSpecies = Repository.get(`/pokemon-species?limit=99999`)
