@@ -2,9 +2,8 @@
   <div class="footerSection">
     <footer>
       <p>
-        All images are owned by Pokémon. TM, ® Nintendo. Data from <a class="regLink" href="https://pokeapi.co" target="_blank">PokéAPI</a>.
+        All images are owned by Pokémon™, ® Nintendo. Data from <a class="regLink" href="https://pokeapi.co" target="_blank">PokéAPI</a>.
       </p>
-      <!-- <p>Powered by <a href="https://pokeapi.co">PokéAPI</a></p> -->
     </footer>
   </div>
 </template>
