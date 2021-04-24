@@ -1,20 +1,32 @@
 <template>
-    <div class="pokeBox" :id="dexNum">
-    <!-- <div class="pokeBox" :class="speciesData.color" :id="dexNum"> -->
-        <router-link :to="'/pokemon/' + dexNum">
+    <!-- <div class="pokeBox" :id="dexNum" :class="'border-' + color.main"> -->
+    <div class="pokeBox border-" :id="dexNum">  
+      <router-link :to="'/pokemon/' + dexNum">
 
-          <div class="pokeInfo" >
-            <span>{{ toUpper(name) }}</span>
-            <!-- <span>{{ speciesData.name }}</span> -->
-            <span>#{{ findIndex() }}</span>
+        <div class="pokeInfo" >
+          <span>{{ toUpper(name) }}</span>
+          <span>#{{ findIndex() }}</span>
+        </div>
+
+        <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(name)" @load="setLoaded">
+        <!-- <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(name)" @load="setLoaded" @mouseover="getPokeData()" @mouseleave="swapData()"> -->
+
+        <!-- <transition name="fade">
+          <div class="pokemon-types" v-if="types">
+            <div
+              v-for="typeInfo in types.main"
+              :class="'type-' + typeInfo.type.name"
+              :key="typeInfo.slot"
+            >
+              {{ toUpper(typeInfo.type.name) }}
+            </div>
           </div>
+        </transition> -->
 
-          <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(name)" @load="setLoaded">
+        <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
+        <!-- <Loader class="pokePic loaderBall" type="ball" size="medium" v-if="getData != null && isLoading" /> -->
 
-          <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
-          <!-- <Loader class="pokePic loaderBall" type="ball" size="medium" v-if="getData != null && isLoading" /> -->
-
-        </router-link>
+      </router-link>
     </div>
 </template>
 
@@ -32,8 +44,7 @@ export default {
   },
   props: {
     name: String,
-    dexNum: String,
-    // getData: Object
+    dexNum: String
   },
   data () {
     return {
@@ -41,35 +52,58 @@ export default {
       imgUrl: '',
       imgLoadClass: 'loading',
       loaderClass: '',
-      isLoading: false
+      types: null,
+      color: { main: '' },
+      gotData: false
     }
   },
   created () {
-    this.fetch()
+    this.findIndex()
   },
   methods: {
 
-    async fetch () {
-      
+    async getPokeData () {
 
-      this.findIndex()
+      if (!this.gotData) {
+        var { data } = await pokeApi.getPokemonSpecies(this.dexNum)
+        this.color = {
+          main: data.color.name,
+          backup: ''
+        }
 
-      // if (getData != null) {
+        var { data } = await pokeApi.getPokemon(this.dexNum)
+        this.types = {
+          main: data.types,
+          backup: []
+        }
 
-      //   this.isLoading = true;
+        this.gotData = true
+      } else {
+        this.swapData();
+      }
+     
+    },
 
+    swapData() {
+      if (this.color.main == '') {
+        this.color.main = this.color.backup
+        this.color.backup = ''
+      } else {
+        this.color.backup = this.color.main
+        this.color.main = ''
+      }
 
+      if (this.types.main.length == 0) {
+        this.types.main = this.types.backup
+        this.types.backup = []
+      } else {
+        this.types.backup = this.types.main
+        this.types.main = []
+      }
+    },
 
-      //   this.isLoading = false;
-      // }
-
-      // var { data } = await pokeApi.getPokemonSpecies(this.dexNum);
-      // this.speciesData = {
-      //   name: this.getEntryForLocale(data.names).name,
-      //   color: data.color
-      // }
-
-      
+    getAbbrType (name) {
+      return name.substring(0, 3).toUpperCase()
     },
 
     toUpper (name) {
@@ -117,9 +151,10 @@ export default {
 <style scoped lang="css">
 
 @import '../../styling/colors.css';
+@import '../../styling/types.css';
 
 .pokeBox {
-    border: 2px solid #4A4A4A;
+    /* border: 2px solid #4A4A4A; */
     border-radius: 0.625rem;
     text-align: center;
     cursor: pointer;
@@ -145,6 +180,31 @@ export default {
   /* margin-top: 1rem; */
   height: 8rem;
 }
+
+/* Type styling */
+.pokemon-types {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+[class*="type-"] {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  min-width: 2.7rem;
+  border-radius: 0.625rem;
+  margin: 0 0.2rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
 
 .loading, .loaded {
   display: none;
