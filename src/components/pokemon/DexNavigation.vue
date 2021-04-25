@@ -82,6 +82,10 @@ export default {
 
     findIndex (value) {
       return util.findIndex(value)
+    },
+
+    splitName (value) {
+        return util.splitName(value, '-')
     }
   }
 }
