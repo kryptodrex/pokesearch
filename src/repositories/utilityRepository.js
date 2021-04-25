@@ -30,6 +30,29 @@ export default {
     return value[0].toUpperCase() + value.slice(1)
   },
 
+  splitName (value, delimiter, to_upper) {
+    var nameArr = value.split(delimiter)
+    var newName = ''
+
+    if (nameArr.length > 1) {
+      for (var i = 0; i < nameArr.length; i++) {
+
+        var name
+        if (to_upper) name = this.toUpper(nameArr[i])
+        else name = nameArr[i]
+
+        if (i < nameArr.length) {
+          newName += name + ' '
+        } else {
+          newName += name
+        }
+
+      }
+    }
+
+    return newName
+  },
+
   // setUserLocales() {
   //     userLocales = this.getBrowserLocales({languageCodeOnly: true});
   // },
