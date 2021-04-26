@@ -3,7 +3,7 @@
     <h2>404 Not Found</h2>
     <p class="">Whatever you were searching for couldn't be found...</p>
     <router-link :to="'/'">
-        <Button color="red" size="large"> Head back home? </Button>
+        <Button color="ps-red" size="large"> Head back home? </Button>
     </router-link>
   </div>
 </template>
