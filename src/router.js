@@ -21,6 +21,11 @@ export default new Router({
       component: Pokemon
     },
     {
+      path: '/pokemon/:name/forms',
+      name: 'pokePageDirect',
+      component: Pokemon
+    },
+    {
       path: '/pokemon/:name/forms/:form',
       name: 'pokePageAltForm',
       component: Pokemon
