@@ -119,8 +119,8 @@
     background-color: #e3e3e3;
     color: #323232;
 }
-.bg-white:hover { color: #aaaaaa; }
-.bgInv-white { border-color: #e3e3e3; color: #aaaaaa; }
+.bg-white:hover { color: #323232; }
+.bgInv-white { border-color: #e3e3e3; color: #323232; }
 .bg-yellow {
     border-color: #f8d030;
     background-color: #f8d030;
