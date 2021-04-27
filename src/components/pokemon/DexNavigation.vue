@@ -66,22 +66,22 @@ export default {
       var { data } = await pokeApi.getPokemon(this.prevNum)
       this.prevPokeData = {
         name: util.toUpper(data.species.name),
-        dexNum: this.findIndex(this.prevNum),
+        dexNum: this.formatIndex(this.prevNum),
         spriteUrl: data.sprites.front_default
       }
 
       var { data } = await pokeApi.getPokemon(this.nextNum)
       this.nextPokeData = {
         name: util.toUpper(data.species.name),
-        dexNum: this.findIndex(this.nextNum),
+        dexNum: this.formatIndex(this.nextNum),
         spriteUrl: data.sprites.front_default
       }
 
       this.isLoading = false
     },
 
-    findIndex (value) {
-      return util.findIndex(value)
+    formatIndex (value) {
+      return util.formatIndex(value)
     },
 
     splitName (value) {

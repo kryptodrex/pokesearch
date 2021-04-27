@@ -16,7 +16,7 @@ export default {
     return splitUrl[6]
   },
 
-  findIndex (value) {
+  formatIndex (value) {
     if (value < 10) {
       return '00' + value
     } else if (value < 100) {
