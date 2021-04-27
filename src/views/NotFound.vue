@@ -22,8 +22,8 @@ export default {
   },
   methods: {
     getAlternatives () {
-      var prevRoute = router
-      console.log(prevRoute)
+      var routes = this.$router
+      console.log(routes)
     }
   }
 
