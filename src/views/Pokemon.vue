@@ -8,7 +8,7 @@
       <div id="head" class="poke-head">
         <h1 class="pokedex-num">#{{ formatIndex(speciesInfo.id) }}</h1>
 
-        <img :src="photoUrl" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" />
+        <img :src="photoUrl" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" @error="imgUrlAlt" />
 
         <!-- Grab the base name of the Pokémon -->
         <h1 class="pokemon-name" id="pokemon-name">
@@ -276,6 +276,7 @@ export default {
   },
   updated () {
     if (this.navigating) {
+      this.formInfo = null
       this.fetch()
       this.navigating = false
     }
@@ -589,6 +590,24 @@ export default {
       else return false
     },
 
+    imgUrlAlt (event) {
+      if (this.form) {
+        switch (this.formType) {
+          case 'form':
+            if (this.formInfo.sprites.front_default != null) event.target.src = this.formInfo.sprites.front_default
+            else event.target.src = util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+            break
+
+          case 'variety':
+            event.target.src = this.pokeInfo.sprites.front_default
+            break
+        }
+      } else {
+        event.target.src = util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+      }
+      
+    },
+
     splitName (value) {
       return util.splitName(value, '-')
     },
@@ -625,24 +644,14 @@ export default {
         if (this.form == this.speciesInfo.id) {
           return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
         } else {
-
-          var formToFind = this.form
-          var formId = this.alternateForms.findIndex(form => {
-            return formToFind == form.id
-          })
-          
-          if (formId >= 0) {
-            return util.getPokemonAltFormImageUrl(util.formatIndex(this.speciesInfo.id), formId + 1)
-          } 
-
-          // switch (this.formType) {
-          //   case 'form':
-          //     if (this.formInfo.sprites.front_default != null) return this.formInfo.sprites.front_default
-          //     else return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
-
-          //   case 'variety':
-          //     return this.pokeInfo.sprites.front_default
-          // }
+            var formToFind = this.form
+            var formId = this.alternateForms.findIndex(form => {
+              return formToFind == form.id
+            })
+            
+            if (formId >= 0) {
+              return util.getPokemonAltFormImageUrl(util.formatIndex(this.speciesInfo.id), formId + 1)
+            }
         }
       } else return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
     },
@@ -650,8 +659,11 @@ export default {
       var varieties_f = []
       var forms_f = []
 
+      var varietyAmt = this.speciesInfo.varieties.length
+      var formAmt = this.pokeInfo.forms.length
+
       this.speciesInfo.varieties.forEach(variety => {
-        if (variety.pokemon.name.toUpperCase() == this.pokeName.toUpperCase() && !variety.pokemon.name.includes('gmax')) {
+        if (variety.pokemon.name.toUpperCase() == this.pokeName.toUpperCase() && varietyAmt > 1 && formAmt == 1) {
           varieties_f.push({
             name: variety.pokemon.name,
             name_formatted: 'Base',
@@ -659,7 +671,7 @@ export default {
             type: 'variety',
             is_default: variety.is_default
           })
-        } else if (variety.pokemon.name.toUpperCase() != this.pokeName.toUpperCase() && !variety.pokemon.name.includes('gmax')) {
+        } else if (variety.pokemon.name.toUpperCase() != this.pokeName.toUpperCase()) {
           varieties_f.push({
             name: variety.pokemon.name,
             name_formatted: this.splitName(variety.pokemon.name).replace(this.pokeName.toLowerCase() + ' ', ''),
@@ -670,7 +682,7 @@ export default {
         }
       })
 
-      if (varieties_f.length > 1) {
+      if (varietyAmt > 1) {
         this.pokeInfo.forms.forEach(form => {
           var variety_names = []
           varieties_f.forEach(variety => {
@@ -764,7 +776,7 @@ export default {
 .alternateForms{
   display: flex;
   flex-direction: column;
-  align-items: center;
+  // align-items: center;
 }
 .alternateForms > strong {
   margin-right: 0.5rem;
@@ -792,6 +804,11 @@ export default {
   padding: 0 1rem;
   margin: 1rem 0;
   text-align: left;
+  transition: 0.3s;
+}
+.info-box:hover {
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
+  transition: 0.3s;
 }
 
 
@@ -927,6 +944,7 @@ export default {
 @media screen and (min-width: 25.9375rem) {
   .alternateForms {
     flex-direction: row;
+    align-items: center;
   }
   .formBtns {
     overflow: visible;
