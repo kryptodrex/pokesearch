@@ -166,7 +166,7 @@ export default {
 }
 
 .pokeBox:hover, .pokeBox:focus {
-  box-shadow: 0px 3px 2px #757575;
+  box-shadow: 0 5px 5px 0 rgba(0,0,0,0.20);;
   transition: 0.2s;
 }
 
