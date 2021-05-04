@@ -669,6 +669,8 @@ export default {
       if (this.speciesInfo.id == 774 || this.speciesInfo.id == 718 || this.speciesInfo.id == 555 || 
           this.speciesInfo.id == 646 || this.speciesInfo.id == 849 || this.speciesInfo.id == 658 || this.speciesInfo.id == 83) { // special logic for specific Pokemon
         return varieties_f = pokeApi.getSpecialCaseForms(this.speciesInfo.id)
+      } else if (this.speciesInfo.id == 710 || this.speciesInfo.id == 711) {
+        return []
       } else {
         this.speciesInfo.varieties.forEach(variety => {
           if (variety.pokemon.name.toUpperCase() == this.pokeName.toUpperCase() && varietyAmt > 1 && formAmt == 1) {
