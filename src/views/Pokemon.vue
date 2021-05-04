@@ -643,6 +643,9 @@ export default {
       if (this.form) {
         if (this.form == this.speciesInfo.id) {
           return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+        // } else if (this.form == '10174' || this.form == '10118' || this.form == '10119' || this.form == '10120') {
+        //     // Logic for forms of specific pokemon, which don't work well for images
+        //     return util.getLocalAltFormImage(this.form)
         } else {
             var formToFind = this.form
             var formId = this.alternateForms.findIndex(form => {
@@ -662,48 +665,52 @@ export default {
       var varietyAmt = this.speciesInfo.varieties.length
       var formAmt = this.pokeInfo.forms.length
 
-      this.speciesInfo.varieties.forEach(variety => {
-        if (variety.pokemon.name.toUpperCase() == this.pokeName.toUpperCase() && varietyAmt > 1 && formAmt == 1) {
-          varieties_f.push({
-            name: variety.pokemon.name,
-            name_formatted: 'Base',
-            id: this.getId(variety.pokemon.url),
-            type: 'variety',
-            is_default: variety.is_default
-          })
-        } else if (variety.pokemon.name.toUpperCase() != this.pokeName.toUpperCase()) {
-          varieties_f.push({
-            name: variety.pokemon.name,
-            name_formatted: this.splitName(variety.pokemon.name).replace(this.pokeName.toLowerCase() + ' ', ''),
-            id: this.getId(variety.pokemon.url),
-            type: 'variety',
-            is_default: variety.is_default
-          })
-        }
-      })
 
-      if (varietyAmt > 1) {
-        this.pokeInfo.forms.forEach(form => {
-          var variety_names = []
-          varieties_f.forEach(variety => {
-            variety_names.push(variety.name)
-        })
-
-        if (!variety_names.includes(form.name) && (form.name.toUpperCase() != this.pokeName.toUpperCase())) {
-            forms_f.push({
-              name: form.name,
-              name_formatted: this.splitName(form.name).replace(this.pokeName.toLowerCase() + ' ', ''),
-              id: this.getId(form.url),
-              type: 'form',
-              is_default: null
+      if (this.speciesInfo.id == 774 || this.speciesInfo.id == 718 || this.speciesInfo.id == 555 || 
+          this.speciesInfo.id == 646 || this.speciesInfo.id == 849 || this.speciesInfo.id == 658 || this.speciesInfo.id == 83) { // special logic for specific Pokemon
+        return varieties_f = pokeApi.getSpecialCaseForms(this.speciesInfo.id)
+      } else {
+        this.speciesInfo.varieties.forEach(variety => {
+          if (variety.pokemon.name.toUpperCase() == this.pokeName.toUpperCase() && varietyAmt > 1 && formAmt == 1) {
+            varieties_f.push({
+              name: variety.pokemon.name,
+              name_formatted: 'Base',
+              id: this.getId(variety.pokemon.url),
+              type: 'variety',
+              is_default: variety.is_default
+            })
+          } else if (variety.pokemon.name.toUpperCase() != this.pokeName.toUpperCase()) {
+            varieties_f.push({
+              name: variety.pokemon.name,
+              name_formatted: this.splitName(variety.pokemon.name).replace(this.pokeName.toLowerCase() + ' ', ''),
+              id: this.getId(variety.pokemon.url),
+              type: 'variety',
+              is_default: variety.is_default
             })
           }
         })
+
+        if (varietyAmt > 1) {
+          this.pokeInfo.forms.forEach(form => {
+            var variety_names = []
+            varieties_f.forEach(variety => {
+              variety_names.push(variety.name)
+          })
+
+          if (!variety_names.includes(form.name) && (form.name.toUpperCase() != this.pokeName.toUpperCase())) {
+              forms_f.push({
+                name: form.name,
+                name_formatted: this.splitName(form.name).replace(this.pokeName.toLowerCase() + ' ', ''),
+                id: this.getId(form.url),
+                type: 'form',
+                is_default: null
+              })
+            }
+          })
+        }
+
+        return varieties_f.concat(forms_f)
       }
-
-      var altForms = varieties_f.concat(forms_f)
-
-      return altForms
     },
     hasDefaultForm() {
       var hasDefault = false
