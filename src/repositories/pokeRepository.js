@@ -31,6 +31,167 @@ export default {
     return Repository.get(`/pokemon-form/${pokemon}`)
   },
 
+  getSpecialCaseForms(id) {
+    var formsList = []
+
+    switch (id) {
+      
+      case 774: // case for Minior's forms
+        formsList.push({
+          name: 'minior',
+          name_formatted: 'Meteor',
+          id: 774,
+          type: 'variety',
+          is_default: true
+        }) 
+        formsList.push({
+          name: 'minior-core',
+          name_formatted: 'Core',
+          id: 10130,
+          type: 'variety',
+          is_default: false
+        })
+        return formsList
+
+      case 718: // case for Zygarde's forms
+        formsList.push({
+          name: 'zygarde',
+          name_formatted: '50%',
+          id: 718,
+          type: 'variety',
+          is_default: true
+        })
+        formsList.push({
+          name: 'zygarde-10',
+          name_formatted: '10%',
+          id: 10118,
+          type: 'variety',
+          is_default: false
+        })
+        formsList.push({
+          name: 'zygarde-complete',
+          name_formatted: 'Complete',
+          id: 10120,
+          type: 'variety',
+          is_default: false
+        })
+        return formsList
+
+      case 555: // case for Darmanitan's forms
+        formsList.push({
+          name: 'darmanitan',
+          name_formatted: 'Base',
+          id: 555,
+          type: 'variety',
+          is_default: true
+        })
+        formsList.push({
+          name: 'darmanitan-galar',
+          name_formatted: 'Galar',
+          id: 10174,
+          type: 'variety',
+          is_default: false
+        })
+        formsList.push({
+          name: 'darmanitan-zen',
+          name_formatted: 'Zen',
+          id: 10017,
+          type: 'variety',
+          is_default: false
+        })
+        formsList.push({
+          name: 'darmanitan-zen-galar',
+          name_formatted: 'Zen Galar',
+          id: 10175,
+          type: 'variety',
+          is_default: false
+        })
+        return formsList
+
+      case 646: // case for Kyurem's forms
+        formsList.push({
+          name: 'kyurem',
+          name_formatted: 'Base',
+          id: 646,
+          type: 'variety',
+          is_default: true
+        })
+        formsList.push({
+          name: 'kyurem-white',
+          name_formatted: 'White Kyurem',
+          id: 10023,
+          type: 'variety',
+          is_default: false
+        })
+        formsList.push({
+          name: 'kyurem-black',
+          name_formatted: 'Black Kyurem',
+          id: 10022,
+          type: 'variety',
+          is_default: false
+        })
+        return formsList
+
+      case 849: // case for Toxtricity's forms
+        formsList.push({
+          name: 'toxtricity-low-key',
+          name_formatted: 'Low Key',
+          id: 849,
+          type: 'variety',
+          is_default: true
+        })
+        formsList.push({
+          name: 'toxtricity-amped',
+          name_formatted: 'Amped',
+          id: 10178,
+          type: 'variety',
+          is_default: false
+        })
+        formsList.push({
+          name: 'toxtricity-gmax',
+          name_formatted: 'Gmax',
+          id: 10210,
+          type: 'variety',
+          is_default: false
+        })
+        return formsList
+
+      case 658: // case for Greninja's forms
+        formsList.push({
+          name: 'greninja',
+          name_formatted: 'Base',
+          id: 658,
+          type: 'variety',
+          is_default: true
+        })
+        formsList.push({
+          name: 'greninja-ash',
+          name_formatted: 'Ash Greninja',
+          id: 10117,
+          type: 'variety',
+          is_default: false
+        })
+        return formsList
+
+      case 83: // case for Farfetch'd's forms
+        formsList.push({
+          name: 'farfetchd',
+          name_formatted: 'Base',
+          id: 83,
+          type: 'variety',
+          is_default: true
+        })
+        formsList.push({
+          name: 'farfetchd-galar',
+          name_formatted: 'Galar',
+          id: 10163,
+          type: 'variety',
+          is_default: false
+        })
+        return formsList
+    }
+  },
+
   getAllPokemonSpecies () {
     if (allSpecies.length == 0) {
       allSpecies = Repository.get(`/pokemon-species?limit=99999`)
