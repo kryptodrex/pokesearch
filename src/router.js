@@ -22,7 +22,7 @@ export default new Router({
     },
     {
       path: '/pokemon/:name/forms',
-      name: 'pokePageDirect',
+      name: 'pokePageForms',
       component: Pokemon
     },
     {
