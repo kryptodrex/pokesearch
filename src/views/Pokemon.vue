@@ -6,9 +6,9 @@
 
     <div class="pokemon-data" v-if="!isLoading">
       <div id="head" class="poke-head">
-        <h1 class="pokedex-num">#{{ findIndex(speciesInfo.id) }}</h1>
+        <h1 class="pokedex-num">#{{ formatIndex(speciesInfo.id) }}</h1>
 
-        <img :src="getPhotoUrl()" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" />
+        <img :src="photoUrl" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" @error="imgUrlAlt" />
 
         <!-- Grab the base name of the Pokémon -->
         <h1 class="pokemon-name" id="pokemon-name">
@@ -19,7 +19,7 @@
         <div class="pokemon-types">
           <div
             :class="'type-' + typeInfo.type.name"
-            v-for="typeInfo in pokeInfo.types"
+            v-for="typeInfo in types"
             v-bind:key="typeInfo.slot"
           >
             {{ toUpper(typeInfo.type.name) }}
@@ -28,22 +28,36 @@
 
         <div class="pokemon-desc">
           <p>
-            A {{ getTyping(pokeInfo.types) }} type Pokémon introduced in
+            A {{ getTyping(types) }} type Pokémon introduced in
             {{ getGeneration(speciesInfo.generation.name) }}.
             {{ getFlavorText(speciesInfo.flavor_text_entries) }}
           </p>
         </div>
       </div>
 
-      <!-- <div class="alternateForms" v-if="pokeInfo.forms.length > 1 || speciesInfo.varieties.length > 1">
-        <strong>Alternate Forms: </strong>
-        <p>
+      <div class="alternateForms" v-if="alternateForms.length > 1 && speciesInfo.id != 25">
+        <strong>Forms: </strong>
+        <!-- <p>
           {{ getAlternateForms(speciesInfo.varieties, pokeInfo.forms) }}
-        </p>
-        <span class="form" v-for="(form, index) in pokeInfo.forms" :key="index" >
-          {{ form.name }}
-        </span>
-      </div> -->
+        </p> -->
+        <div class="formBtns">
+          <div 
+            class="formBtn" 
+            v-for="(formData, index) in alternateForms"
+            :key="index" 
+            v-on:click="changeForm(formData.id, formData.type)" 
+            :aria-label="'Click to show form ' + toUpper(formData.name_formatted)"
+          >
+            <!-- Buttons for other unselected forms -->
+            <Button size="medium" :color="speciesInfo.color.name" v-if="formData.id != form && formData.id" > {{ toUpperEachWord(formData.name_formatted) }} </Button>
+            <!-- Button for selected forms -->
+            <Button size="medium" :color="speciesInfo.color.name" :inverted="true" v-if="formData.id == form" > {{ toUpperEachWord(formData.name_formatted) }} </Button>
+          </div>
+          <!-- <router-link v-if="!hasDefaultForm && form" :to="'/pokemon/' + pokemon" class="formBtn">
+            <Button size="medium" :color="speciesInfo.color.name"> Default </Button>
+          </router-link> -->
+        </div>
+      </div>
 
       <div
         id="basic-info"
@@ -70,7 +84,7 @@
           </p>
         </details>
 
-        <p><strong>Species:</strong> {{ getSpecies(speciesInfo.genera) }}</p>
+        <p><strong>Genus:</strong> {{ getGenus(speciesInfo.genera) }}</p>
 
         <p>
           <strong>Color:</strong>
@@ -95,7 +109,7 @@
       <div id="type-defenses" class="typeDefenses" :class="'info-box border-' + speciesInfo.color.name">
         <h3>Type Defenses</h3>
         <p>Effectiveness of each move typing on {{ toUpper(speciesInfo.name) }}</p>
-        <TypeEffectiveness :typing="pokeInfo.types" />
+        <TypeEffectiveness :typing="types" />
       </div>
 
       <!-- Pokemon Training Info Box -->
@@ -209,6 +223,7 @@ import Loader from '@/components/Loader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import DexNavigation from '@/components/pokemon/DexNavigation'
 import EvolutionChain from '@/components/pokemon/EvolutionChain'
+import Button from '@/components/Button'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
@@ -231,6 +246,7 @@ export default {
   name: 'Pokemon',
   components: {
     Loader,
+    Button,
     TypeEffectiveness,
     DexNavigation,
     EvolutionChain
@@ -238,10 +254,13 @@ export default {
   data () {
     return {
       pokemon: router.currentRoute.params.name,
-      form: router.currentRoute.query.form,
+      form: router.currentRoute.params.form,
+      formType: router.currentRoute.query.formType,
       isLoading: true,
       speciesInfo: null,
       pokeInfo: null,
+      formInfo: null,
+      // types: null,
       pokeName: null,
       abilityList: [],
       nextNum: null,
@@ -257,6 +276,7 @@ export default {
   },
   updated () {
     if (this.navigating) {
+      this.formInfo = null
       this.fetch()
       this.navigating = false
     }
@@ -267,9 +287,41 @@ export default {
 
       var { data } = await pokeApi.getPokemonSpecies(this.pokemon)
       this.speciesInfo = data
+      this.pokeName = this.getEntryForLocale(this.speciesInfo.names).name
 
       var { data } = await pokeApi.getPokemon(this.pokemon)
       this.pokeInfo = data
+
+      if (this.form) {
+        var formInd = this.alternateForms.findIndex(form => {
+          return form.id == this.form
+        })
+
+        if (formInd >= 0) {
+          switch (this.formType) {
+            case 'form':
+              var { data } = await pokeApi.getPokemonForm(this.form)
+              this.formInfo = data
+              break;
+
+            case 'variety':
+              var { data } = await pokeApi.getPokemon(this.form)
+              this.pokeInfo = data
+
+              // var { data } = await pokeApi.getPokemonForm(this.pokeInfo.forms[0])
+              // this.formInfo = data
+              break;
+
+            default:
+              this.form = null
+              this.changeForm(null, null)
+              break;
+          }
+        } else {
+          this.form = null
+          this.changeForm(null, null)
+        }
+      }
 
       var { data } = await pokeApi.getCurrentTotalPokemon()
       this.totalPokemon = data.count
@@ -288,26 +340,31 @@ export default {
         this.storeAbilityData(data)
       }
 
-      this.pokeName = this.getEntryForLocale(this.speciesInfo.names).name
-      document.title = this.pokeName + this.title // set site title to pokemon name
+      document.title = '#' + this.formatIndex(this.speciesInfo.id) + ' ' + this.pokeName + this.title // set site title to pokemon name
 
       this.isLoading = false
     },
 
     toUpper (value) {
-      return util.toUpper(value)
+      var val = value.trim()
+      if (val != '') return util.toUpper(val)
+    },
+
+    toUpperEachWord (value) {
+      var strArr = value.trim().split(' ')
+      var newString = ''
+      strArr.forEach(str => {
+        newString += this.toUpper(str) + ' '
+      })
+      return newString.trim()
     },
 
     formatText (text) {
       return text.trim().replace('/\s+/', '')
     },
 
-    getPhotoUrl () {
-      return util.getPokemonImageUrl(util.findIndex(this.speciesInfo.id))
-    },
-
-    findIndex (value) {
-      return util.findIndex(value)
+    formatIndex (value) {
+      return util.formatIndex(value)
     },
 
     getTyping (types) {
@@ -327,13 +384,18 @@ export default {
       return this.getEntryForLocale(data).flavor_text
     },
 
-    getAlternateForms(varieties, forms) {
+    changeForm(toForm, type) {
+      var currentRoute = this.$router.currentRoute
 
-      var varieties = varieties.filter(variety => {
-        if (item.name != 'unknown' && item.name != 'shadow') return item
-      })
-
-      return varieties.concat(forms)
+      if (currentRoute.params.form != toForm) {
+        if (toForm != this.speciesInfo.id && toForm) {
+            this.form = toForm
+            this.$router.push({ name: 'pokePageAltForm', params: { name: this.pokemon, form: toForm }, query: { formType: type } })
+        } else {
+          this.form = null
+          this.$router.push({ name: 'pokePageDirect', params: { name: this.pokemon }})
+        }
+      }
     },
 
     storeAbilityData (data) {
@@ -379,7 +441,7 @@ export default {
       }
     },
 
-    getSpecies (data) {
+    getGenus (data) {
       return this.getEntryForLocale(data).genus
     },
 
@@ -507,6 +569,9 @@ export default {
         case 'Farfetch’d':
           this.pokeName = 'Bird Jesus'
           break
+        case 'Virizion':
+          this.pokeName = 'Verizon'
+          break
       }
 
       var that = this
@@ -523,6 +588,28 @@ export default {
     checkNull (data) {
       if (data == null) return true
       else return false
+    },
+
+    imgUrlAlt (event) {
+      if (this.form) {
+        switch (this.formType) {
+          case 'form':
+            if (this.formInfo.sprites.front_default != null) event.target.src = this.formInfo.sprites.front_default
+            else event.target.src = util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+            break
+
+          case 'variety':
+            event.target.src = this.pokeInfo.sprites.front_default
+            break
+        }
+      } else {
+        event.target.src = util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+      }
+      
+    },
+
+    splitName (value) {
+      return util.splitName(value, '-')
     },
 
     getId (url) {
@@ -551,10 +638,111 @@ export default {
       return entry
     }
   },
+  computed: {
+    photoUrl () {
+      if (this.form) {
+        if (this.form == this.speciesInfo.id) {
+          return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+        } else if (this.speciesInfo.id == 351) {
+            // Logic for forms of specific pokemon, which don't work well for images
+            return this.pokeInfo.sprites.front_default
+        } else {
+            var formToFind = this.form
+            var formId = this.alternateForms.findIndex(form => {
+              return formToFind == form.id
+            })
+            
+            if (formId >= 0) {
+              return util.getPokemonAltFormImageUrl(util.formatIndex(this.speciesInfo.id), formId + 1)
+            }
+        }
+      } else return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+    },
+    alternateForms () {
+      var varieties_f = []
+      var forms_f = []
+
+      var varietyAmt = this.speciesInfo.varieties.length
+      var formAmt = this.pokeInfo.forms.length
+
+
+      if (this.speciesInfo.id == 774 || this.speciesInfo.id == 718 || this.speciesInfo.id == 555 || 
+          this.speciesInfo.id == 646 || this.speciesInfo.id == 849 || this.speciesInfo.id == 658 || this.speciesInfo.id == 83) { // special logic for specific Pokemon
+        return varieties_f = pokeApi.getSpecialCaseForms(this.speciesInfo.id)
+      } else if (this.speciesInfo.id == 710 || this.speciesInfo.id == 711 || this.speciesInfo.id == 716) { // special logic for only pumpkaboo, gourgeist, xernas
+        return []
+      } else {
+        this.speciesInfo.varieties.forEach(variety => {
+          if (variety.pokemon.name.toUpperCase() == this.pokeName.toUpperCase() && varietyAmt > 1 && formAmt == 1 && !variety.pokemon.name.includes('-totem')) {
+            varieties_f.push({
+              name: variety.pokemon.name,
+              name_formatted: 'Base',
+              id: this.getId(variety.pokemon.url),
+              type: 'variety',
+              is_default: variety.is_default
+            })
+          } else if (variety.pokemon.name.toUpperCase() != this.pokeName.toUpperCase() && !variety.pokemon.name.includes('-totem')) {
+            varieties_f.push({
+              name: variety.pokemon.name,
+              name_formatted: this.splitName(variety.pokemon.name).replace(this.pokeName.toLowerCase() + ' ', ''),
+              id: this.getId(variety.pokemon.url),
+              type: 'variety',
+              is_default: variety.is_default
+            })
+          }
+        })
+
+        if (varietyAmt > 1 || formAmt <= 2) {
+          this.pokeInfo.forms.forEach(form => {
+            var variety_names = []
+            varieties_f.forEach(variety => {
+              variety_names.push(variety.name)
+          })
+
+          if (!variety_names.includes(form.name) && (form.name.toUpperCase() != this.pokeName.toUpperCase()) && !form.name.includes('-totem')) {
+              forms_f.push({
+                name: form.name,
+                name_formatted: this.splitName(form.name).replace(this.pokeName.toLowerCase() + ' ', ''),
+                id: this.getId(form.url),
+                type: 'form',
+                is_default: null
+              })
+            }
+          })
+        }
+
+        return varieties_f.concat(forms_f)
+      }
+    },
+    hasDefaultForm() {
+      var hasDefault = false
+      // var altForms = this.getAlternateForms(this.speciesInfo.varieties, this.pokeInfo.forms)
+
+      this.alternateForms.forEach(alt => {
+        if (alt.is_default) hasDefault = true
+      })
+
+      return hasDefault
+    },
+    types () {
+      if (this.formInfo) return this.formInfo.types
+      else return this.pokeInfo.types
+    }
+  },
   watch: {
     $route: function (to, from) {
+      this.pokemon = 0
+      this.form = 0
+      this.formType = null
+
+      if (to.params.form && to.query.formType) {
+        this.form = to.params.form
+        this.formType = to.query.formType
+      }
       this.pokemon = to.params.name
+
       this.navigating = true
+      // location.reload()
     }
   }
 
@@ -594,6 +782,24 @@ export default {
   /* cursor: pointer; */
 }
 
+.alternateForms{
+  display: flex;
+  flex-direction: column;
+  // align-items: center;
+}
+.alternateForms > strong {
+  margin-right: 0.5rem;
+}
+.formBtns {
+  display: flex;
+  flex-direction: row;
+  overflow: scroll;
+  margin: 0.5rem 0 0.5rem;
+}
+.formBtn {
+  margin: 0 0.5rem 0.5rem;
+}
+
 /* Info styling */
 
 /* Info boxes */
@@ -607,6 +813,11 @@ export default {
   padding: 0 1rem;
   margin: 1rem 0;
   text-align: left;
+  transition: 0.3s;
+}
+.info-box:hover {
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
+  transition: 0.3s;
 }
 
 
@@ -740,6 +951,17 @@ export default {
 }
 
 @media screen and (min-width: 25.9375rem) {
+  .alternateForms {
+    flex-direction: row;
+    align-items: center;
+  }
+  .formBtns {
+    overflow: visible;
+    // justify-content: center;
+    text-align: left;
+    flex-wrap: wrap;
+  }
+
   .pokemon-data {
     margin: 0 auto;
     padding: 0;

@@ -16,7 +16,7 @@ export default {
     return splitUrl[6]
   },
 
-  findIndex (value) {
+  formatIndex (value) {
     if (value < 10) {
       return '00' + value
     } else if (value < 100) {
@@ -28,6 +28,29 @@ export default {
 
   toUpper (value) {
     return value[0].toUpperCase() + value.slice(1)
+  },
+
+  splitName (value, delimiter, to_upper) {
+    var nameArr = value.split(delimiter)
+    var newName = ''
+
+    if (nameArr.length > 1) {
+      for (var i = 0; i < nameArr.length; i++) {
+
+        var name
+        if (to_upper) name = this.toUpper(nameArr[i])
+        else name = nameArr[i]
+
+        if (i < nameArr.length) {
+          newName += name + ' '
+        } else {
+          newName += name
+        }
+
+      }
+    }
+
+    return newName
   },
 
   // setUserLocales() {

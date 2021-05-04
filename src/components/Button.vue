@@ -1,5 +1,6 @@
 <template>
-    <div tabindex="0" class="button" :class="getFormatting()">
+    <!-- <div tabindex="0" class="button" :class="getFormatting()"> -->
+    <div tabindex="0" class="button" :class="colorClass + ' ' + sizeClass">
       <slot></slot>
     </div>
 </template>
@@ -10,7 +11,8 @@ export default {
   name: 'PokeBox',
   props: {
     size: String,
-    color: String
+    color: String,
+    inverted: Boolean
   },
   methods: {
     getFormatting () {
@@ -22,6 +24,20 @@ export default {
         return this.size
       }
     }
+  },
+  computed: {
+    colorClass () {
+      if (this.color) {
+        if (this.inverted) {
+          return 'bgInv-' + this.color
+        } else return 'bg-' + this.color
+      }
+      else return ''
+    },
+    sizeClass () {
+      if (this.size) return this.size
+      else return ''
+    }
   }
 }
 
@@ -29,16 +45,7 @@ export default {
 
 <style scoped lang="css">
 
-.large{
-  border-radius: 0.5rem;
-  font-size: 1.2rem;
-  padding: 0.8rem 1.5rem;
-}
-.medium {
-  border-radius: 0.4rem;
-  font-size: 0.9rem;
-  padding: 0.5rem 0.8rem;
-}
+@import '../styling/colors.css';
 
 .button {
   display: flex;
@@ -47,7 +54,7 @@ export default {
   justify-content: center;
   font-weight: bold;
   font-size: 1.1rem;
-  border: 2px solid;
+  /* border: 2px solid; */
   border-radius: 0.625rem;
   /* margin: 0 1rem; */
   width: fit-content;
@@ -55,46 +62,56 @@ export default {
   transition: 0.2s;
 }
 
-.white {
+.large{
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  padding: 0.8rem 1.5rem;
+}
+.medium {
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  padding: 0.5rem 0.8rem;
+}
+
+.bg-ps-white {
     background-color: #f1f1f1;
     border-color: #f1f1f1;
     color: rgb(201, 38, 63);
 }
 
-.grey {
+.bg-ps-red {
+    background-color: rgb(201, 38, 63);
+    border-color: rgb(201, 38, 63);
+    color: #f1f1f1;
+}
+.bgInv-ps-red {
     background-color: #f1f1f1;
     border-color: rgb(201, 38, 63);
     color: rgb(201, 38, 63);
 }
 
-.red {
-    background-color: rgb(201, 38, 63);
-    border-color: rgb(201, 38, 63);
-    color: #f1f1f1;
-}
-
 .button:hover, .button:focus {
-    border: 2px solid;
+    /* border: 2px solid; */
     transition: 0.2s;
 }
 
-.white:hover, .white:focus {
+.bg-ps-white:hover, .bg-ps-white:focus {
     border-color: #f1f1f1;
     background-color: #4A4A4A;
     color: #f1f1f1;
 }
 
-.red:hover, .red:focus {
+.bg-ps-red:hover, .bg-ps-red:focus {
     background-color: #f1f1f1;
     border-color: rgb(201, 38, 63);
     color: rgb(201, 38, 63);
 }
 
-.grey:hover, .grey:focus {
+/* .bg-ps-grey:hover, .bg-ps-grey:focus {
     background-color: rgb(201, 38, 63);
     border-color: rgb(201, 38, 63);
     color: #f1f1f1;
-}
+} */
 
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {

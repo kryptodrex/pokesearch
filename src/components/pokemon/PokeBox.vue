@@ -5,7 +5,7 @@
 
         <div class="pokeInfo" >
           <span>{{ toUpper(name) }}</span>
-          <span>#{{ findIndex() }}</span>
+          <span>#{{ formatIndex() }}</span>
         </div>
 
         <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(name)" @load="setLoaded">
@@ -58,7 +58,7 @@ export default {
     }
   },
   created () {
-    this.findIndex()
+    this.formatIndex()
   },
   methods: {
 
@@ -110,7 +110,7 @@ export default {
       return util.toUpper(name)
     },
 
-    findIndex () {
+    formatIndex () {
       if (this.dexNum < 10) {
         return '00' + this.dexNum
       } else if (this.dexNum < 100) {
@@ -122,7 +122,7 @@ export default {
 
     getImageUrl () {
       var basePath = 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'
-      return basePath + this.findIndex() + '.png'
+      return basePath + this.formatIndex() + '.png'
     },
 
     setLoaded () {
@@ -166,7 +166,7 @@ export default {
 }
 
 .pokeBox:hover, .pokeBox:focus {
-  box-shadow: 0px 3px 2px #757575;
+  box-shadow: 0 5px 5px 0 rgba(0,0,0,0.20);;
   transition: 0.2s;
 }
 

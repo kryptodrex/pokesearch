@@ -21,6 +21,16 @@ export default new Router({
       component: Pokemon
     },
     {
+      path: '/pokemon/:name/forms',
+      name: 'pokePageForms',
+      component: Pokemon
+    },
+    {
+      path: '/pokemon/:name/forms/:form',
+      name: 'pokePageAltForm',
+      component: Pokemon
+    },
+    {
       path: '/lost-in-the-tall-grass',
       name: 'gotLost',
       component: NotFound

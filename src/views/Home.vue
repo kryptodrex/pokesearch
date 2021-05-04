@@ -6,9 +6,9 @@
       <div class="filterBtns">
         <div class="genBtns" v-for="(gen, index) in generations" :key="index" v-on:click="changeGeneration(getIndex(gen.url))" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
           <!-- Buttons for other unselected generations -->
-          <Button size="medium" color="red" v-if="getIndex(gen.url) != genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <Button size="medium" color="ps-red" v-if="getIndex(gen.url) != genToSearch" > {{ getGeneration(gen.name) }} </Button>
           <!-- Button for selected generation -->
-          <Button size="medium" color="grey" v-if="getIndex(gen.url) == genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <Button size="medium" color="ps-red" :inverted="true" v-if="getIndex(gen.url) == genToSearch" > {{ getGeneration(gen.name) }} </Button>
         </div>
       </div>
 
@@ -182,9 +182,13 @@ export default {
   }
 
   // watch: {
-  //   $route: function (from, to) {
+  //   $route: function (to, from) {
+  //     this.genToSearch = null
+
   //     this.genToSearch = to.query.gen
+
   //     this.navigating = true
+  //     // location.reload()
   //   }
   // }
 }
