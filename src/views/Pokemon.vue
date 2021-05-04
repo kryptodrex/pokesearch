@@ -669,11 +669,11 @@ export default {
       if (this.speciesInfo.id == 774 || this.speciesInfo.id == 718 || this.speciesInfo.id == 555 || 
           this.speciesInfo.id == 646 || this.speciesInfo.id == 849 || this.speciesInfo.id == 658 || this.speciesInfo.id == 83) { // special logic for specific Pokemon
         return varieties_f = pokeApi.getSpecialCaseForms(this.speciesInfo.id)
-      } else if (this.speciesInfo.id == 710 || this.speciesInfo.id == 711 || this.speciesInfo.id == 716) { // special logic for only pumpkaboo, gourgeist, and xernas
+      } else if (this.speciesInfo.id == 710 || this.speciesInfo.id == 711 || this.speciesInfo.id == 716) { // special logic for only pumpkaboo, gourgeist, xernas
         return []
       } else {
         this.speciesInfo.varieties.forEach(variety => {
-          if (variety.pokemon.name.toUpperCase() == this.pokeName.toUpperCase() && varietyAmt > 1 && formAmt == 1) {
+          if (variety.pokemon.name.toUpperCase() == this.pokeName.toUpperCase() && varietyAmt > 1 && formAmt == 1 && !variety.pokemon.name.includes('-totem')) {
             varieties_f.push({
               name: variety.pokemon.name,
               name_formatted: 'Base',
@@ -681,7 +681,7 @@ export default {
               type: 'variety',
               is_default: variety.is_default
             })
-          } else if (variety.pokemon.name.toUpperCase() != this.pokeName.toUpperCase()) {
+          } else if (variety.pokemon.name.toUpperCase() != this.pokeName.toUpperCase() && !variety.pokemon.name.includes('-totem')) {
             varieties_f.push({
               name: variety.pokemon.name,
               name_formatted: this.splitName(variety.pokemon.name).replace(this.pokeName.toLowerCase() + ' ', ''),
@@ -699,7 +699,7 @@ export default {
               variety_names.push(variety.name)
           })
 
-          if (!variety_names.includes(form.name) && (form.name.toUpperCase() != this.pokeName.toUpperCase())) {
+          if (!variety_names.includes(form.name) && (form.name.toUpperCase() != this.pokeName.toUpperCase()) && !form.name.includes('-totem')) {
               forms_f.push({
                 name: form.name,
                 name_formatted: this.splitName(form.name).replace(this.pokeName.toLowerCase() + ' ', ''),
