@@ -643,9 +643,9 @@ export default {
       if (this.form) {
         if (this.form == this.speciesInfo.id) {
           return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
-        // } else if (this.form == '10174' || this.form == '10118' || this.form == '10119' || this.form == '10120') {
-        //     // Logic for forms of specific pokemon, which don't work well for images
-        //     return util.getLocalAltFormImage(this.form)
+        } else if (this.speciesInfo.id == 351) {
+            // Logic for forms of specific pokemon, which don't work well for images
+            return this.pokeInfo.sprites.front_default
         } else {
             var formToFind = this.form
             var formId = this.alternateForms.findIndex(form => {
