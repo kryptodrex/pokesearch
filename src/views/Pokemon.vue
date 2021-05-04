@@ -53,9 +53,9 @@
             <!-- Button for selected forms -->
             <Button size="medium" :color="speciesInfo.color.name" :inverted="true" v-if="formData.id == form" > {{ toUpperEachWord(formData.name_formatted) }} </Button>
           </div>
-          <router-link v-if="!hasDefaultForm && form" :to="'/pokemon/' + pokemon" class="formBtn">
+          <!-- <router-link v-if="!hasDefaultForm && form" :to="'/pokemon/' + pokemon" class="formBtn">
             <Button size="medium" :color="speciesInfo.color.name"> Default </Button>
-          </router-link>
+          </router-link> -->
         </div>
       </div>
 
@@ -692,7 +692,7 @@ export default {
           }
         })
 
-        if (varietyAmt > 1) {
+        if (varietyAmt >= 1 && formAmt < 3) {
           this.pokeInfo.forms.forEach(form => {
             var variety_names = []
             varieties_f.forEach(variety => {
