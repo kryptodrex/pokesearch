@@ -6,15 +6,15 @@
       <div class="filterBtns">
         <div class="genBtns" v-for="(gen, index) in generations" :key="index" v-on:click="changeGeneration(getIndex(gen.url))" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
           <!-- Buttons for other unselected generations -->
-          <Button size="medium" color="ps-red" v-if="getIndex(gen.url) != genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <Button size="medium" color="ps-red" v-if="getIndex(gen.url) !== genToSearch" > {{ getGeneration(gen.name) }} </Button>
           <!-- Button for selected generation -->
-          <Button size="medium" color="ps-red" :inverted="true" v-if="getIndex(gen.url) == genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <Button size="medium" color="ps-red" :inverted="true" v-if="getIndex(gen.url) === genToSearch" > {{ getGeneration(gen.name) }} </Button>
         </div>
       </div>
 
       <div class="searchInput">
         <Search placeholder="Start typing a name..." v-on:searching="setSearchedPokemon($event)" :hasClear="true" />
-        <p class="error" v-if="pokeInfo.length == 0 && !isLoading">No matching Pokémon found!</p>
+        <p class="error" v-if="pokeInfo.length === 0 && !isLoading">No matching Pokémon found!</p>
       </div>
 
       <div class="pokeBoxes">
@@ -23,8 +23,8 @@
 
     </div>
 
-    <div class="loadMore" v-on:click="getNextGen()" :aria-label="'Click to load ' +  getGeneration(nextGen.name) + ' Pokémon'" v-if="nextGen != null">
-      <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen != null && !searching"> Load {{ getGeneration(nextGen.name) }} </Button>
+    <div class="loadMore" v-on:click="getNextGen()" :aria-label="'Click to load ' +  getGeneration(nextGen.name) + ' Pokémon'" v-if="nextGen !== null">
+      <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen !== null && !searching"> Load {{ getGeneration(nextGen.name) }} </Button>
       <Loader v-if="isLoading" size="large" :full-page="true" />
     </div>
   </div>
@@ -57,7 +57,7 @@ export default {
       pokeInfo: [],
       generations: [],
       genToSearch: router.currentRoute.query.gen,
-      nextGen: {name: 'generation-ii'},
+      nextGen: { name: 'generation-ii' },
       limit: 30,
       offset: 0,
       disable: false,
@@ -79,7 +79,7 @@ export default {
     changeGeneration (gen) {
       this.genToSearch = gen
       var currentRoute = this.$router.currentRoute
-      if (currentRoute.query.gen != gen) {
+      if (currentRoute.query.gen !== gen) {
         this.pokeInfo = []
         this.$router.push({ name: 'homePokemon', query: { gen: gen } })
         this.getPokemon()
@@ -89,19 +89,19 @@ export default {
     async getPokemon () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getAllGenerations()
+      var { data } = await pokeApi.getAllGenerations() // eslint-disable-line
       this.generations = data.results
 
       var latestGen = this.getIndex(this.generations[this.generations.length - 1].url)
       // var latestGen = 'generation-i';
 
-      if (this.genToSearch == null) this.genToSearch = latestGen
+      if (!this.genToSearch) this.genToSearch = latestGen
 
       this.nextGen = this.setNextGen()
 
-      var { data } = await pokeApi.getGeneration(this.genToSearch)
+      var { data } = await pokeApi.getGeneration(this.genToSearch) // eslint-disable-line
 
-      data.pokemon_species.forEach(species => {
+      data.pokemon_species.forEach(species => { // eslint-disable-line
         this.pokeInfo = this.pokeInfo.concat([{
           name: species.name,
           url: species.url,
@@ -120,7 +120,7 @@ export default {
     setSearchedPokemon (e) {
       this.searching = true
 
-      if (e[0] == 'clear') {
+      if (e[0] === 'clear') {
         this.searching = false
         this.pokeInfo = []
         this.fetch()
@@ -131,9 +131,9 @@ export default {
 
     setNextGen () {
       for (var i = 0; i < this.generations.length; i++) {
-        if (this.getIndex(this.generations[i].url) == this.genToSearch) {
+        if (this.getIndex(this.generations[i].url) === this.genToSearch) {
           var nextgen = this.generations[i + 1]
-          if (nextgen == null) return null
+          if (!nextgen) return null
           else return nextgen
         }
       }
@@ -144,7 +144,7 @@ export default {
     },
 
     getGeneration (gen) {
-      if (gen != null) {
+      if (gen) {
         var split = gen.split('-')
         return 'Gen ' + split[1].toUpperCase()
       } else return ''
@@ -171,7 +171,7 @@ export default {
 
   computed: {
     sortedPokeInfo () {
-      let tempPokeInfo = this.pokeInfo
+      const tempPokeInfo = this.pokeInfo
 
       tempPokeInfo.sort(function (a, b) {
         return a.index - b.index

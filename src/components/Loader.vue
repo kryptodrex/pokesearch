@@ -1,6 +1,6 @@
 <template>
     <div class="loader" :class="getFormat()">
-        <img v-if="type == 'logo' || type == null" class="foresight" :class="getSize()" src="@/assets/images/pokesearch-logo.svg" alt="Pokesearch default logo loader">
+        <img v-if="type === 'logo' || type == null" class="foresight" :class="getSize()" src="@/assets/images/pokesearch-logo.svg" alt="Pokesearch default logo loader">
         <img v-if="type == 'ball'" class="spinning" :class="getSize()" src="@/assets/images/loading-ball.svg" alt="Spinning Pokeball loader">
     </div>
 </template>

@@ -63,18 +63,18 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getPokemon(this.prevNum)
+      var { data } = await pokeApi.getPokemon(this.prevNum) // eslint-disable-line
       this.prevPokeData = {
-        name: util.toUpper(data.species.name),
+        name: util.toUpper(data.species.name), // eslint-disable-line
         dexNum: this.formatIndex(this.prevNum),
-        spriteUrl: data.sprites.front_default
+        spriteUrl: data.sprites.front_default // eslint-disable-line
       }
 
-      var { data } = await pokeApi.getPokemon(this.nextNum)
+      var { data } = await pokeApi.getPokemon(this.nextNum) // eslint-disable-line
       this.nextPokeData = {
-        name: util.toUpper(data.species.name),
+        name: util.toUpper(data.species.name), // eslint-disable-line
         dexNum: this.formatIndex(this.nextNum),
-        spriteUrl: data.sprites.front_default
+        spriteUrl: data.sprites.front_default // eslint-disable-line
       }
 
       this.isLoading = false
@@ -85,7 +85,7 @@ export default {
     },
 
     splitName (value) {
-        return util.splitName(value, '-')
+      return util.splitName(value, '-')
     }
   }
 }

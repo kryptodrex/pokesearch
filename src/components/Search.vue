@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { VueAutosuggest } from 'vue-autosuggest'
+// import { VueAutosuggest } from 'vue-autosuggest'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
 import Button from '@/components/Button'
@@ -37,8 +37,8 @@ export default {
   name: 'PokeBox',
   components: {
     Loader,
-    Button,
-    VueAutosuggest
+    Button
+    // VueAutosuggest
   },
   props: {
     placeholder: String,
@@ -86,7 +86,7 @@ export default {
 
     clearSearch () {
       this.searchValue = ''
-      var that = this
+      // var that = this
       this.$emit('searching', ['clear'])
     },
 
@@ -100,7 +100,7 @@ export default {
       let tempList = this.speciesList
 
       // Process search input
-      if (this.searchValue != '' && this.searchValue) {
+      if (this.searchValue !== '' && this.searchValue) {
         tempList = tempList.filter((item) => {
           return item.name
             .toUpperCase()

@@ -9,23 +9,23 @@
 </template>
 
 <script>
-import router from '@/router'
+// import router from '@/router'
 import Button from '@/components/Button'
 
 export default {
   name: 'NotFound',
   components: {
     Button
-  },
-  created () {
-    this.getAlternatives()
-  },
-  methods: {
-    getAlternatives () {
-      var routes = this.$router
-      console.log(routes)
-    }
   }
+  // created () {
+  //   this.getAlternatives()
+  // },
+  // methods: {
+  //   getAlternatives () {
+  //     var routes = this.$router
+  //     console.log(routes)
+  //   }
+  // }
 
 }
 </script>

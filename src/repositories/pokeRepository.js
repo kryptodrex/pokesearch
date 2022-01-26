@@ -15,8 +15,8 @@ export default {
   },
 
   getCurrentTotalPokemon () {
-    if (totalPokemon.count == 0) {
-      totalPokemon = Repository.get(`/pokemon-species?limit=1`)
+    if (totalPokemon.count === 0) {
+      totalPokemon = Repository.get('/pokemon-species?limit=1')
       return totalPokemon
     } else {
       return totalPokemon
@@ -31,11 +31,10 @@ export default {
     return Repository.get(`/pokemon-form/${pokemon}`)
   },
 
-  getSpecialCaseForms(id) {
+  getSpecialCaseForms (id) {
     var formsList = []
 
     switch (id) {
-      
       case 774: // case for Minior's forms
         formsList.push({
           name: 'minior',
@@ -43,7 +42,7 @@ export default {
           id: 774,
           type: 'variety',
           is_default: true
-        }) 
+        })
         formsList.push({
           name: 'minior-core',
           name_formatted: 'Core',
@@ -193,8 +192,8 @@ export default {
   },
 
   getAllPokemonSpecies () {
-    if (allSpecies.length == 0) {
-      allSpecies = Repository.get(`/pokemon-species?limit=99999`)
+    if (allSpecies.length === 0) {
+      allSpecies = Repository.get('/pokemon-species?limit=99999')
       return allSpecies
     } else {
       return allSpecies
@@ -210,8 +209,8 @@ export default {
   },
 
   getAllGenerations () {
-    if (allGens.length == 0) {
-      allGens = Repository.get(`/generation`)
+    if (allGens.length === 0) {
+      allGens = Repository.get('/generation')
       return allGens
     } else {
       return allGens
@@ -227,8 +226,8 @@ export default {
   },
 
   getAllTypes () {
-    if (allTypes.length == 0) {
-      allTypes = Repository.get(`/type?limit=100`)
+    if (allTypes.length === 0) {
+      allTypes = Repository.get('/type?limit=100')
       return allTypes
     } else {
       return allTypes
