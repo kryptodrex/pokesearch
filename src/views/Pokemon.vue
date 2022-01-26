@@ -336,8 +336,8 @@ export default {
       this.abilityList = []
       for (var i = 0; i < this.pokeInfo.abilities.length; i++) {
         var abilityInfo = this.pokeInfo.abilities[i]
-        var { abilityData } = await pokeApi.getAbility(abilityInfo.ability.name)
-        this.storeAbilityData(abilityData)
+        var { data } = await pokeApi.getAbility(abilityInfo.ability.name) // eslint-disable-line
+        this.storeAbilityData(data) // eslint-disable-line
       }
 
       document.title = '#' + this.formatIndex(this.speciesInfo.id) + ' ' + this.pokeName + this.title // set site title to pokemon name
@@ -586,7 +586,7 @@ export default {
     // },
 
     checkNull (data) {
-      if (data === null) return true
+      if (!data) return true
       else return false
     },
 
@@ -626,7 +626,7 @@ export default {
 
       // })
 
-      if (entry === null) {
+      if (!entry) {
         data.forEach(item => {
           if (item.language.name === 'en') {
             entry = item
@@ -640,7 +640,7 @@ export default {
   computed: {
     photoUrl () {
       if (this.form) {
-        if (this.form === this.speciesInfo.id) {
+        if (parseInt(this.form) === this.speciesInfo.id) {
           return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
         } else if (this.speciesInfo.id === 351) {
           // Logic for forms of specific pokemon, which don't work well for images

@@ -95,7 +95,7 @@ export default {
       var latestGen = this.getIndex(this.generations[this.generations.length - 1].url)
       // var latestGen = 'generation-i';
 
-      if (this.genToSearch === null) this.genToSearch = latestGen
+      if (!this.genToSearch) this.genToSearch = latestGen
 
       this.nextGen = this.setNextGen()
 
@@ -133,7 +133,7 @@ export default {
       for (var i = 0; i < this.generations.length; i++) {
         if (this.getIndex(this.generations[i].url) === this.genToSearch) {
           var nextgen = this.generations[i + 1]
-          if (nextgen === null) return null
+          if (!nextgen) return null
           else return nextgen
         }
       }
@@ -144,7 +144,7 @@ export default {
     },
 
     getGeneration (gen) {
-      if (gen !== null) {
+      if (gen) {
         var split = gen.split('-')
         return 'Gen ' + split[1].toUpperCase()
       } else return ''

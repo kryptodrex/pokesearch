@@ -131,7 +131,7 @@ export default {
     getEntryForLocale (data) {
       var entry
 
-      if (entry === null) {
+      if (!entry) {
         data.forEach(item => {
           if (item.language.name === 'en') {
             entry = item

@@ -52,8 +52,8 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { typesData } = await pokeApi.getAllTypes()
-      this.types = typesData.results
+      var { data } = await pokeApi.getAllTypes() // eslint-disable-line
+      this.types = data.results // eslint-disable-line
 
       this.types = this.types.filter((item) => {
         if (item.name !== 'unknown' && item.name !== 'shadow') return item
