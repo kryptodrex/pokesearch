@@ -1,6 +1,6 @@
 <template>
     <!-- <div class="pokeBox" :id="dexNum" :class="'border-' + color.main"> -->
-    <div class="pokeBox border-" :id="dexNum">  
+    <div class="pokeBox border-" :id="dexNum">
       <router-link :to="'/pokemon/' + dexNum">
 
         <div class="pokeInfo" >
@@ -63,7 +63,6 @@ export default {
   methods: {
 
     async getPokeData () {
-
       if (!this.gotData) {
         var { data } = await pokeApi.getPokemonSpecies(this.dexNum)
         this.color = {
@@ -79,12 +78,11 @@ export default {
 
         this.gotData = true
       } else {
-        this.swapData();
+        this.swapData()
       }
-     
     },
 
-    swapData() {
+    swapData () {
       if (this.color.main == '') {
         this.color.main = this.color.backup
         this.color.backup = ''
@@ -204,7 +202,6 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
-
 
 .loading, .loaded {
   display: none;

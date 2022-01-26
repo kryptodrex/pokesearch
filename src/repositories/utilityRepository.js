@@ -36,7 +36,6 @@ export default {
 
     if (nameArr.length > 1) {
       for (var i = 0; i < nameArr.length; i++) {
-
         var name
         if (to_upper) name = this.toUpper(nameArr[i])
         else name = nameArr[i]
@@ -46,7 +45,6 @@ export default {
         } else {
           newName += name
         }
-
       }
     }
 

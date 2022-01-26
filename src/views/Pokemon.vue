@@ -41,11 +41,11 @@
           {{ getAlternateForms(speciesInfo.varieties, pokeInfo.forms) }}
         </p> -->
         <div class="formBtns">
-          <div 
-            class="formBtn" 
+          <div
+            class="formBtn"
             v-for="(formData, index) in alternateForms"
-            :key="index" 
-            v-on:click="changeForm(formData.id, formData.type)" 
+            :key="index"
+            v-on:click="changeForm(formData.id, formData.type)"
             :aria-label="'Click to show form ' + toUpper(formData.name_formatted)"
           >
             <!-- Buttons for other unselected forms -->
@@ -229,16 +229,16 @@ const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
 
 const statMap = {
-  hp: {short: 'HP', long: 'HP'},
-  attack: {short: 'Atk', long: 'Attack'},
-  defense: {short: 'Def', long: 'Defense'},
-  special_attack: {short: 'Sp.Atk', long: 'Special Attack'},
-  special_defense: {short: 'Sp.Def', long: 'Special Defense'},
-  speed: {short: 'Speed', long: 'Speed'}
+  hp: { short: 'HP', long: 'HP' },
+  attack: { short: 'Atk', long: 'Attack' },
+  defense: { short: 'Def', long: 'Defense' },
+  special_attack: { short: 'Sp.Atk', long: 'Special Attack' },
+  special_defense: { short: 'Sp.Def', long: 'Special Defense' },
+  speed: { short: 'Speed', long: 'Speed' }
 }
 
 const StatRepo = {
-  get: stat => statMap[stat.replace('-','_')]
+  get: stat => statMap[stat.replace('-', '_')]
 }
 
 export default {
@@ -302,7 +302,7 @@ export default {
             case 'form':
               var { data } = await pokeApi.getPokemonForm(this.form)
               this.formInfo = data
-              break;
+              break
 
             case 'variety':
               var { data } = await pokeApi.getPokemon(this.form)
@@ -310,12 +310,12 @@ export default {
 
               // var { data } = await pokeApi.getPokemonForm(this.pokeInfo.forms[0])
               // this.formInfo = data
-              break;
+              break
 
             default:
               this.form = null
               this.changeForm(null, null)
-              break;
+              break
           }
         } else {
           this.form = null
@@ -384,16 +384,16 @@ export default {
       return this.getEntryForLocale(data).flavor_text
     },
 
-    changeForm(toForm, type) {
+    changeForm (toForm, type) {
       var currentRoute = this.$router.currentRoute
 
       if (currentRoute.params.form != toForm) {
         if (toForm != this.speciesInfo.id && toForm) {
-            this.form = toForm
-            this.$router.push({ name: 'pokePageAltForm', params: { name: this.pokemon, form: toForm }, query: { formType: type } })
+          this.form = toForm
+          this.$router.push({ name: 'pokePageAltForm', params: { name: this.pokemon, form: toForm }, query: { formType: type } })
         } else {
           this.form = null
-          this.$router.push({ name: 'pokePageDirect', params: { name: this.pokemon }})
+          this.$router.push({ name: 'pokePageDirect', params: { name: this.pokemon } })
         }
       }
     },
@@ -481,7 +481,7 @@ export default {
     },
 
     getStats (stats) {
-      var statArr = [];
+      var statArr = []
       stats.forEach(stat => {
         statArr.push({
           base_stat: stat.base_stat,
@@ -605,7 +605,6 @@ export default {
       } else {
         event.target.src = util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
       }
-      
     },
 
     splitName (value) {
@@ -644,17 +643,17 @@ export default {
         if (this.form == this.speciesInfo.id) {
           return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
         } else if (this.speciesInfo.id == 351) {
-            // Logic for forms of specific pokemon, which don't work well for images
-            return this.pokeInfo.sprites.front_default
+          // Logic for forms of specific pokemon, which don't work well for images
+          return this.pokeInfo.sprites.front_default
         } else {
-            var formToFind = this.form
-            var formId = this.alternateForms.findIndex(form => {
-              return formToFind == form.id
-            })
-            
-            if (formId >= 0) {
-              return util.getPokemonAltFormImageUrl(util.formatIndex(this.speciesInfo.id), formId + 1)
-            }
+          var formToFind = this.form
+          var formId = this.alternateForms.findIndex(form => {
+            return formToFind == form.id
+          })
+
+          if (formId >= 0) {
+            return util.getPokemonAltFormImageUrl(util.formatIndex(this.speciesInfo.id), formId + 1)
+          }
         }
       } else return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
     },
@@ -665,8 +664,7 @@ export default {
       var varietyAmt = this.speciesInfo.varieties.length
       var formAmt = this.pokeInfo.forms.length
 
-
-      if (this.speciesInfo.id == 774 || this.speciesInfo.id == 718 || this.speciesInfo.id == 555 || 
+      if (this.speciesInfo.id == 774 || this.speciesInfo.id == 718 || this.speciesInfo.id == 555 ||
           this.speciesInfo.id == 646 || this.speciesInfo.id == 849 || this.speciesInfo.id == 658 || this.speciesInfo.id == 83) { // special logic for specific Pokemon
         return varieties_f = pokeApi.getSpecialCaseForms(this.speciesInfo.id)
       } else if (this.speciesInfo.id == 710 || this.speciesInfo.id == 711 || this.speciesInfo.id == 716) { // special logic for only pumpkaboo, gourgeist, xernas
@@ -697,9 +695,9 @@ export default {
             var variety_names = []
             varieties_f.forEach(variety => {
               variety_names.push(variety.name)
-          })
+            })
 
-          if (!variety_names.includes(form.name) && (form.name.toUpperCase() != this.pokeName.toUpperCase()) && !form.name.includes('-totem')) {
+            if (!variety_names.includes(form.name) && (form.name.toUpperCase() != this.pokeName.toUpperCase()) && !form.name.includes('-totem')) {
               forms_f.push({
                 name: form.name,
                 name_formatted: this.splitName(form.name).replace(this.pokeName.toLowerCase() + ' ', ''),
@@ -714,7 +712,7 @@ export default {
         return varieties_f.concat(forms_f)
       }
     },
-    hasDefaultForm() {
+    hasDefaultForm () {
       var hasDefault = false
       // var altForms = this.getAlternateForms(this.speciesInfo.varieties, this.pokeInfo.forms)
 
@@ -820,7 +818,6 @@ export default {
   transition: 0.3s;
 }
 
-
 /* Pokedex Data */
 .poke-abilities {
   cursor: pointer;
@@ -904,7 +901,6 @@ export default {
 .poke-train-c2 {
   padding-left: 1rem;
 }
-
 
 /* Base Stats & Breeding Box styling */
 

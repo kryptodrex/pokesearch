@@ -20,7 +20,7 @@ export default {
 .footerSection {
   display: flex;
   flex-direction: column;
-  
+
 }
 
 footer {

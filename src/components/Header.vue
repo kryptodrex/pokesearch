@@ -5,7 +5,7 @@
             <img class="logo" src="../assets/images/pokesearch-icon.svg" alt="PokeSearch Logo">
         </router-link>
         <h1 class="site-name">PokéSearch</h1>
-        <h4 class="site-name">&nbsp; beta</h4> 
+        <h4 class="site-name">&nbsp; beta</h4>
         <!-- Take out 'beta' once it is v1.0! -->
     </div>
 

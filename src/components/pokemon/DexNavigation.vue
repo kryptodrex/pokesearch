@@ -85,7 +85,7 @@ export default {
     },
 
     splitName (value) {
-        return util.splitName(value, '-')
+      return util.splitName(value, '-')
     }
   }
 }

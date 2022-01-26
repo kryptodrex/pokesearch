@@ -31,8 +31,7 @@ export default {
         if (this.inverted) {
           return 'bgInv-' + this.color
         } else return 'bg-' + this.color
-      }
-      else return ''
+      } else return ''
     },
     sizeClass () {
       if (this.size) return this.size

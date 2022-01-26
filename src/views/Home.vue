@@ -57,7 +57,7 @@ export default {
       pokeInfo: [],
       generations: [],
       genToSearch: router.currentRoute.query.gen,
-      nextGen: {name: 'generation-ii'},
+      nextGen: { name: 'generation-ii' },
       limit: 30,
       offset: 0,
       disable: false,
@@ -171,7 +171,7 @@ export default {
 
   computed: {
     sortedPokeInfo () {
-      let tempPokeInfo = this.pokeInfo
+      const tempPokeInfo = this.pokeInfo
 
       tempPokeInfo.sort(function (a, b) {
         return a.index - b.index
