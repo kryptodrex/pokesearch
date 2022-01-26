@@ -285,12 +285,12 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { speciesData } = await pokeApi.getPokemonSpecies(this.pokemon)
-      this.speciesInfo = speciesData
+      var { data } = await pokeApi.getPokemonSpecies(this.pokemon) // eslint-disable-line
+      this.speciesInfo = data // eslint-disable-line 
       this.pokeName = this.getEntryForLocale(this.speciesInfo.names).name
 
-      var { pokeData } = await pokeApi.getPokemon(this.pokemon)
-      this.pokeInfo = pokeData
+      var { data } = await pokeApi.getPokemon(this.pokemon) // eslint-disable-line
+      this.pokeInfo = data // eslint-disable-line
 
       if (this.form) {
         var formInd = this.alternateForms.findIndex(form => {
@@ -300,13 +300,13 @@ export default {
         if (formInd >= 0) {
           switch (this.formType) {
             case 'form':
-              var { formData } = await pokeApi.getPokemonForm(this.form)
-              this.formInfo = formData
+              var { data } = await pokeApi.getPokemonForm(this.form) // eslint-disable-line
+              this.formInfo = data // eslint-disable-line
               break
 
             case 'variety':
-              var { varietyData } = await pokeApi.getPokemon(this.form)
-              this.pokeInfo = varietyData
+              var { data } = await pokeApi.getPokemon(this.form) // eslint-disable-line
+              this.pokeInfo = data // eslint-disable-line
 
               // var { data } = await pokeApi.getPokemonForm(this.pokeInfo.forms[0])
               // this.formInfo = data
@@ -323,8 +323,8 @@ export default {
         }
       }
 
-      var { totalPokeData } = await pokeApi.getCurrentTotalPokemon()
-      this.totalPokemon = totalPokeData.count
+      var { data } = await pokeApi.getCurrentTotalPokemon() // eslint-disable-line
+      this.totalPokemon = data.count // eslint-disable-line
 
       // Set the prev Pokedex num and next Pokedex num
       if ((this.speciesInfo.id - 1) < 1) this.prevNum = this.totalPokemon

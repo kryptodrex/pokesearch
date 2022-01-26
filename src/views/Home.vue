@@ -89,8 +89,8 @@ export default {
     async getPokemon () {
       this.isLoading = true
 
-      var { allGenData } = await pokeApi.getAllGenerations()
-      this.generations = allGenData.results
+      var { data } = await pokeApi.getAllGenerations() // eslint-disable-line
+      this.generations = data.results
 
       var latestGen = this.getIndex(this.generations[this.generations.length - 1].url)
       // var latestGen = 'generation-i';
@@ -99,9 +99,9 @@ export default {
 
       this.nextGen = this.setNextGen()
 
-      var { genData } = await pokeApi.getGeneration(this.genToSearch)
+      var { data } = await pokeApi.getGeneration(this.genToSearch) // eslint-disable-line
 
-      genData.pokemon_species.forEach(species => {
+      data.pokemon_species.forEach(species => { // eslint-disable-line
         this.pokeInfo = this.pokeInfo.concat([{
           name: species.name,
           url: species.url,

@@ -64,15 +64,15 @@ export default {
 
     async getPokeData () {
       if (!this.gotData) {
-        var { speciesData } = await pokeApi.getPokemonSpecies(this.dexNum)
+        var { data } = await pokeApi.getPokemonSpecies(this.dexNum) // eslint-disable-line
         this.color = {
-          main: speciesData.color.name,
+          main: data.color.name, // eslint-disable-line
           backup: ''
         }
 
-        var { pokeData } = await pokeApi.getPokemon(this.dexNum)
+        var { data } = await pokeApi.getPokemon(this.dexNum) // eslint-disable-line
         this.types = {
-          main: pokeData.types,
+          main: data.types, // eslint-disable-line
           backup: []
         }
 

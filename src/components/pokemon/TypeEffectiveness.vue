@@ -59,12 +59,12 @@ export default {
         if (item.name !== 'unknown' && item.name !== 'shadow') return item
       })
 
-      var { typeData } = await pokeApi.getType(this.typing[0].type.name)
-      this.typingData.push(typeData.damage_relations)
+      var { data } = await pokeApi.getType(this.typing[0].type.name) // eslint-disable-line
+      this.typingData.push(data.damage_relations) // eslint-disable-line
 
       if (this.typing.length > 1) {
-        var { typeTwoData } = await pokeApi.getType(this.typing[1].type.name)
-        this.typingData.push(typeTwoData.damage_relations)
+        var { data } = await pokeApi.getType(this.typing[1].type.name) // eslint-disable-line
+        this.typingData.push(data.damage_relations) // eslint-disable-line
       }
 
       this.storeDamageRelations()
