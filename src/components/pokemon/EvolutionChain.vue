@@ -82,7 +82,7 @@ export default {
       var levelArray = []
 
       this.evoDetails.forEach(item => {
-        if (item.level == num) {
+        if (item.level === num) {
           levelArray.push(item)
         }
       })

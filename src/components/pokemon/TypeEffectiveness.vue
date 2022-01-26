@@ -52,19 +52,19 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getAllTypes()
-      this.types = data.results
+      var { typesData } = await pokeApi.getAllTypes()
+      this.types = typesData.results
 
       this.types = this.types.filter((item) => {
-        if (item.name != 'unknown' && item.name != 'shadow') return item
+        if (item.name !== 'unknown' && item.name !== 'shadow') return item
       })
 
-      var { data } = await pokeApi.getType(this.typing[0].type.name)
-      this.typingData.push(data.damage_relations)
+      var { typeData } = await pokeApi.getType(this.typing[0].type.name)
+      this.typingData.push(typeData.damage_relations)
 
       if (this.typing.length > 1) {
-        var { data } = await pokeApi.getType(this.typing[1].type.name)
-        this.typingData.push(data.damage_relations)
+        var { typeTwoData } = await pokeApi.getType(this.typing[1].type.name)
+        this.typingData.push(typeTwoData.damage_relations)
       }
 
       this.storeDamageRelations()
@@ -105,14 +105,14 @@ export default {
       var damageAmt = 1
 
       this.damageRelations.forEach(data => {
-        if (data.name == type) {
+        if (data.name === type) {
           damageAmt *= data.damage
         }
       })
 
-      if (damageAmt == 0.5) {
+      if (damageAmt === 0.5) {
         return '½'
-      } else if (damageAmt == 0.25) {
+      } else if (damageAmt === 0.25) {
         return '¼'
       } else {
         return damageAmt.toString()

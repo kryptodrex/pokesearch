@@ -15,7 +15,7 @@ export default {
   },
 
   getCurrentTotalPokemon () {
-    if (totalPokemon.count == 0) {
+    if (totalPokemon.count === 0) {
       totalPokemon = Repository.get('/pokemon-species?limit=1')
       return totalPokemon
     } else {
@@ -192,7 +192,7 @@ export default {
   },
 
   getAllPokemonSpecies () {
-    if (allSpecies.length == 0) {
+    if (allSpecies.length === 0) {
       allSpecies = Repository.get('/pokemon-species?limit=99999')
       return allSpecies
     } else {
@@ -209,7 +209,7 @@ export default {
   },
 
   getAllGenerations () {
-    if (allGens.length == 0) {
+    if (allGens.length === 0) {
       allGens = Repository.get('/generation')
       return allGens
     } else {
@@ -226,7 +226,7 @@ export default {
   },
 
   getAllTypes () {
-    if (allTypes.length == 0) {
+    if (allTypes.length === 0) {
       allTypes = Repository.get('/type?limit=100')
       return allTypes
     } else {

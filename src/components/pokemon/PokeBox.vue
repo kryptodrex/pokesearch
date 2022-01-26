@@ -24,7 +24,7 @@
         </transition> -->
 
         <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
-        <!-- <Loader class="pokePic loaderBall" type="ball" size="medium" v-if="getData != null && isLoading" /> -->
+        <!-- <Loader class="pokePic loaderBall" type="ball" size="medium" v-if="getData !== null && isLoading" /> -->
 
       </router-link>
     </div>
@@ -64,15 +64,15 @@ export default {
 
     async getPokeData () {
       if (!this.gotData) {
-        var { data } = await pokeApi.getPokemonSpecies(this.dexNum)
+        var { speciesData } = await pokeApi.getPokemonSpecies(this.dexNum)
         this.color = {
-          main: data.color.name,
+          main: speciesData.color.name,
           backup: ''
         }
 
-        var { data } = await pokeApi.getPokemon(this.dexNum)
+        var { pokeData } = await pokeApi.getPokemon(this.dexNum)
         this.types = {
-          main: data.types,
+          main: pokeData.types,
           backup: []
         }
 
@@ -83,7 +83,7 @@ export default {
     },
 
     swapData () {
-      if (this.color.main == '') {
+      if (this.color.main === '') {
         this.color.main = this.color.backup
         this.color.backup = ''
       } else {
@@ -91,7 +91,7 @@ export default {
         this.color.main = ''
       }
 
-      if (this.types.main.length == 0) {
+      if (this.types.main.length === 0) {
         this.types.main = this.types.backup
         this.types.backup = []
       } else {
@@ -131,9 +131,9 @@ export default {
     getEntryForLocale (data) {
       var entry
 
-      if (entry == null) {
+      if (entry === null) {
         data.forEach(item => {
-          if (item.language.name == 'en') {
+          if (item.language.name === 'en') {
             entry = item
           }
         })

@@ -63,18 +63,18 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getPokemon(this.prevNum)
+      var { prevData } = await pokeApi.getPokemon(this.prevNum)
       this.prevPokeData = {
-        name: util.toUpper(data.species.name),
+        name: util.toUpper(prevData.species.name),
         dexNum: this.formatIndex(this.prevNum),
-        spriteUrl: data.sprites.front_default
+        spriteUrl: prevData.sprites.front_default
       }
 
-      var { data } = await pokeApi.getPokemon(this.nextNum)
+      var { nextData } = await pokeApi.getPokemon(this.nextNum)
       this.nextPokeData = {
-        name: util.toUpper(data.species.name),
+        name: util.toUpper(nextData.species.name),
         dexNum: this.formatIndex(this.nextNum),
-        spriteUrl: data.sprites.front_default
+        spriteUrl: nextData.sprites.front_default
       }
 
       this.isLoading = false

@@ -18,15 +18,15 @@
 
 <script>
 import router from '@/router'
-import Button from '@/components/Button'
-import Search from '@/components/Search'
+// import Button from '@/components/Button'
+// import Search from '@/components/Search'
 
 export default {
   name: 'Header',
-  components: {
-    Button,
-    Search
-  },
+  // components: {
+  //   Button,
+  //   Search
+  // },
   data () {
     return {
       isHomeRoute: false
@@ -41,13 +41,13 @@ export default {
     isHome () {
       var route = router.currentRoute.name
       // console.log(route)
-      if (route == 'home') return true
+      if (route === 'home') return true
       else return false
     }
   },
   watch: {
     $route: function (to, from) {
-      if (to.name == 'home') this.isHomeRoute = true
+      if (to.name === 'home') this.isHomeRoute = true
       else this.isHomeRoute = false
     }
   }
