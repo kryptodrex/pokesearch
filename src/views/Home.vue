@@ -13,8 +13,8 @@
       </div>
 
       <div class="searchInput">
-        <Search placeholder="Start typing a name..." v-on:searching="setSearchedPokemon($event)" :hasClear="true" />
-        <p class="error" v-if="pokeInfo.length === 0 && !isLoading">No matching Pokémon found!</p>
+        <Search placeholder="Start typing a name..." v-on:searching="setSearchedPokemon($event)" :clearable="true" />
+        <p class="error" v-if="pokeInfo.length == 0 && !isLoading">No matching Pokémon found!</p>
       </div>
 
       <div class="pokeBoxes">
@@ -183,11 +183,13 @@ export default {
 
   // watch: {
   //   $route: function (to, from) {
-  //     this.genToSearch = null
+  //     console.log("to: " + to.fullPath)
+  //     console.log("from: " + from.fullPath)
+  //     // this.genToSearch = null
 
-  //     this.genToSearch = to.query.gen
+  //     // this.genToSearch = to.query.gen
 
-  //     this.navigating = true
+  //     // this.navigating = true
   //     // location.reload()
   //   }
   // }
