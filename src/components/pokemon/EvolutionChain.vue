@@ -59,7 +59,7 @@ export default {
     },
 
     traverseChain (data) {
-      this.evoLvl ++
+      this.evoLvl++
 
       data.forEach(item => {
         this.evoDetails.push(this.createEvoObj(item))
@@ -82,7 +82,7 @@ export default {
       var levelArray = []
 
       this.evoDetails.forEach(item => {
-        if (item.level == num) {
+        if (item.level === num) {
           levelArray.push(item)
         }
       })
@@ -90,8 +90,8 @@ export default {
       return levelArray
     },
 
-    getId(value) {
-      return util.getId(value);
+    getId (value) {
+      return util.getId(value)
     }
 
   }
@@ -123,7 +123,7 @@ export default {
 
 /* Viewing on large devices, like tablets and desktop */
 @media screen and (min-width: 25.9375rem) {
-  
+
 }
 
 </style>

@@ -16,11 +16,11 @@ export default {
   },
   methods: {
     getFormatting () {
-      if (this.size != null && this.color != null) {
+      if (this.size !== null && this.color !== null) {
         return this.size + ' ' + this.color
-      } else if (this.size == null && this.color != null) {
+      } else if (this.size == null && this.color !== null) {
         return this.color
-      } else if (this.size != null && this.color == null) {
+      } else if (this.size !== null && this.color == null) {
         return this.size
       }
     }
@@ -31,8 +31,7 @@ export default {
         if (this.inverted) {
           return 'bgInv-' + this.color
         } else return 'bg-' + this.color
-      }
-      else return ''
+      } else return ''
     },
     sizeClass () {
       if (this.size) return this.size

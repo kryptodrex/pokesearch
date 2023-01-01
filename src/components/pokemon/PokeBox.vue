@@ -1,6 +1,6 @@
 <template>
     <!-- <div class="pokeBox" :id="dexNum" :class="'border-' + color.main"> -->
-    <div class="pokeBox border-" :id="dexNum">  
+    <div class="pokeBox border-" :id="dexNum">
       <router-link :to="'/pokemon/' + dexNum">
 
         <div class="pokeInfo" >
@@ -24,7 +24,7 @@
         </transition> -->
 
         <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
-        <!-- <Loader class="pokePic loaderBall" type="ball" size="medium" v-if="getData != null && isLoading" /> -->
+        <!-- <Loader class="pokePic loaderBall" type="ball" size="medium" v-if="getData !== null && isLoading" /> -->
 
       </router-link>
     </div>
@@ -63,29 +63,27 @@ export default {
   methods: {
 
     async getPokeData () {
-
       if (!this.gotData) {
-        var { data } = await pokeApi.getPokemonSpecies(this.dexNum)
+        var { data } = await pokeApi.getPokemonSpecies(this.dexNum) // eslint-disable-line
         this.color = {
-          main: data.color.name,
+          main: data.color.name, // eslint-disable-line
           backup: ''
         }
 
-        var { data } = await pokeApi.getPokemon(this.dexNum)
+        var { data } = await pokeApi.getPokemon(this.dexNum) // eslint-disable-line
         this.types = {
-          main: data.types,
+          main: data.types, // eslint-disable-line
           backup: []
         }
 
         this.gotData = true
       } else {
-        this.swapData();
+        this.swapData()
       }
-     
     },
 
-    swapData() {
-      if (this.color.main == '') {
+    swapData () {
+      if (this.color.main === '') {
         this.color.main = this.color.backup
         this.color.backup = ''
       } else {
@@ -93,7 +91,7 @@ export default {
         this.color.main = ''
       }
 
-      if (this.types.main.length == 0) {
+      if (this.types.main.length === 0) {
         this.types.main = this.types.backup
         this.types.backup = []
       } else {
@@ -133,9 +131,9 @@ export default {
     getEntryForLocale (data) {
       var entry
 
-      if (entry == null) {
+      if (!entry) {
         data.forEach(item => {
-          if (item.language.name == 'en') {
+          if (item.language.name === 'en') {
             entry = item
           }
         })
@@ -204,7 +202,6 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
-
 
 .loading, .loaded {
   display: none;
