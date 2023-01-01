@@ -34,7 +34,7 @@
 
 <script>
 
-import Loader from '@/components/Loader'
+import Loader from '@/components/Loader.vue'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
 const pokeApi = RepositoryFactory.get('pokeApi')

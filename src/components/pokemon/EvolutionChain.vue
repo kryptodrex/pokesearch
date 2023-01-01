@@ -20,8 +20,8 @@
 
 <script>
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
-import PokeBox from '@/components/pokemon/PokeBox'
+import Loader from '@/components/Loader.vue'
+import PokeBox from '@/components/pokemon/PokeBox.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')

@@ -219,11 +219,11 @@
 <script>
 import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
-import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
-import DexNavigation from '@/components/pokemon/DexNavigation'
-import EvolutionChain from '@/components/pokemon/EvolutionChain'
-import Button from '@/components/Button'
+import Loader from '@/components/Loader.vue'
+import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness.vue'
+import DexNavigation from '@/components/pokemon/DexNavigation.vue'
+import EvolutionChain from '@/components/pokemon/EvolutionChain.vue'
+import Button from '@/components/Button.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')

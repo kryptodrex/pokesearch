@@ -10,7 +10,7 @@
 
 <script>
 // import router from '@/router'
-import Button from '@/components/Button'
+import Button from '@/components/Button.vue'
 
 export default {
   name: 'NotFound',

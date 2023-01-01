@@ -12,7 +12,7 @@
 
 <script>
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
+import Loader from '@/components/Loader.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 

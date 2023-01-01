@@ -28,8 +28,8 @@
 <script>
 // import { VueAutosuggest } from 'vue-autosuggest'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
-import Button from '@/components/Button'
+import Loader from '@/components/Loader.vue'
+import Button from '@/components/Button.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 

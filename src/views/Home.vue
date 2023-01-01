@@ -34,10 +34,10 @@
 
 import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import PokeBox from '@/components/pokemon/PokeBox'
-import Loader from '@/components/Loader'
-import Button from '@/components/Button'
-import Search from '@/components/Search'
+import PokeBox from '@/components/pokemon/PokeBox.vue'
+import Loader from '@/components/Loader.vue'
+import Button from '@/components/Button.vue'
+import Search from '@/components/Search.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
