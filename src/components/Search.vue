@@ -29,7 +29,7 @@
 // import { VueAutosuggest } from 'vue-autosuggest'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
-import CustomButton from '@/components/CustomButton'
+// import CustomButton from '@/components/CustomButton'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 
@@ -37,7 +37,7 @@ export default {
   name: 'PokeBox',
   components: {
     Loader,
-    CustomButton
+    // CustomButton
     // VueAutosuggest
   },
   props: {
