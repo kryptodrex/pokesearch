@@ -2,7 +2,7 @@
     <div class="search">
       <div class="searchbar">
 
-        <input class="search-input" type="text" :placeholder="placeholder" v-model="searchValue" v-on:input="waitForTypingToStop" v-if="!hasAutosuggest" >
+        <input class="search-input" type="text" :placeholder="placeholder" v-model="searchValue" v-on:input="waitForTypingToStop" v-if="!autosuggest" >
         <!-- <vue-autosuggest class="search-input" v-if="hasAutosuggest"
             :suggestions="filteredSpeciesList"
             :input-props="{placeholder: placeholder}"
@@ -15,8 +15,8 @@
           </template> -->
         <!-- </vue-autosuggest> -->
 
-        <div class="clearBtn" v-on:click="clearSearch()" v-if="searchValue.length >= 3 && hasClear">
-          <CustomButton size="medium" color="red"> Clear </CustomButton>
+        <div class="clearBtn" v-on:click="clearSearch()" v-if="searchValue.length >= 1 && clearable">
+          <Button size="medium" color="red"> Clear </Button>
         </div>
       </div>
       <div class="loadingSearch" v-if="isLoading">
@@ -42,8 +42,8 @@ export default {
   },
   props: {
     placeholder: String,
-    hasClear: Boolean,
-    hasAutosuggest: Boolean
+    clearable: Boolean,
+    autosuggest: Boolean
   },
   data () {
     return {
@@ -104,7 +104,7 @@ export default {
         tempList = tempList.filter((item) => {
           return item.name
             .toUpperCase()
-            .includes(this.searchValue.toUpperCase())
+            .includes(this.searchValue.trim().toUpperCase())
         })
       }
 
