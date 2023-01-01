@@ -49,12 +49,12 @@
             :aria-label="'Click to show form ' + toUpper(formData.name_formatted)"
           >
             <!-- Buttons for other unselected forms -->
-            <Button size="medium" :color="speciesInfo.color.name" v-if="formData.id !== form && formData.id" > {{ toUpperEachWord(formData.name_formatted) }} </Button>
-            <!-- Button for selected forms -->
-            <Button size="medium" :color="speciesInfo.color.name" :inverted="true" v-if="formData.id === form" > {{ toUpperEachWord(formData.name_formatted) }} </Button>
+            <CustomButton size="medium" :color="speciesInfo.color.name" v-if="formData.id !== form && formData.id" > {{ toUpperEachWord(formData.name_formatted) }} </CustomButton>
+            <!-- CustomButton for selected forms -->
+            <CustomButton size="medium" :color="speciesInfo.color.name" :inverted="true" v-if="formData.id === form" > {{ toUpperEachWord(formData.name_formatted) }} </CustomButton>
           </div>
           <!-- <router-link v-if="!hasDefaultForm && form" :to="'/pokemon/' + pokemon" class="formBtn">
-            <Button size="medium" :color="speciesInfo.color.name"> Default </Button>
+            <CustomButton size="medium" :color="speciesInfo.color.name"> Default </CustomButton>
           </router-link> -->
         </div>
       </div>
@@ -223,7 +223,7 @@ import Loader from '@/components/Loader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import DexNavigation from '@/components/pokemon/DexNavigation'
 import EvolutionChain from '@/components/pokemon/EvolutionChain'
-import Button from '@/components/Button'
+import CustomButton from '@/components/CustomButton'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
@@ -246,7 +246,7 @@ export default {
   name: 'Pokemon',
   components: {
     Loader,
-    Button,
+    CustomButton,
     TypeEffectiveness,
     DexNavigation,
     EvolutionChain

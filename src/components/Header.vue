@@ -11,20 +11,20 @@
 
     <!-- <div class="header-search" v-if="!isHomeRoute && !isHome">
         <Search class="header-search-input" placeholder="Search..." v-on:searching="setSearchedPokemon($event)" :hasAutosuggest="false" />
-        <Button size="medium" color="white"> GO! </Button>
+        <CustomButton size="medium" color="white"> GO! </CustomButton>
     </div> -->
   </header>
 </template>
 
 <script>
 import router from '@/router'
-// import Button from '@/components/Button'
+// import CustomButton from '@/components/CustomButton'
 // import Search from '@/components/Search'
 
 export default {
   name: 'Header',
   // components: {
-  //   Button,
+  //   CustomButton,
   //   Search
   // },
   data () {

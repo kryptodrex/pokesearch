@@ -6,9 +6,9 @@
       <div class="filterBtns">
         <div class="genBtns" v-for="(gen, index) in generations" :key="index" v-on:click="changeGeneration(getIndex(gen.url))" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
           <!-- Buttons for other unselected generations -->
-          <Button size="medium" color="ps-red" v-if="getIndex(gen.url) !== genToSearch" > {{ getGeneration(gen.name) }} </Button>
-          <!-- Button for selected generation -->
-          <Button size="medium" color="ps-red" :inverted="true" v-if="getIndex(gen.url) === genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <CustomButton size="medium" color="ps-red" v-if="getIndex(gen.url) !== genToSearch" > {{ getGeneration(gen.name) }} </CustomButton>
+          <!-- CustomButton for selected generation -->
+          <CustomButton size="medium" color="ps-red" :inverted="true" v-if="getIndex(gen.url) === genToSearch" > {{ getGeneration(gen.name) }} </CustomButton>
         </div>
       </div>
 
@@ -24,7 +24,7 @@
     </div>
 
     <div class="loadMore" v-on:click="getNextGen()" :aria-label="'Click to load ' +  getGeneration(nextGen.name) + ' Pokémon'" v-if="nextGen !== null">
-      <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen !== null && !searching"> Load {{ getGeneration(nextGen.name) }} </Button>
+      <CustomButton id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen !== null && !searching"> Load {{ getGeneration(nextGen.name) }} </CustomButton>
       <Loader v-if="isLoading" size="large" :full-page="true" />
     </div>
   </div>
@@ -36,7 +36,7 @@ import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import PokeBox from '@/components/pokemon/PokeBox'
 import Loader from '@/components/Loader'
-import Button from '@/components/Button'
+import CustomButton from '@/components/CustomButton'
 import Search from '@/components/Search'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
@@ -47,7 +47,7 @@ export default {
   components: {
     PokeBox,
     Loader,
-    Button,
+    CustomButton,
     Search
   },
   data () {

@@ -16,7 +16,7 @@
         <!-- </vue-autosuggest> -->
 
         <div class="clearBtn" v-on:click="clearSearch()" v-if="searchValue.length >= 3 && hasClear">
-          <Button size="medium" color="red"> Clear </Button>
+          <CustomButton size="medium" color="red"> Clear </CustomButton>
         </div>
       </div>
       <div class="loadingSearch" v-if="isLoading">
@@ -29,7 +29,7 @@
 // import { VueAutosuggest } from 'vue-autosuggest'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
-import Button from '@/components/Button'
+import CustomButton from '@/components/CustomButton'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 
@@ -37,7 +37,7 @@ export default {
   name: 'PokeBox',
   components: {
     Loader,
-    Button
+    CustomButton
     // VueAutosuggest
   },
   props: {
