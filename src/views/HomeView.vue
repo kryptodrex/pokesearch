@@ -43,7 +43,7 @@ const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
 
 export default {
-  name: 'Home',
+  name: 'HomeView',
   components: {
     PokeBox,
     Loader,

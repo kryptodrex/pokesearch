@@ -242,8 +242,7 @@ const StatRepo = {
 }
 
 export default {
-
-  name: 'Pokemon',
+  name: 'PokemonView',
   components: {
     Loader,
     CustomButton,
