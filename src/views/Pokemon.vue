@@ -8,7 +8,14 @@
       <div id="head" class="poke-head">
         <h1 class="pokedex-num">#{{ formatIndex(speciesInfo.id) }}</h1>
 
-        <img :src="photoUrl" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" @error="imgUrlAlt" />
+        <div class="pokemon-img-container">
+          <img :src="photoUrl" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" @error="imgUrlAlt" />
+          <!-- <div>
+            <span>Normal</span> | <span>Shiny</span>
+          </div> -->
+        </div>
+
+        <!-- <PokeImg class="pokemon-image" :baseUrl="'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'" :dexNum="speciesInfo.id" :name="pokeName"/> -->
 
         <!-- Grab the base name of the Pokémon -->
         <h1 class="pokemon-name" id="pokemon-name">
@@ -93,7 +100,7 @@
           </span>
         </p>
 
-        <p><strong>Shape:</strong> {{ toUpper(speciesInfo.shape.name) }}</p>
+        <p><strong>Shape:</strong> {{ toUpper(speciesInfo.shape !== null ? speciesInfo.shape.name : 'Unknown') }}</p>
 
         <p>
           <strong>Height:</strong> {{ getHeight(pokeInfo.height) }} <br />
@@ -224,6 +231,7 @@ import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import DexNavigation from '@/components/pokemon/DexNavigation'
 import EvolutionChain from '@/components/pokemon/EvolutionChain'
 import Button from '@/components/Button'
+// import PokeImg from '../components/pokemon/PokeImg.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
@@ -250,6 +258,7 @@ export default {
     TypeEffectiveness,
     DexNavigation,
     EvolutionChain
+    // PokeImg
   },
   data () {
     return {
@@ -758,6 +767,12 @@ export default {
 .poke-head {
   max-width: 46.875rem;
   margin: 0 auto;
+}
+
+.pokemon-img-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pokemon-image {
