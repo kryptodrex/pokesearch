@@ -13,7 +13,7 @@
     "core-js": "^3.27.1",
     "vue": "^2.6.10",
     "vue-autosuggest": "^2.2.0",
-    "vue-router": "^3.0.3",
+    "vue-router": "^3.6.5",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
