@@ -49,11 +49,11 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getEvolutionChain(this.chain)
-
-      this.evoDetails.push(this.createEvoObj(data.chain))
-
-      this.traverseChain(data.chain.evolves_to)
+      if (this.chain !== 'None') {
+        var { data } = await pokeApi.getEvolutionChain(this.chain)
+        this.evoDetails.push(this.createEvoObj(data.chain))
+        this.traverseChain(data.chain.evolves_to)
+      }
 
       this.isLoading = false
     },

@@ -205,7 +205,7 @@
       <div id="evolutions" class="evoChain" :class="'info-box border-' + speciesInfo.color.name">
         <!-- <h3>Evolution Chain</h3> -->
         <h3>Evolutions</h3>
-        <EvolutionChain :chain="getId(speciesInfo.evolution_chain.url)" />
+        <EvolutionChain :chain="speciesInfo.evolution_chain == null ? 'None' : getId(speciesInfo.evolution_chain.url)" />
       </div>
 
       <!-- Pokemon Dex Entries Info Box -->
