@@ -93,11 +93,38 @@ export default {
   transition: .4s;
 }
 
-/* input:checked + .slider {
-  background-color: #2196F3;
+input:checked + .slider-color-black {
+  background-color: #323232;
+}
+input:checked + .slider-color-blue {
+  background-color: #3482de;
+}
+input:checked + .slider-color-brown {
+  background-color: #af891f;
+}
+input:checked + .slider-color-gray {
+  background-color: #707070;
+}
+input:checked + .slider-color-green {
+  background-color: #64a743;
+}
+input:checked + .slider-color-pink {
+  background-color: #e97698;
+}
+input:checked + .slider-color-purple {
+  background-color: #7c63b8;
+}
+input:checked + .slider-color-red {
+  background-color: rgb(201, 38, 63);
+}
+input:checked + .slider-color-white {
+  background-color: #aaaaaa;
+}
+input:checked + .slider-color-yellow {
+  background-color: #f8d030;
 }
 
-input:focus + .slider {
+/* input:focus + .slider {
   box-shadow: 0 0 1px #2196F3;
 } */
 
