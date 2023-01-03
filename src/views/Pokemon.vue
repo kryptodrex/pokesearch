@@ -10,9 +10,13 @@
 
         <div class="pokemon-img-container">
           <img :src="photoUrl" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" @error="imgUrlAlt" />
-          <!-- <div>
-            <span>Normal</span> | <span>Shiny</span>
-          </div> -->
+          <div>
+            <span>Normal</span>
+            <span>
+              <SliderSwitch :propState="showShiny" v-on:stateChange="toggleShiny($event)"/>
+            </span>
+            <span>Shiny</span>
+          </div>
         </div>
 
         <!-- <PokeImg class="pokemon-image" :baseUrl="'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'" :dexNum="speciesInfo.id" :name="pokeName"/> -->
@@ -231,6 +235,7 @@ import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import DexNavigation from '@/components/pokemon/DexNavigation'
 import EvolutionChain from '@/components/pokemon/EvolutionChain'
 import Button from '@/components/Button'
+import SliderSwitch from '@/components/SliderSwitch'
 // import PokeImg from '../components/pokemon/PokeImg.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
@@ -257,7 +262,8 @@ export default {
     Button,
     TypeEffectiveness,
     DexNavigation,
-    EvolutionChain
+    EvolutionChain,
+    SliderSwitch
     // PokeImg
   },
   data () {
@@ -270,11 +276,14 @@ export default {
       pokeInfo: null,
       formInfo: null,
       // types: null,
+      showShiny: false,
       pokeName: null,
       abilityList: [],
       nextNum: null,
       prevNum: null,
       navigating: false,
+      timeout: null,
+      timer: 0,
       locales: [],
       title: ' - Pokémon'
     }
@@ -562,6 +571,23 @@ export default {
       return groups
     },
 
+    toggleShiny (e) {
+      // console.log(e)
+      if (this.timer === 0) {
+        // console.log('toggling shiny on/off')
+        this.showShiny = e
+        // console.log(this.showShiny)
+        this.timer = 1
+
+        clearTimeout(this.timeout)
+
+        var that = this
+        this.timeout = setTimeout(function () {
+          that.timer = 0
+        }, 1)
+      }
+    },
+
     showEasterEgg () {
       var origName = this.pokeName
 
@@ -666,6 +692,8 @@ export default {
             return ''
           }
         }
+      } else if (this.showShiny) {
+        return util.getPokemonShinyImageUrl(util.formatIndex(this.speciesInfo.id))
       } else return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
     },
     alternateForms () {
