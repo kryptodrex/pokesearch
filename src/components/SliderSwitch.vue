@@ -1,6 +1,6 @@
 <template>
     <label class="switch">
-        <input type="checkbox" :checked="state" v-on:click="changeState()">
+        <input type="checkbox" :checked="state" v-on:click="changeState()" :disabled="disabled" :hidden="hidden">
         <span class="slider round"></span>
     </label>
 </template>
@@ -10,7 +10,9 @@
 export default {
   name: 'SliderSwitch',
   props: {
-    propState: Boolean
+    propState: Boolean,
+    disabled: Boolean,
+    hidden: Boolean
   },
   data () {
     return {
@@ -86,6 +88,10 @@ input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
+}
+
+input:disabled {
+  background-color: #ccc
 }
 
 /* Rounded sliders */
