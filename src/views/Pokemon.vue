@@ -10,9 +10,13 @@
 
         <div class="pokemon-img-container">
           <img :src="photoUrl" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" @error="imgUrlAlt" />
-          <!-- <div>
-            <span>Normal</span> | <span>Shiny</span>
-          </div> -->
+          <div class="shiny-slider" v-if="!form || parseInt(form) === speciesInfo.id">
+            <span>Normal</span>
+            <span class="shiny-switch">
+              <SliderSwitch :propState="showShiny" :color="speciesInfo.color.name" v-on:toggle="toggleShiny($event)"/>
+            </span>
+            <span>Shiny</span>
+          </div>
         </div>
 
         <!-- <PokeImg class="pokemon-image" :baseUrl="'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'" :dexNum="speciesInfo.id" :name="pokeName"/> -->
@@ -231,6 +235,7 @@ import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import DexNavigation from '@/components/pokemon/DexNavigation'
 import EvolutionChain from '@/components/pokemon/EvolutionChain'
 import Button from '@/components/Button'
+import SliderSwitch from '@/components/SliderSwitch'
 // import PokeImg from '../components/pokemon/PokeImg.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
@@ -257,7 +262,8 @@ export default {
     Button,
     TypeEffectiveness,
     DexNavigation,
-    EvolutionChain
+    EvolutionChain,
+    SliderSwitch
     // PokeImg
   },
   data () {
@@ -270,11 +276,14 @@ export default {
       pokeInfo: null,
       formInfo: null,
       // types: null,
+      showShiny: false,
       pokeName: null,
       abilityList: [],
       nextNum: null,
       prevNum: null,
       navigating: false,
+      timeout: null,
+      timer: 0,
       locales: [],
       title: ' - Pokémon'
     }
@@ -562,6 +571,23 @@ export default {
       return groups
     },
 
+    toggleShiny (e) {
+      // console.log(e)
+      if (this.timer === 0) {
+        // console.log('toggling shiny on/off')
+        this.showShiny = e
+        // console.log(this.showShiny)
+        this.timer = 1
+
+        clearTimeout(this.timeout)
+
+        var that = this
+        this.timeout = setTimeout(function () {
+          that.timer = 0
+        }, 1)
+      }
+    },
+
     showEasterEgg () {
       var origName = this.pokeName
 
@@ -648,10 +674,9 @@ export default {
   },
   computed: {
     photoUrl () {
-      if (this.form) {
-        if (parseInt(this.form) === this.speciesInfo.id) {
-          return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
-        } else if (this.speciesInfo.id === 351) {
+      // if (this.form) {
+      if (this.form && parseInt(this.form) !== this.speciesInfo.id) {
+        if (this.speciesInfo.id === 351) {
           // Logic for forms of specific pokemon, which don't work well for images
           return this.pokeInfo.sprites.front_default
         } else {
@@ -666,6 +691,8 @@ export default {
             return ''
           }
         }
+      } else if (this.showShiny) {
+        return util.getPokemonShinyImageUrl(util.formatIndex(this.speciesInfo.id))
       } else return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
     },
     alternateForms () {
@@ -773,11 +800,23 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 1rem;
 }
 
 .pokemon-image {
   margin-top: 1rem;
   height: 12rem;
+}
+
+.shiny-slider {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.shiny-switch {
+  margin: 0 1rem 0 1rem;
 }
 
 /* Type styling */

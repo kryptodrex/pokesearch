@@ -6,7 +6,6 @@
         </router-link>
         <h1 class="site-name">PokéSearch</h1>
         <h4 v-if="env == 'dev'" class="site-name">&nbsp; beta</h4>
-        <!-- Take out 'beta' once it is v1.0! -->
     </div>
 
     <!-- <div class="header-search" v-if="!isHomeRoute && !isHome">
@@ -52,6 +51,14 @@ export default {
   },
   watch: {
     $route: function (to, from) {
+      // console.log(this.$store.state.priorId)
+      // console.log(to, from)
+
+      // Add path to history
+      // this.$store.commit('addIdToHistory', from.fullPath)
+      this.$store.commit('addIdToHistory', to.fullPath)
+      // console.log(this.$store.state.idHistory)
+
       if (to.name === 'home') this.isHomeRoute = true
       else this.isHomeRoute = false
     }
