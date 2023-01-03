@@ -13,7 +13,7 @@
           <div class="shiny-slider" v-if="!form || parseInt(form) === speciesInfo.id">
             <span>Normal</span>
             <span class="shiny-switch">
-              <SliderSwitch :propState="showShiny" v-on:stateChange="toggleShiny($event)"/>
+              <SliderSwitch :propState="showShiny" :color="speciesInfo.color.name" v-on:toggle="toggleShiny($event)"/>
             </span>
             <span>Shiny</span>
           </div>

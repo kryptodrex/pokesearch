@@ -1,7 +1,7 @@
 <template>
     <label class="switch">
         <input type="checkbox" :checked="state" v-on:click="changeState()" :disabled="disabled" :hidden="hidden">
-        <span class="slider round"></span>
+        <span class="slider round" :class="colorClass"></span>
     </label>
 </template>
 
@@ -12,7 +12,8 @@ export default {
   props: {
     propState: Boolean,
     disabled: Boolean,
-    hidden: Boolean
+    hidden: Boolean,
+    color: String
   },
   data () {
     return {
@@ -25,7 +26,23 @@ export default {
   methods: {
     changeState () {
       this.state ? this.state = false : this.state = true
-      this.$emit('stateChange', this.state)
+      this.$emit('toggle', this.state)
+    },
+    getFormatting () {
+      if (this.size !== null && this.color !== null) {
+        return this.size + ' ' + this.color
+      } else if (this.size == null && this.color !== null) {
+        return this.color
+      } else if (this.size !== null && this.color == null) {
+        return this.size
+      }
+    }
+  },
+  computed: {
+    colorClass () {
+      if (this.color) {
+        return 'slider-color-' + this.color
+      } else return ''
     }
   }
 }
@@ -76,13 +93,13 @@ export default {
   transition: .4s;
 }
 
-input:checked + .slider {
+/* input:checked + .slider {
   background-color: #2196F3;
 }
 
 input:focus + .slider {
   box-shadow: 0 0 1px #2196F3;
-}
+} */
 
 input:checked + .slider:before {
   -webkit-transform: translateX(26px);
