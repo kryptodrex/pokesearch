@@ -10,9 +10,9 @@
 
         <div class="pokemon-img-container">
           <img :src="photoUrl" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" @error="imgUrlAlt" />
-          <div>
+          <div class="shiny-slider" v-if="!form || parseInt(form) === speciesInfo.id">
             <span>Normal</span>
-            <span>
+            <span class="shiny-switch">
               <SliderSwitch :propState="showShiny" v-on:stateChange="toggleShiny($event)"/>
             </span>
             <span>Shiny</span>
@@ -674,10 +674,9 @@ export default {
   },
   computed: {
     photoUrl () {
-      if (this.form) {
-        if (parseInt(this.form) === this.speciesInfo.id) {
-          return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
-        } else if (this.speciesInfo.id === 351) {
+      // if (this.form) {
+      if (this.form && parseInt(this.form) !== this.speciesInfo.id) {
+        if (this.speciesInfo.id === 351) {
           // Logic for forms of specific pokemon, which don't work well for images
           return this.pokeInfo.sprites.front_default
         } else {
@@ -801,11 +800,23 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 1rem;
 }
 
 .pokemon-image {
   margin-top: 1rem;
   height: 12rem;
+}
+
+.shiny-slider {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.shiny-switch {
+  margin: 0 1rem 0 1rem;
 }
 
 /* Type styling */
