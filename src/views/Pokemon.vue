@@ -104,7 +104,7 @@
           </span>
         </p>
 
-        <p><strong>Shape:</strong> {{ toUpper(speciesInfo.shape !== null ? speciesInfo.shape.name : 'Unknown') }}</p>
+        <p><strong>Shape:</strong> {{ toUpper(speciesInfo.shape !== null ? speciesInfo.shape.name : '(Not found)') }}</p>
 
         <p>
           <strong>Height:</strong> {{ getHeight(pokeInfo.height) }} <br />
@@ -399,7 +399,7 @@ export default {
     },
 
     getFlavorText (data) {
-      return this.getEntryForLocale(data).flavor_text
+      return util.tryData(this.getEntryForLocale(data), 'flavor_text')
     },
 
     changeForm (toForm, type) {
@@ -460,7 +460,8 @@ export default {
     },
 
     getGenus (data) {
-      return this.getEntryForLocale(data).genus
+      // return this.getEntryForLocale(data).genus
+      return util.tryData(this.getEntryForLocale(data), 'genus', '(Not found)')
     },
 
     getWeight (data) {
@@ -652,14 +653,6 @@ export default {
 
     getEntryForLocale (data) {
       var entry
-      // this.locales.forEach(lang => {
-      //   data.forEach(item => {
-      //     if (item.language.name === lang) {
-      //       entry = item;
-      //     }
-      //   })
-
-      // })
 
       if (!entry) {
         data.forEach(item => {
