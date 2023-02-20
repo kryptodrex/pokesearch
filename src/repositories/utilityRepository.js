@@ -89,6 +89,17 @@ export default {
         ? trimmedLocale.split(/-|_/)[0]
         : trimmedLocale
     })
+  },
+
+  tryData (data, key) {
+    var text
+    try {
+      text = data[key]
+    } catch (error) {
+      console.log(error)
+      text = ''
+    }
+    return text
   }
 
 }
