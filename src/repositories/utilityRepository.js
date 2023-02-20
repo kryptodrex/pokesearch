@@ -91,13 +91,13 @@ export default {
     })
   },
 
-  tryData (data, key) {
+  tryData (data, key, returnStr = '') {
     var text
     try {
       text = data[key]
     } catch (error) {
       console.log(error)
-      text = ''
+      text = returnStr
     }
     return text
   }
