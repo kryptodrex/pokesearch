@@ -3,8 +3,11 @@
     <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
     <div v-if="!isLoading" class="evolutionChain">
       <div class="evoLevels" v-if="evoDetails.length > 1">
+        <!-- <div v-for="(evo, index) in evoDetails" :key="index" :class="'evoLevel' + evo.level">
+          <PokeBox :dexNum="getId(evo.species.url)" :name="evo.species.name" />
+        </div> -->
         <div class="evoLevel0">
-        <PokeBox v-for="(evo, index) in getEvoLevelDetails(0)" :key="index" :dexNum="getId(evo.species.url)" :name="evo.species.name" />
+          <PokeBox v-for="(evo, index) in getEvoLevelDetails(0)" :key="index" :dexNum="getId(evo.species.url)" :name="evo.species.name" />
         </div>
         <div class="evoLevel1">
           <PokeBox v-for="(evo, index) in getEvoLevelDetails(1)" :key="index" :dexNum="getId(evo.species.url)" :name="evo.species.name" />
@@ -49,11 +52,11 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getEvolutionChain(this.chain)
-
-      this.evoDetails.push(this.createEvoObj(data.chain))
-
-      this.traverseChain(data.chain.evolves_to)
+      if (this.chain !== 'None') {
+        var { data } = await pokeApi.getEvolutionChain(this.chain)
+        this.evoDetails.push(this.createEvoObj(data.chain))
+        this.traverseChain(data.chain.evolves_to)
+      }
 
       this.isLoading = false
     },
