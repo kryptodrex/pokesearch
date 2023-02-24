@@ -3,10 +3,10 @@
     <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
     <div v-if="!isLoading" class="evolutionChain">
       <div class="evoLevels" v-if="evoDetails.length > 1">
-        <!-- <div v-for="(evo, index) in evoDetails" :key="index" :class="'evoLevel' + evo.level">
-          <PokeBox :dexNum="getId(evo.species.url)" :name="evo.species.name" />
-        </div> -->
-        <div class="evoLevel0">
+        <div v-for="index in evoLvl" :key="index" :class="'evoLevel' + index">
+          <PokeBox v-for="(evo, index2) in getEvoLevelDetails(index)" :key="index2" :dexNum="getId(evo.species.url)" :name="evo.species.name" />
+        </div>
+        <!-- <div class="evoLevel0">
           <PokeBox v-for="(evo, index) in getEvoLevelDetails(0)" :key="index" :dexNum="getId(evo.species.url)" :name="evo.species.name" />
         </div>
         <div class="evoLevel1">
@@ -14,7 +14,7 @@
         </div>
         <div class="evoLevel2">
           <PokeBox v-for="(evo, index) in getEvoLevelDetails(2)" :key="index" :dexNum="getId(evo.species.url)" :name="evo.species.name" />
-        </div>
+        </div> -->
       </div>
       <h4 v-if="evoDetails.length <= 1">This Pokémon does not evolve!</h4>
     </div>
@@ -42,7 +42,7 @@ export default {
     return {
       isLoading: false,
       evoDetails: [],
-      evoLvl: 0
+      evoLvl: 1
     }
   },
   created () {
@@ -57,6 +57,8 @@ export default {
         this.evoDetails.push(this.createEvoObj(data.chain))
         this.traverseChain(data.chain.evolves_to)
       }
+
+      console.log(this.evoDetails)
 
       this.isLoading = false
     },
