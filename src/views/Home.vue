@@ -4,6 +4,9 @@
     <div class="content">
 
       <div class="filterBtns">
+        <select name="" id="" v-on:change="e => changeGeneration(e.target.value)">
+          <option selected v-for="(gen, index) in generations" :key="index" :value="getIndex(gen.url)">{{ getGeneration(gen.name) }}</option>
+        </select>
         <div class="genBtns" v-for="(gen, index) in generations" :key="index" v-on:click="changeGeneration(getIndex(gen.url))" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
           <!-- Buttons for other unselected generations -->
           <Button size="medium" color="ps-red" v-if="getIndex(gen.url) !== genToSearch" > {{ getGeneration(gen.name) }} </Button>
