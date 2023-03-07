@@ -227,7 +227,7 @@ export default {
 
   getAllTypes () {
     if (allTypes.length === 0) {
-      allTypes = Repository.get('/type?limit=100')
+      allTypes = Repository.get('/type?limit=999')
       return allTypes
     } else {
       return allTypes
