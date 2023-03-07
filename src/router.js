@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Pokemon from './views/Pokemon.vue'
+import Type from './views/Type.vue'
 import NotFound from '@/views/NotFound.vue'
 
 Vue.use(Router)
@@ -30,6 +31,16 @@ export default new Router({
       path: '/pokemon/:name/forms/:form',
       name: 'pokePageAltForm',
       component: Pokemon
+    },
+    {
+      path: '/type',
+      name: 'typePage',
+      component: Type
+    },
+    {
+      path: '/type/:name',
+      name: 'typePageDirect',
+      component: Type
     },
     {
       path: '/lost-in-the-tall-grass',
