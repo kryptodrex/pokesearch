@@ -4,8 +4,11 @@
     <div class="content">
 
       <div class="filterBtns">
-        <select name="" id="" v-on:change="e => changeGeneration(e.target.value)">
+        <select name="genFilter" id="genFilter" v-on:change="e => changeGeneration(e.target.value)">
           <option selected v-for="(gen, index) in generations" :key="index" :value="getIndex(gen.url)">{{ getGeneration(gen.name) }}</option>
+        </select>
+        <select name="typeFilter" id="typeFilter" v-on:change="e => changeType(e.target.value)">
+          <option v-for="(type, index) in allTypes" :key="index" :value="type.name">{{ getType(type.name) }}</option>
         </select>
         <div class="genBtns" v-for="(gen, index) in generations" :key="index" v-on:click="changeGeneration(getIndex(gen.url))" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
           <!-- Buttons for other unselected generations -->
@@ -59,7 +62,9 @@ export default {
       searching: false,
       pokeInfo: [],
       generations: [],
+      types: [],
       genToSearch: router.currentRoute.query.gen,
+      typeToSearch: router.currentRoute.query.type,
       nextGen: { name: 'generation-ii' },
       limit: 30,
       offset: 0,
@@ -88,6 +93,15 @@ export default {
         this.getPokemon()
       }
     },
+    changeType (type) {
+      this.typeToSearch = type
+      var currentRoute = this.$router.currentRoute
+      if (currentRoute.query.type !== type) {
+        this.pokeInfo = []
+        this.$router.push({ name: 'homePokemon', query: { type: type } })
+        this.getPokemon()
+      }
+    },
 
     async getPokemon () {
       this.isLoading = true
@@ -95,22 +109,45 @@ export default {
       var { data } = await pokeApi.getAllGenerations() // eslint-disable-line
       this.generations = data.results
 
+      var { data } = await pokeApi.getAllTypes() // eslint-disable-line
+      this.types = data.results
+
       var latestGen = this.getIndex(this.generations[this.generations.length - 1].url)
       // var latestGen = 'generation-i';
 
-      if (!this.genToSearch) this.genToSearch = latestGen
+      if (!this.genToSearch) {
+        this.genToSearch = latestGen
+      } else {
+        this.typeToSearch = ''
+      }
 
       this.nextGen = this.setNextGen()
 
-      var { data } = await pokeApi.getGeneration(this.genToSearch) // eslint-disable-line
+      if (this.typeToSearch) {
+        var { data } = await pokeApi.getType(this.typeToSearch) // eslint-disable-line
 
-      data.pokemon_species.forEach(species => { // eslint-disable-line
-        this.pokeInfo = this.pokeInfo.concat([{
-          name: species.name,
-          url: species.url,
-          index: this.getIndex(species.url)
-        }])
-      })
+        data.pokemon.forEach(poke => { // eslint-disable-line
+          var pokeObj = poke.pokemon
+          var index = this.getIndex(pokeObj.url)
+          if (index < 10000) {
+            this.pokeInfo = this.pokeInfo.concat([{
+              name: pokeObj.name,
+              url: pokeObj.url,
+              index: index
+            }])
+          }
+        })
+      } else {
+        var { data } = await pokeApi.getGeneration(this.genToSearch) // eslint-disable-line
+
+        data.pokemon_species.forEach(species => { // eslint-disable-line
+          this.pokeInfo = this.pokeInfo.concat([{
+            name: species.name,
+            url: species.url,
+            index: this.getIndex(species.url)
+          }])
+        })
+      }
 
       this.isLoading = false
     },
@@ -151,6 +188,11 @@ export default {
         var split = gen.split('-')
         return 'Gen ' + split[1].toUpperCase()
       } else return ''
+    },
+    getType (type) {
+      if (type) {
+        return util.toUpper(type)
+      } else return ''
     }
 
     // async getPokemon() {
@@ -181,6 +223,13 @@ export default {
       })
 
       return tempPokeInfo
+    },
+    allTypes () {
+      let tempTypes = this.types
+      tempTypes = tempTypes.filter((item) => {
+        if (item.name !== 'unknown' && item.name !== 'shadow') return item
+      })
+      return tempTypes
     }
   }
 
