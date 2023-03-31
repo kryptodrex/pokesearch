@@ -33,12 +33,13 @@ export default new Router({
       component: Pokemon
     },
     {
-      path: '/type',
-      name: 'typePage',
-      component: Type
+      path: '/types',
+      redirect: '/'
+      // name: 'typePage',
+      // component: Type
     },
     {
-      path: '/type/:name',
+      path: '/types/:name',
       name: 'typePageDirect',
       component: Type
     },
