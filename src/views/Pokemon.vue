@@ -33,7 +33,9 @@
             v-for="typeInfo in types"
             v-bind:key="typeInfo.slot"
           >
-            {{ toUpper(typeInfo.type.name) }}
+            <router-link :to="'/types/' + typeInfo.type.name">
+              {{ toUpper(typeInfo.type.name) }}
+            </router-link>
           </div>
         </div>
 
