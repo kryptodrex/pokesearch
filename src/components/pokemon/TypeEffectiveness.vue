@@ -3,7 +3,9 @@
     <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
     <div v-if="!isLoading" class="typeEffectiveness">
         <div class="dmg-box" v-for="(type, index) in types" :key="index">
-            <span :class="'type-' + type.name "> {{ getAbbrType(type.name) }} </span>
+            <router-link :to="'/types/' + type.name">
+              <span :class="'type-' + type.name "> {{ getAbbrType(type.name) }} </span>
+            </router-link>
             <span :class="'dmg-num dmg-' + getDamageAmount(type.name)"> {{ getDamageAmount(type.name) }} </span>
         </div>
     </div>
