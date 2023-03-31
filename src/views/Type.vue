@@ -5,9 +5,14 @@
     <div class="typeData" v-if="!isLoading">
       <p>{{ toUpper(typeInfo.name) }}</p>
 
-      <span>Comparing {{ toUpper(typeInfo.name) }}. Add another typing to see the dual defensiveness:</span>
-      
-      <TypeEffectiveness :typing="types" />
+      <span>Comparing {{ toUpper(typeInfo.name) }}. Add another typing to see dual typing defensiveness:</span>
+      <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
+        <option v-for="(type, index) in allTypes" :key="index" :value="type.name">{{ toUpper(type.name) }}</option>
+      </select>
+      <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('', clear = true)">
+        <Button size="medium" color="ps-red">Clear</Button>
+      </div>
+      <TypeEffectiveness :key="typeEffKey" :typing="types" />
     </div>
   </div>
 </template>
@@ -18,7 +23,7 @@ import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 // import DexNavigation from '@/components/pokemon/DexNavigation'
-// import Button from '@/components/Button'
+import Button from '@/components/Button'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
@@ -41,7 +46,7 @@ export default {
   name: 'Type',
   components: {
     Loader,
-    // Button,
+    Button,
     TypeEffectiveness
     // DexNavigation,
     // PokeImg
@@ -53,6 +58,7 @@ export default {
       typeInfo: null,
       types: [],
       allTypes: [],
+      typeEffKey: 1,
       nextNum: null,
       prevNum: null,
       navigating: false,
@@ -88,7 +94,7 @@ export default {
 
       var { data } = await pokeApi.getAllTypes() // eslint-disable-line
       this.allTypes = data.results.filter((item) => { // filtering out unknown and shadow types
-        if (item.name !== 'unknown' && item.name !== 'shadow') return item
+        if (item.name !== 'unknown' && item.name !== 'shadow' && item.name !== this.typeInfo.name) return item
       })
 
       document.title = this.toUpper(this.typeInfo.name) + this.title // set site title to type name
@@ -123,6 +129,20 @@ export default {
     checkNull (data) {
       if (!data) return true
       else return false
+    },
+
+    updateTypes (type, clear = false) {
+      if (this.types.length > 1) {
+        this.types.pop()
+      }
+      if (!clear) {
+        this.types.push({
+          type: {
+            name: type
+          }
+        })
+      }
+      this.typeEffKey += 1
     }
 
     // getEntryForLocale (data) {
@@ -138,18 +158,16 @@ export default {
 
     //   return entry
     // }
+  },
+  watch: {
+    $route: function (to, from) {
+      this.type = ''
+      this.types = []
+      this.type = to.params.name
+      this.navigating = true
+      // location.reload()
+    }
   }
-  // computed: {
-  //   types () {
-  //     var typeList = []
-  //     typeList.push({
-  //       type: {
-  //         name: this.typeInfo.name
-  //       }
-  //     })
-  //     return typeList
-  //   }
-  // }
 }
 </script>
 
