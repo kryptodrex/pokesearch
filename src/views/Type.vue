@@ -3,7 +3,7 @@
     <Loader v-if="isLoading" :full-page="true" />
 
     <div class="typeData" v-if="!isLoading">
-      <p>{{ toUpper(typeInfo.name) }}</p>
+      <TypeBox :typeName="typeInfo.name" size="large">{{ toUpper(typeInfo.name) }} Type</TypeBox>
 
       <span>Comparing {{ toUpper(typeInfo.name) }}. Add another typing to see dual typing defensiveness:</span>
       <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
@@ -12,7 +12,12 @@
       <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('', clear = true)">
         <Button size="medium" color="ps-red">Clear</Button>
       </div>
-      <TypeEffectiveness :key="typeEffKey" :typing="types" />
+
+      Defensiveness:
+      <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
+
+      Offensiveness:
+      <TypeEffectiveness :key="typeEffKey" :typing="types" direction="to" />
     </div>
   </div>
 </template>
@@ -22,24 +27,11 @@ import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
-// import DexNavigation from '@/components/pokemon/DexNavigation'
 import Button from '@/components/Button'
+import TypeBox from '@/components/types/TypeBox'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
-
-// const statMap = {
-//   hp: { short: 'HP', long: 'HP' },
-//   attack: { short: 'Atk', long: 'Attack' },
-//   defense: { short: 'Def', long: 'Defense' },
-//   special_attack: { short: 'Sp.Atk', long: 'Special Attack' },
-//   special_defense: { short: 'Sp.Def', long: 'Special Defense' },
-//   speed: { short: 'Speed', long: 'Speed' }
-// }
-
-// const StatRepo = {
-//   get: stat => statMap[stat.replace('-', '_')]
-// }
 
 export default {
 
@@ -47,9 +39,8 @@ export default {
   components: {
     Loader,
     Button,
-    TypeEffectiveness
-    // DexNavigation,
-    // PokeImg
+    TypeEffectiveness,
+    TypeBox
   },
   data () {
     return {
