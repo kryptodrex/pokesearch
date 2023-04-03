@@ -19,9 +19,9 @@ import Loader from '@/components/Loader'
 const pokeApi = RepositoryFactory.get('pokeApi')
 
 const damageMap = {
-  double_damage_from: 2,
-  half_damage_from: 0.5,
-  no_damage_from: 0
+  double_damage: 2,
+  half_damage: 0.5,
+  no_damage: 0
 }
 
 const DamageRepo = {
@@ -34,7 +34,8 @@ export default {
     Loader
   },
   props: {
-    typing: Array // 'typing' is passed in as an Array to the component
+    typing: Array, // 'typing' is passed in as an Array to the component
+    direction: String
   },
   data () {
     return {
@@ -62,7 +63,7 @@ export default {
       var { data } = await pokeApi.getType(this.typing[0].type.name) // eslint-disable-line
       this.typingData.push(data.damage_relations) // eslint-disable-line
 
-      if (this.typing.length > 1) {
+      if (this.typing.length > 1 && this.direction === 'from') {
         var { data } = await pokeApi.getType(this.typing[1].type.name) // eslint-disable-line
         this.typingData.push(data.damage_relations) // eslint-disable-line
       }
@@ -78,24 +79,24 @@ export default {
 
     storeDamageRelations () {
       this.typingData.forEach(data => {
-        data.double_damage_from.forEach(type => {
+        data['double_damage_' + this.direction].forEach(type => {
           this.damageRelations = this.damageRelations.concat({
             name: type.name,
-            damage: DamageRepo.get('double_damage_from')
+            damage: DamageRepo.get('double_damage')
           })
         })
 
-        data.half_damage_from.forEach(type => {
+        data['half_damage_' + this.direction].forEach(type => {
           this.damageRelations = this.damageRelations.concat({
             name: type.name,
-            damage: DamageRepo.get('half_damage_from')
+            damage: DamageRepo.get('half_damage')
           })
         })
 
-        data.no_damage_from.forEach(type => {
+        data['no_damage_' + this.direction].forEach(type => {
           this.damageRelations = this.damageRelations.concat({
             name: type.name,
-            damage: DamageRepo.get('no_damage_from')
+            damage: DamageRepo.get('no_damage')
           })
         })
       })
