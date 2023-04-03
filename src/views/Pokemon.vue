@@ -28,15 +28,13 @@
 
         <!-- Grab the type(s) of the Pokémon -->
         <div class="pokemon-types">
-          <div
-            :class="'type-' + typeInfo.type.name"
+          <TypeBox
             v-for="typeInfo in types"
             v-bind:key="typeInfo.slot"
-          >
-            <router-link :to="'/types/' + typeInfo.type.name">
-              {{ toUpper(typeInfo.type.name) }}
-            </router-link>
-          </div>
+            :typeName="typeInfo.type.name"
+            size="small">
+            {{ toUpper(typeInfo.type.name) }}
+          </TypeBox>
         </div>
 
         <div class="pokemon-desc">
@@ -122,7 +120,7 @@
       <div id="type-defenses" class="typeDefenses" :class="'info-box border-' + speciesInfo.color.name">
         <h3>Type Defenses</h3>
         <p>Effectiveness of each move typing on {{ toUpper(speciesInfo.name) }}</p>
-        <TypeEffectiveness :typing="types" />
+        <TypeEffectiveness :typing="types" direction="from" />
       </div>
 
       <!-- Pokemon Training Info Box -->
@@ -238,6 +236,7 @@ import DexNavigation from '@/components/pokemon/DexNavigation'
 import EvolutionChain from '@/components/pokemon/EvolutionChain'
 import Button from '@/components/Button'
 import SliderSwitch from '@/components/SliderSwitch'
+import TypeBox from '@/components/types/TypeBox'
 // import PokeImg from '../components/pokemon/PokeImg.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
@@ -265,7 +264,8 @@ export default {
     TypeEffectiveness,
     DexNavigation,
     EvolutionChain,
-    SliderSwitch
+    SliderSwitch,
+    TypeBox
     // PokeImg
   },
   data () {
