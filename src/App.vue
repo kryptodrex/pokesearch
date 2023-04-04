@@ -130,6 +130,18 @@ a {
   color: rgb(199, 95, 95);
 }
 
+.info-box {
+  border-radius: 0.625rem;
+  padding: 0 1rem;
+  margin: 1rem 0;
+  text-align: left;
+  transition: 0.3s;
+}
+.info-box:hover {
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
+  transition: 0.3s;
+}
+
 // @media screen and (min-width: 25.9375rem) {
 //   main {
 //     max-width: 46.875rem;
