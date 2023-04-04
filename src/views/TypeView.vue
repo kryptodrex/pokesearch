@@ -1,5 +1,5 @@
 <template>
-  <div class="typePage" :key="type">
+  <div class="typePage">
     <Loader v-if="isLoading" :full-page="true" />
 
     <div class="typeData" v-if="!isLoading">
@@ -12,7 +12,7 @@
       <div class="basicInfo info-box" :class="'type-border-' + typeInfo.name">
         <h3>Type Data</h3>
         <p><strong>Introduced in </strong> {{ getGeneration(typeInfo.generation.name) }}</p>
-        <p><strong>Damage class:</strong> {{ toUpper(typeInfo.move_damage_class.name) }}</p>
+        <p><strong>Damage class:</strong> {{ !checkNull(typeInfo.move_damage_class) ? toUpper(typeInfo.move_damage_class.name) : 'Variable' }}</p>
       </div>
 
       <div class="typeCharts">
@@ -28,7 +28,7 @@
         <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
 
         Offensiveness:
-        <TypeEffectiveness :key="typeEffKey" :typing="types" direction="to" />
+        <TypeEffectiveness :typing="types" direction="to" />
       </div>
     </div>
   </div>
