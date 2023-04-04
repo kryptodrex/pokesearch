@@ -3,21 +3,33 @@
     <Loader v-if="isLoading" :full-page="true" />
 
     <div class="typeData" v-if="!isLoading">
-      <TypeBox :typeName="typeInfo.name" size="large"><b>{{ toUpper(typeInfo.name) }} Type</b></TypeBox>
-
-      <span>Comparing {{ toUpper(typeInfo.name) }}. Add another typing to see dual typing defensiveness:</span>
-      <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
-        <option v-for="(type, index) in allTypes" :key="index" :value="type.name">{{ toUpper(type.name) }}</option>
-      </select>
-      <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('', clear = true)">
-        <Button size="medium" color="ps-red">Clear</Button>
+      <div class="typeHeader">
+        <TypeBox :typeName="typeInfo.name" size="large">
+          <b>{{ toUpper(typeInfo.name) }} Type</b>
+      </TypeBox>
       </div>
 
-      Defensiveness:
-      <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
+      <div class="basicInfo info-box" :class="'type-border-' + typeInfo.name">
+        <h3>Type Data</h3>
+        <p><strong>Introduced in </strong> {{ getGeneration(typeInfo.generation.name) }}</p>
+        <p><strong>Damage class:</strong> {{ toUpper(typeInfo.move_damage_class.name) }}</p>
+      </div>
 
-      Offensiveness:
-      <TypeEffectiveness :key="typeEffKey" :typing="types" direction="to" />
+      <div class="typeCharts">
+        <span>Comparing {{ toUpper(typeInfo.name) }}. Add another typing to see dual typing defensiveness:</span>
+        <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
+          <option v-for="(type, index) in allTypes" :key="index" :value="type.name">{{ toUpper(type.name) }}</option>
+        </select>
+        <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('', clear = true)">
+          <Button size="medium" color="ps-red">Clear</Button>
+        </div>
+
+        Defensiveness:
+        <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
+
+        Offensiveness:
+        <TypeEffectiveness :key="typeEffKey" :typing="types" direction="to" />
+      </div>
     </div>
   </div>
 </template>
@@ -96,8 +108,7 @@ export default {
     // == Utilities ==============
 
     toUpper (value) {
-      var val = value.trim()
-      if (val !== '') return util.toUpper(val)
+      return util.toUpper(value)
     },
 
     toUpperEachWord (value) {
@@ -134,6 +145,11 @@ export default {
         })
       }
       this.typeEffKey += 1
+    },
+
+    getGeneration (gen) {
+      var split = gen.split('-')
+      return util.toUpper(split[0]) + ' ' + split[1].toUpperCase()
     }
 
     // getEntryForLocale (data) {
@@ -166,6 +182,19 @@ export default {
 
 @import '../styling/types.css';
 @import '../styling/colors.css';
+
+.typePage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.typeHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 2rem 1rem;
+}
 
 // @media screen and (min-width: 25.9375rem) {
 
