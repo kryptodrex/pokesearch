@@ -3,7 +3,7 @@
     <Loader v-if="isLoading" :full-page="true" />
 
     <div class="typeData" v-if="!isLoading">
-      <TypeBox :typeName="typeInfo.name" size="large">{{ toUpper(typeInfo.name) }} Type</TypeBox>
+      <TypeBox :typeName="typeInfo.name" size="large"><b>{{ toUpper(typeInfo.name) }} Type</b></TypeBox>
 
       <span>Comparing {{ toUpper(typeInfo.name) }}. Add another typing to see dual typing defensiveness:</span>
       <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
@@ -35,7 +35,7 @@ const util = RepositoryFactory.get('util')
 
 export default {
 
-  name: 'Type',
+  name: 'TypeView',
   components: {
     Loader,
     Button,
