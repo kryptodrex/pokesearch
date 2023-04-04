@@ -30,27 +30,24 @@ export default {
 
   padding: 0.2rem 1rem;
   margin: 0 0.5rem;
+  /* max-width: 25%; */
   min-width: 5.625rem;
   text-align: center;
 }
-.clickable {
-  cursor: pointer;
-}
-.not-clickable {
-  cursor: text;
-}
 
 .large{
-  border-radius: 0.5rem;
-  font-size: 1.2rem;
-  padding: 0.8rem 1.5rem;
+  border-radius: 1rem;
+  border-width: 4px;
+  font-size: 1.5rem;
+  padding: 1rem 1.8rem;
 }
 .medium {
-  border-radius: 0.4rem;
-  font-size: 1rem;
+  border-radius: 1rem;
+  border-width: 3px;
+  font-size: 1.3rem;
   padding: 0.5rem 0.8rem;
 }
-.small {
-  /* font-size: 1rem; */
-}
+/* .small {
+  font-size: 1rem;
+} */
 </style>
