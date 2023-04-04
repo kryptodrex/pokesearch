@@ -4,7 +4,7 @@
     <div v-if="!isLoading" class="typeEffectiveness">
         <div class="dmg-box" v-for="(type, index) in types" :key="index">
             <router-link :to="'/types/' + type.name">
-              <span :class="'type-' + type.name "> {{ getAbbrType(type.name) }} </span>
+              <span :class="'type-color' + type.name + ' type-border-' + type.name"> {{ getAbbrType(type.name) }} </span>
             </router-link>
             <span :class="'dmg-num dmg-' + getDamageAmount(type.name)"> {{ getDamageAmount(type.name) }} </span>
         </div>
@@ -133,8 +133,8 @@ export default {
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-row-gap: 0.5rem;
-
     margin-bottom: 1.25rem;
+    max-width: 44.625rem;
 }
 
 .loaderBall {
