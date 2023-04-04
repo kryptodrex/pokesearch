@@ -1,6 +1,6 @@
 <template>
     <router-link :to="'/types/' + typeName">
-        <div :class="'type-' + typeName + ' ' + sizeClass">
+        <div :class="'type-color-' + typeName + ' ' + 'type-border-' + typeName + ' ' + sizeClass">
             <slot></slot>
         </div>
     </router-link>
