@@ -16,19 +16,27 @@
       </div>
 
       <div class="typeCharts">
-        <span>Comparing {{ toUpper(typeInfo.name) }}. Add another typing to see dual typing defensiveness:</span>
-        <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
-          <option v-for="(type, index) in allTypes" :key="index" :value="type.name">{{ toUpper(type.name) }}</option>
-        </select>
-        <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('', clear = true)">
-          <Button size="medium" color="ps-red">Clear</Button>
+        <div class="typeDefense info-box" :class="'type-border-' + typeInfo.name">
+          <p>Defensiveness:</p>
+          <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
+          <p>Add another typing to see dual typing defensiveness:</p>
+
+          <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
+            <option v-for="(type, index) in allTypes" :key="index" :value="type.name">{{ toUpper(type.name) }}</option>
+          </select>
+
+          <Dropdown value="Select a type" :list="allTypes" />
+
+          <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('', clear = true)">
+            <Button size="medium" color="ps-red">Clear</Button>
+          </div>
         </div>
 
-        Defensiveness:
-        <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
+        <div class="typeOffense info-box" :class="'type-border-' + typeInfo.name">
+          <p>Offensiveness:</p>
+          <TypeEffectiveness :typing="types" direction="to" />
+        </div>
 
-        Offensiveness:
-        <TypeEffectiveness :typing="types" direction="to" />
       </div>
     </div>
   </div>
@@ -41,6 +49,7 @@ import Loader from '@/components/Loader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import Button from '@/components/Button'
 import TypeBox from '@/components/types/TypeBox'
+import Dropdown from '../components/Dropdown.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
@@ -52,7 +61,8 @@ export default {
     Loader,
     Button,
     TypeEffectiveness,
-    TypeBox
+    TypeBox,
+    Dropdown
   },
   data () {
     return {
@@ -187,6 +197,12 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.typeData {
+  max-width: 46.875rem;
 }
 
 .typeHeader {
@@ -194,6 +210,17 @@ export default {
   flex-direction: row;
   justify-content: center;
   margin: 2rem 1rem;
+}
+
+.typeCharts {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.typeDefense, .typeOffense {
+  width: 100%
 }
 
 // @media screen and (min-width: 25.9375rem) {
