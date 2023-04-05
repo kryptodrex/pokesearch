@@ -60,56 +60,56 @@
 
 /* Border type colors */
 .type-border-normal {
-  border: 2px solid #a8a878;
+  border: 2px solid #a8a878 !important;
 }
 .type-border-fire {
-  border: 2px solid #f08030;
+  border: 2px solid #f08030 !important;
 }
 .type-border-fighting {
-  border: 2px solid #c03028;
+  border: 2px solid #c03028 !important;
 }
 .type-border-water {
-  border: 2px solid #6890f0;
+  border: 2px solid #6890f0 !important;
 }
 .type-border-flying {
-  border: 2px solid #a890f0;
+  border: 2px solid #a890f0 !important;
 }
 .type-border-grass {
-  border: 2px solid #78c850;
+  border: 2px solid #78c850 !important;
 }
 .type-border-poison {
-  border: 2px solid #a040a0;
+  border: 2px solid #a040a0 !important;
 }
 .type-border-electric {
-  border: 2px solid #f8d030;
+  border: 2px solid #f8d030 !important;
 }
 .type-border-ground {
-  border: 2px solid #e0c068;
+  border: 2px solid #e0c068 !important;
 }
 .type-border-psychic {
-  border: 2px solid #f85888;
+  border: 2px solid #f85888 !important;
 }
 .type-border-rock {
-  border: 2px solid #b8a038;
+  border: 2px solid #b8a038 !important;
 }
 .type-border-ice {
-  border: 2px solid #98d8d8;
+  border: 2px solid #98d8d8 !important;
 }
 .type-border-bug {
-  border: 2px solid #a8b820;
+  border: 2px solid #a8b820 !important;
 }
 .type-border-dragon {
-  border: 2px solid #7038f8;
+  border: 2px solid #7038f8 !important;
 }
 .type-border-ghost {
-  border: 2px solid #705898;
+  border: 2px solid #705898 !important;
 }
 .type-border-dark {
-  border: 2px solid #705848;
+  border: 2px solid #705848 !important;
 }
 .type-border-steel {
-  border: 2px solid #b8b8d0;
+  border: 2px solid #b8b8d0 !important;
 }
 .type-border-fairy {
-  border: 2px solid #ee99ac;
+  border: 2px solid #ee99ac !important;
 }

@@ -2,10 +2,9 @@
 /* Border colors */
 
 /* Default border color */
-/* [class*="border-"] {
-    
+[class*="border-"] {
     border: 2px solid #4a4a4a;
-} */
+}
 .border-black {
     border: 2px solid #323232;
 }
