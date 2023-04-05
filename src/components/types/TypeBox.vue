@@ -37,13 +37,13 @@ export default {
 
 .large{
   border-radius: 1rem;
-  border-width: 4px;
+  border-width: 4px !important;
   font-size: 1.5rem;
   padding: 1rem 1.8rem;
 }
 .medium {
   border-radius: 1rem;
-  border-width: 3px;
+  border-width: 3px !important;
   font-size: 1.3rem;
   padding: 0.5rem 0.8rem;
 }
