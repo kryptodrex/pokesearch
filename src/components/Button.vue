@@ -8,7 +8,7 @@
 <script>
 
 export default {
-  name: 'PokeBox',
+  name: 'Button',
   props: {
     size: String,
     color: String,
