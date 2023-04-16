@@ -137,10 +137,10 @@ a {
   text-align: left;
   transition: 0.3s;
 }
-.info-box:hover {
-  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
-  transition: 0.3s;
-}
+// .info-box:hover, .info-box:focus {
+//   box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
+//   transition: 0.3s;
+// }
 
 // @media screen and (min-width: 25.9375rem) {
 //   main {
