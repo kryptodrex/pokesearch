@@ -1,8 +1,110 @@
-[class*="type-"] {
+[class*="type-border-"] {
   border: 2px solid #68a090;
+}
+[class*="type-color-"] {
   color: #4b7468;
 }
+[class*="type-btn-"] {
+  transition: 0.3s;
+  cursor: pointer;
+  &:hover, &.inverted {
+    transition: 0.3s;
+    color: white;
+  }
+}
 
+.type-btn-normal {
+  &:hover, &.inverted {
+    background-color: #a8a878;
+  }
+}
+.type-btn-fire {
+  &:hover, &.inverted {
+    background-color: #f08030;
+  }
+}
+.type-btn-fighting {
+  &:hover, &.inverted {
+    background-color: #c03028;
+  }
+}
+.type-btn-water {
+  &:hover, &.inverted {
+    background-color: #6890f0;
+  }
+}
+.type-btn-flying {
+  &:hover, &.inverted {
+    background-color: #a890f0;
+  }
+}
+.type-btn-grass {
+  &:hover, &.inverted {
+    background-color: #78c850;
+  }
+}
+.type-btn-poison {
+  &:hover, &.inverted {
+    background-color: #a040a0;
+  }
+}
+.type-btn-electric {
+  &:hover, &.inverted {
+    background-color: #f8d030;
+  }
+}
+.type-btn-ground {
+  &:hover, &.inverted {
+    background-color: #e0c068;
+  }
+}
+.type-btn-psychic {
+  &:hover, &.inverted {
+    background-color: #f85888;
+  }
+}
+.type-btn-rock {
+  &:hover, &.inverted {
+    background-color: #b8a038;
+  }
+}
+.type-btn-ice {
+  &:hover, &.inverted {
+    background-color: #98d8d8;
+  }
+}
+.type-btn-bug {
+  &:hover, &.inverted {
+    background-color: #a8b820;
+  }
+}
+.type-btn-dragon {
+  &:hover, &.inverted {
+    background-color: #7038f8;
+  }
+}
+.type-btn-ghost {
+  &:hover, &.inverted {
+    background-color: #705898;
+  }
+}
+.type-btn-dark {
+  &:hover, &.inverted {
+    background-color: #705848;
+  }
+}
+.type-btn-steel {
+  &:hover, &.inverted {
+    background-color: #b8b8d0;
+  }
+}
+.type-btn-fairy {
+  &:hover, &.inverted {
+    background-color: #ee99ac;
+  }
+}
+
+/* Type font colors only */
 .type-color-normal {
   color: #6d6d4e;
 }
@@ -58,7 +160,7 @@
   color: #9b6470;
 }
 
-/* Border type colors */
+/* Border type colors only */
 .type-border-normal {
   border: 2px solid #a8a878 !important;
 }
