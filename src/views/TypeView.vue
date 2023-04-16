@@ -1,12 +1,12 @@
 <template>
-  <div class="typePage">
+  <div class="typePage" :class="'type-color-' + typeInfo.name">
     <Loader v-if="isLoading" :full-page="true" />
 
     <div class="typeData" v-if="!isLoading">
       <div class="typeHeader">
-        <TypeBox :typeName="typeInfo.name" size="large">
+        <TypeBox :typeName="typeInfo.name" size="large" :linkEnabled="false">
           <b>{{ toUpper(typeInfo.name) }} Type</b>
-      </TypeBox>
+        </TypeBox>
       </div>
 
       <div class="basicInfo info-box" :class="'type-border-' + typeInfo.name">
@@ -21,11 +21,72 @@
           <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
           <p>Add another typing to see dual typing defensiveness:</p>
 
-          <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
+          <!-- <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
             <option v-for="(type, index) in allTypes" :key="index" :value="type.name">{{ toUpper(type.name) }}</option>
-          </select>
+          </select> -->
 
-          <Dropdown value="Select a type" :list="allTypes" />
+          <!-- <Dropdown value="Select a type" :list="allTypes" /> -->
+
+          <div class="typeSelector">
+            <div
+              v-for="(type, index) in allTypes"
+              :key="index"
+              v-on:click="e => updateTypes(e.target.innerHTML.toLowerCase().trim())"
+            >
+              <TypeBox
+                :typeName="type.name"
+                :linkEnabled="false"
+                :clickable="true"
+              >
+                {{ toUpper(type.name) }}
+            </TypeBox>
+            </div>
+          </div>
+
+          <!-- <table>
+            <tr>
+              <td
+                v-for="num in 5"
+                :key="num"
+              >
+                <TypeBox
+                  :typeName="allTypes[num].name"
+                  :linkEnabled="false"
+                  :clickable="true"
+                >
+                  {{ toUpper(allTypes[num].name) }}
+                </TypeBox>
+              </td>
+            </tr>
+            <tr>
+              <td
+                v-for="num in 5"
+                :key="(num + 4) * 2"
+              >
+                <TypeBox
+                  :typeName="allTypes[(num + 4) * 2].name"
+                  :linkEnabled="false"
+                  :clickable="true"
+                >
+                  {{ toUpper(allTypes[(num + 4) * 2].name) }}
+                </TypeBox>
+              </td>
+            </tr>
+            <tr>
+              <td
+                v-for="num in 5"
+                :key="(num + 3) * 3"
+              >
+                <TypeBox
+                  :typeName="allTypes[(num + 4) * 3].name"
+                  :linkEnabled="false"
+                  :clickable="true"
+                >
+                  {{ toUpper(allTypes[(num + 4) * 3].name) }}
+                </TypeBox>
+              </td>
+            </tr>
+          </table> -->
 
           <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('', clear = true)">
             <Button size="medium" color="ps-red">Clear</Button>
@@ -35,6 +96,18 @@
         <div class="typeOffense info-box" :class="'type-border-' + typeInfo.name">
           <p>Offensiveness:</p>
           <TypeEffectiveness :typing="types" direction="to" />
+        </div>
+
+        <div class="info-box" :class="'type-border-' + typeInfo.name">
+          <h3>{{ toUpper(typeInfo.name) }} Type Pokémon</h3>
+          <div class="pokemonList">
+            <PokeBox
+              v-for="(poke) in pokesWithType"
+              :key="poke.name"
+              :dexNum="getIndex(poke.url)"
+              :name="poke.name"
+            />
+          </div>
         </div>
 
       </div>
@@ -49,7 +122,8 @@ import Loader from '@/components/Loader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import Button from '@/components/Button'
 import TypeBox from '@/components/types/TypeBox'
-import Dropdown from '../components/Dropdown.vue'
+import PokeBox from '../components/pokemon/PokeBox.vue'
+// import Dropdown from '../components/Dropdown.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
@@ -62,7 +136,8 @@ export default {
     Button,
     TypeEffectiveness,
     TypeBox,
-    Dropdown
+    // Dropdown
+    PokeBox
   },
   data () {
     return {
@@ -71,6 +146,7 @@ export default {
       typeInfo: null,
       types: [],
       allTypes: [],
+      pokesWithType: [],
       typeEffKey: 1,
       nextNum: null,
       prevNum: null,
@@ -99,11 +175,25 @@ export default {
       var { data } = await pokeApi.getType(this.type)
       this.typeInfo = data
 
-      this.types.push({
-        type: {
-          name: this.typeInfo.name
+      this.pokesWithType = []
+      this.typeInfo.pokemon.forEach(poke => {
+        const name = poke.pokemon.name
+        const url = poke.pokemon.url
+        const id = this.getIndex(url)
+        if (id < 10000) {
+          this.pokesWithType.push({
+            name: name,
+            url: url
+          })
         }
       })
+
+      // this.types.push({
+      //   type: {
+      //     name: this.typeInfo.name
+      //   }
+      // })
+      this.types.push(this.typeInfo.name)
 
       var { data } = await pokeApi.getAllTypes() // eslint-disable-line
       this.allTypes = data.results.filter((item) => { // filtering out unknown and shadow types
@@ -138,23 +228,32 @@ export default {
       return util.formatIndex(value)
     },
 
+    getIndex (url) {
+      return util.getId(url)
+    },
+
     checkNull (data) {
       if (!data) return true
       else return false
     },
 
     updateTypes (type, clear = false) {
+      // console.log(this.types)
       if (this.types.length > 1) {
         this.types.pop()
       }
+      // if (!clear) {
+      //   this.types.push({
+      //     type: {
+      //       name: type
+      //     }
+      //   })
+      // }
       if (!clear) {
-        this.types.push({
-          type: {
-            name: type
-          }
-        })
+        this.types.push(type)
       }
       this.typeEffKey += 1
+      console.log(this.types)
     },
 
     getGeneration (gen) {
@@ -190,7 +289,7 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/types.css';
+@import '../styling/types.scss';
 @import '../styling/colors.css';
 
 .typePage {
@@ -219,8 +318,22 @@ export default {
   justify-content: center;
 }
 
-.typeDefense, .typeOffense {
+.typeDefense, .typeOffense, .pokemonList {
   width: 100%
+}
+
+.typeSelector {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.pokemonList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 // @media screen and (min-width: 25.9375rem) {
