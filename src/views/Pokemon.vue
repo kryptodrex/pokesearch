@@ -631,7 +631,7 @@ export default {
         switch (this.formType) {
           case 'form':
             if (this.formInfo.sprites.front_default !== null) event.target.src = this.formInfo.sprites.front_default
-            else event.target.src = util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+            else event.target.src = util.getPokemonImageUrl(this.speciesInfo.id)
             break
 
           case 'variety':
@@ -639,7 +639,7 @@ export default {
             break
         }
       } else {
-        event.target.src = util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+        event.target.src = util.getPokemonImageUrl(this.speciesInfo.id)
       }
     },
 
@@ -686,7 +686,7 @@ export default {
         }
       } else if (this.showShiny) {
         return util.getPokemonShinyImageUrl(util.formatIndex(this.speciesInfo.id))
-      } else return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+      } else return util.getPokemonImageUrl(this.speciesInfo.id)
     },
     alternateForms () {
       var varietiesFormatted = []

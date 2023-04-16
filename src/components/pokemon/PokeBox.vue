@@ -119,8 +119,9 @@ export default {
     },
 
     getImageUrl () {
-      var basePath = 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'
-      return basePath + this.formatIndex() + '.png'
+      // var basePath = 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'
+      // return basePath + this.formatIndex() + '.png'
+      return util.getPokemonImageUrl(this.dexNum)
     },
 
     setLoaded () {
