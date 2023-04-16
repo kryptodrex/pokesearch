@@ -4,7 +4,7 @@
     <div v-if="!isLoading" class="typeEffectiveness">
         <div class="dmg-box" v-for="(type, index) in types" :key="index">
             <router-link :to="'/types/' + type.name">
-              <span :class="'type-color' + type.name + ' type-border-' + type.name"> {{ getAbbrType(type.name) }} </span>
+              <span :class="'typeLink type-color-' + type.name + ' type-border-' + type.name + ' type-btn-' + type.name"> {{ getAbbrType(type.name) }} </span>
             </router-link>
             <span :class="'dmg-num dmg-' + getDamageAmount(type.name)"> {{ getDamageAmount(type.name) }} </span>
         </div>
@@ -60,11 +60,13 @@ export default {
         if (item.name !== 'unknown' && item.name !== 'shadow') return item
       })
 
-      var { data } = await pokeApi.getType(this.typing[0].type.name) // eslint-disable-line
+      // var { data } = await pokeApi.getType(this.typing[0].type.name) // eslint-disable-line
+      var { data } = await pokeApi.getType(this.typing[0]) // eslint-disable-line
       this.typingData.push(data.damage_relations) // eslint-disable-line
 
       if (this.typing.length > 1 && this.direction === 'from') {
-        var { data } = await pokeApi.getType(this.typing[1].type.name) // eslint-disable-line
+        // var { data } = await pokeApi.getType(this.typing[1].type.name) // eslint-disable-line
+        var { data } = await pokeApi.getType(this.typing[1]) // eslint-disable-line
         this.typingData.push(data.damage_relations) // eslint-disable-line
       }
 
@@ -124,9 +126,9 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
-@import '../../styling/types.css';
+@import '../../styling/types.scss';
 
 .typeEffectiveness {
     display: grid;
@@ -187,6 +189,14 @@ export default {
   background-color: #73d216;
   color: #ffdd57;
 }
+
+// .typeLink {
+//     transition: 0.2s;
+// }
+// .typeLink:hover, .typeLink:focus {
+//   box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
+//   transition: 0.3s;
+// }
 
 /* Viewing on smaller phones, like iPhone SE */
 @media screen and (max-width: 22.25rem) {
