@@ -1,7 +1,7 @@
 <template>
     <div v-on:click="toggleSelect()">
         <router-link v-if="enableLink" :to="'/types/' + typeName">
-            <div :class="'typeLink type-color-' + typeName + ' ' + ' type-border-' + typeName + ' type-btn-' + typeName + ' ' + sizeClass + ' ' + selectedClass">
+            <div class="typeLink" :class="'type-color-' + typeName + ' ' + ' type-border-' + typeName + ' type-btn-' + typeName + ' ' + sizeClass + ' ' + selectedClass">
                 <slot></slot>
             </div>
         </router-link>
