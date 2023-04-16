@@ -3,19 +3,6 @@
 
 export default {
 
-  getPokemonImageUrl (num) {
-    // return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num}.png`
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${num}.png`
-  },
-
-  getPokemonShinyImageUrl (num) {
-    return `https://www.serebii.net/Shiny/SV/new/${num}.png`
-  },
-
-  getPokemonAltFormImageUrl (num, formNum) {
-    return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num}_f${formNum}.png`
-  },
-
   getId (url) {
     var splitUrl = url.split('/')
     return splitUrl[6]
@@ -32,7 +19,9 @@ export default {
   },
 
   toUpper (value) {
-    return value[0].toUpperCase() + value.slice(1)
+    if (value !== '' && value !== null) {
+      return value[0].toUpperCase() + value.slice(1)
+    } else return value
   },
 
   splitName (value, delimiter, toUpper) {
