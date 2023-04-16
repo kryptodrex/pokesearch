@@ -1,5 +1,5 @@
 <template>
-  <div class="typePage" :class="'type-color-' + typeInfo.name">
+  <div class="typePage">
     <Loader v-if="isLoading" :full-page="true" />
 
     <div class="typeData" v-if="!isLoading">
@@ -17,19 +17,57 @@
 
       <div class="typeCharts">
         <div class="typeDefense info-box" :class="'type-border-' + typeInfo.name">
-          <p>Defensiveness:</p>
+          <h3>Defensiveness</h3>
+          <p>Effectiveness of other types against the {{ toUpper(typeInfo.name) }} type</p>
           <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
-          <p>Add another typing to see dual typing defensiveness:</p>
+          <!-- <p>Add another typing to see dual typing defensiveness:</p> -->
 
           <!-- <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
-            <option v-for="(type, index) in allTypes" :key="index" :value="type.name">{{ toUpper(type.name) }}</option>
+            <option v-for="(type, index) in allTypeNames" :key="index" :value="type.name">{{ toUpper(type.name) }}</option>
           </select> -->
 
-          <!-- <Dropdown value="Select a type" :list="allTypes" /> -->
+          <!-- <Dropdown
+            class="info-box"
+            :class="'type-border-' + typeInfo.name"
+            value="Select a type"
+            :list="allTypeNames"
+          /> -->
+          <!-- <div class="aselect" >
+            <div class="selector" @click="toggle()">
+              <div class="label">
+                <span>Select a type</span>
+              </div>
+              <div class="arrow" :class="{ expanded : dropdownVisible }"></div>
+              <div :class="{ hidden : !dropdownVisible, dropdownVisible }">
+                <ul> -->
+                  <!-- <li
+                    :class="{ current : item === value }"
+                    v-for="item, index in list" @click="select(item)"
+                    :key="index"
+                  >
+                    {{ item }}
+                  </li> -->
+                  <!-- <div
+                    v-for="(type, index) in allTypeNames"
+                    :key="index"
+                    @click="e => updateTypes(e.target.innerHTML.toLowerCase().trim())"
+                  >
+                    <TypeBox
+                      :typeName="type.name"
+                      :linkEnabled="false"
+                      :clickable="true"
+                    >
+                      {{ toUpper(type.name) }}
+                    </TypeBox>
+                  </div>
+                </ul>
+              </div>
+            </div>
+          </div> -->
 
-          <div class="typeSelector">
+          <!-- <div class="typeSelector">
             <div
-              v-for="(type, index) in allTypes"
+              v-for="(type, index) in allTypeNames"
               :key="index"
               v-on:click="e => updateTypes(e.target.innerHTML.toLowerCase().trim())"
             >
@@ -41,7 +79,7 @@
                 {{ toUpper(type.name) }}
             </TypeBox>
             </div>
-          </div>
+          </div> -->
 
           <!-- <table>
             <tr>
@@ -50,11 +88,11 @@
                 :key="num"
               >
                 <TypeBox
-                  :typeName="allTypes[num].name"
+                  :typeName="allTypeNames[num].name"
                   :linkEnabled="false"
                   :clickable="true"
                 >
-                  {{ toUpper(allTypes[num].name) }}
+                  {{ toUpper(allTypeNames[num].name) }}
                 </TypeBox>
               </td>
             </tr>
@@ -64,11 +102,11 @@
                 :key="(num + 4) * 2"
               >
                 <TypeBox
-                  :typeName="allTypes[(num + 4) * 2].name"
+                  :typeName="allTypeNames[(num + 4) * 2].name"
                   :linkEnabled="false"
                   :clickable="true"
                 >
-                  {{ toUpper(allTypes[(num + 4) * 2].name) }}
+                  {{ toUpper(allTypeNames[(num + 4) * 2].name) }}
                 </TypeBox>
               </td>
             </tr>
@@ -78,11 +116,11 @@
                 :key="(num + 3) * 3"
               >
                 <TypeBox
-                  :typeName="allTypes[(num + 4) * 3].name"
+                  :typeName="allTypeNames[(num + 4) * 3].name"
                   :linkEnabled="false"
                   :clickable="true"
                 >
-                  {{ toUpper(allTypes[(num + 4) * 3].name) }}
+                  {{ toUpper(allTypeNames[(num + 4) * 3].name) }}
                 </TypeBox>
               </td>
             </tr>
@@ -94,7 +132,8 @@
         </div>
 
         <div class="typeOffense info-box" :class="'type-border-' + typeInfo.name">
-          <p>Offensiveness:</p>
+          <h3>Offensiveness</h3>
+          <p>Effectiveness of the {{ toUpper(typeInfo.name) }} type against other types</p>
           <TypeEffectiveness :typing="types" direction="to" />
         </div>
 
@@ -136,7 +175,7 @@ export default {
     Button,
     TypeEffectiveness,
     TypeBox,
-    // Dropdown
+    // Dropdown,
     PokeBox
   },
   data () {
@@ -145,14 +184,11 @@ export default {
       isLoading: true,
       typeInfo: null,
       types: [],
-      allTypes: [],
+      allTypeNames: [],
       pokesWithType: [],
       typeEffKey: 1,
-      nextNum: null,
-      prevNum: null,
+      dropdownVisible: false,
       navigating: false,
-      timeout: null,
-      timer: 0,
       locales: [],
       title: ' - Type'
     }
@@ -172,9 +208,11 @@ export default {
     async fetch () {
       this.isLoading = true
 
+      // Get data on the type from url
       var { data } = await pokeApi.getType(this.type)
       this.typeInfo = data
 
+      // Get array of Pokemon that have this type
       this.pokesWithType = []
       this.typeInfo.pokemon.forEach(poke => {
         const name = poke.pokemon.name
@@ -188,16 +226,14 @@ export default {
         }
       })
 
-      // this.types.push({
-      //   type: {
-      //     name: this.typeInfo.name
-      //   }
-      // })
+      // Add main type to the types array for tracking
       this.types.push(this.typeInfo.name)
 
       var { data } = await pokeApi.getAllTypes() // eslint-disable-line
-      this.allTypes = data.results.filter((item) => { // filtering out unknown and shadow types
+      data.results.filter((item) => { // filtering out unknown and shadow types
         if (item.name !== 'unknown' && item.name !== 'shadow' && item.name !== this.typeInfo.name) return item
+      }).forEach(type => {
+        this.allTypeNames.push(this.toUpper(type.name))
       })
 
       document.title = this.toUpper(this.typeInfo.name) + this.title // set site title to type name
@@ -259,6 +295,10 @@ export default {
     getGeneration (gen) {
       var split = gen.split('-')
       return util.toUpper(split[0]) + ' ' + split[1].toUpperCase()
+    },
+
+    toggle () {
+      this.dropdownVisible = !this.dropdownVisible
     }
 
     // getEntryForLocale (data) {
@@ -334,6 +374,68 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+// Styling for type dropdown
+.aselect {
+  width: 280px;
+  margin: 20px auto;
+  .selector {
+    border: 1px solid gainsboro;
+    background: #F8F8F8;
+    position: relative;
+    z-index: 1;
+    .arrow {
+      position: absolute;
+      right: 10px;
+      top: 40%;
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 10px solid #888;
+      transform: rotateZ(0deg) translateY(0px);
+      transition-duration: 0.3s;
+      transition-timing-function: cubic-bezier(.59,1.39,.37,1.01);
+    }
+    .expanded {
+      transform: rotateZ(180deg) translateY(2px);
+    }
+    .label {
+      display: block;
+      padding: 12px;
+      font-size: 16px;
+      color: #888;
+    }
+  }
+  // ul {
+  //   width: 100%;
+  //   list-style-type: none;
+  //   padding: 0;
+  //   margin: 0;
+  //   font-size: 16px;
+  //   border: 1px solid gainsboro;
+  //   position: absolute;
+  //   z-index: 1;
+  //   background: #fff;
+  // }
+  // li {
+  //   padding: 12px;
+  //   color: #666;
+  //   &:hover {
+  //     color: white;
+  //     background: seagreen;
+  //   }
+  // }
+  .current {
+    background: #eaeaea;
+  }
+  .hidden {
+    visibility: hidden;
+  }
+  .visible {
+    visibility: visible;
+  }
 }
 
 // @media screen and (min-width: 25.9375rem) {
