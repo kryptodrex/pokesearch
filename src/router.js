@@ -14,7 +14,8 @@ export default new Router({
   routes: [
     {
       path: '/pokemon',
-      redirect: '/'
+      redirect: '/',
+      name: 'homePokemon'
     },
     {
       path: '/pokemon/:name',
