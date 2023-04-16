@@ -39,6 +39,7 @@ import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
+const img = RepositoryFactory.get('img')
 
 export default {
   name: 'DexNavigation',
@@ -90,7 +91,7 @@ export default {
 
     chooseSpriteUrl (data, id) {
       if (data.front_default == null) {
-        return util.getPokemonImageUrl(id)
+        return img.getPokemonImageUrl(id)
       } else return data.front_default
     }
   }
