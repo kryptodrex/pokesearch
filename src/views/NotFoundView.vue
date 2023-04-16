@@ -13,7 +13,7 @@
 import Button from '@/components/Button'
 
 export default {
-  name: 'NotFound',
+  name: 'NotFoundView',
   components: {
     Button
   },

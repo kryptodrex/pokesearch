@@ -72,7 +72,7 @@ export default {
 <style scoped lang="css">
 
 @import '../../styling/colors.css';
-@import '../../styling/types.css';
+@import '../../styling/types.scss';
 
 .pokeBox {
     /* border: 2px solid #4A4A4A; */
