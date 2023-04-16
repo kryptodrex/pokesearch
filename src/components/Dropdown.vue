@@ -40,6 +40,7 @@ export default {
     },
     select (option) {
       this.value = option
+      this.$emit('input', this.value)
     }
   }
   // computed: {
@@ -62,6 +63,7 @@ export default {
 <style scoped lang="scss">
 
 @import '../styling/colors.css';
+@import '../styling/types.scss';
 
 .aselect {
   width: 280px;
