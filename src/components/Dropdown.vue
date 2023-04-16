@@ -10,8 +10,8 @@
             <ul>
                 <li
                   :class="{ current : item === value }"
-                  v-for="item in list" @click="select(item)"
-                  :key="item"
+                  v-for="item, index in list" @click="select(item)"
+                  :key="index"
                 >
                   {{ item }}
                 </li>
