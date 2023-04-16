@@ -29,11 +29,13 @@
         <!-- Grab the type(s) of the Pokémon -->
         <div class="pokemon-types">
           <TypeBox
-            v-for="typeInfo in types"
-            v-bind:key="typeInfo.slot"
-            :typeName="typeInfo.type.name"
-            size="small">
-            {{ toUpper(typeInfo.type.name) }}
+            v-for="(typeName, index) in types"
+            v-bind:key="index"
+            :typeName="typeName"
+            size="small"
+            :linkEnabled="true"
+            >
+              {{ toUpper(typeName) }}
           </TypeBox>
         </div>
 
@@ -395,9 +397,9 @@ export default {
 
     getTyping (types) {
       if (types.length > 1) {
-        return util.toUpper(types[0].type.name) + ' & ' + util.toUpper(types[1].type.name)
+        return util.toUpper(types[0]) + ' & ' + util.toUpper(types[1])
       } else {
-        return util.toUpper(types[0].type.name)
+        return util.toUpper(types[0])
       }
     },
 
@@ -763,8 +765,23 @@ export default {
       return hasDefault
     },
     types () {
-      if (this.formInfo) return this.formInfo.types
-      else return this.pokeInfo.types
+      const typeArr = []
+      if (this.formInfo) {
+        this.formInfo.types.forEach(typeData => {
+          console.log(typeData)
+          typeArr.push(typeData.type.name)
+        })
+        // return this.formInfo.types
+        return typeArr
+      } else {
+        this.pokeInfo.types.forEach(typeData => {
+          console.log(typeData)
+          typeArr.push(typeData.type.name)
+        })
+        // return this.formInfo.types
+        return typeArr
+      }
+      // else return this.pokeInfo.types
     }
   },
   watch: {
@@ -789,7 +806,7 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/types.css';
+@import '../styling/types.scss';
 @import '../styling/colors.css';
 
 .poke-head {
