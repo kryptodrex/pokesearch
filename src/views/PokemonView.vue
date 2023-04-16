@@ -695,7 +695,7 @@ export default {
           }
         }
       } else if (this.showShiny) {
-        return util.getPokemonShinyImageUrl(util.formatIndex(this.speciesInfo.id))
+        return img.getPokemonShinyImageUrl(util.formatIndex(this.speciesInfo.id))
       } else return img.getPokemonImageUrl(this.speciesInfo.id)
     },
     alternateForms () {
