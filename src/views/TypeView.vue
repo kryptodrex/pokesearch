@@ -18,127 +18,38 @@
       <div class="typeCharts">
         <div class="typeDefense info-box" :class="'type-border-' + typeInfo.name">
           <h3>Defensiveness</h3>
-          <p>Effectiveness of other types against the {{ toUpper(typeInfo.name) }} type</p>
+          <p>Effectiveness of other types against the <TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> type</p>
           <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
-          <!-- <p>Add another typing to see dual typing defensiveness:</p> -->
 
-          <!-- <select name="typeList" id="typeList" v-on:change="e => updateTypes(e.target.value)">
-            <option v-for="(type, index) in allTypeNames" :key="index" :value="type.name">{{ toUpper(type.name) }}</option>
-          </select> -->
+          <div class="typeDualDefense">
+            <span>Add another typing to see dual typing defensiveness:</span>
+            <div class="typeSelect">
+              <select
+                name="typeList"
+                id="typeList"
+                :class="typeSelectClass"
+                :value="types[1]"
+                @change="e => updateTypes(e.target.value)"
+              >
+                <option value=""> - Select a type - </option>
+                <option v-for="(type, index) in allTypeNames" :key="index" :value="type.toLowerCase()">{{ type }}</option>
+              </select>
 
-          <!-- <Dropdown
-            class="info-box"
-            :class="'type-border-' + typeInfo.name"
-            value="Select a type"
-            :list="allTypeNames"
-          /> -->
-          <!-- <div class="aselect" >
-            <div class="selector" @click="toggle()">
-              <div class="label">
-                <span>Select a type</span>
-              </div>
-              <div class="arrow" :class="{ expanded : dropdownVisible }"></div>
-              <div :class="{ hidden : !dropdownVisible, dropdownVisible }">
-                <ul> -->
-                  <!-- <li
-                    :class="{ current : item === value }"
-                    v-for="item, index in list" @click="select(item)"
-                    :key="index"
-                  >
-                    {{ item }}
-                  </li> -->
-                  <!-- <div
-                    v-for="(type, index) in allTypeNames"
-                    :key="index"
-                    @click="e => updateTypes(e.target.innerHTML.toLowerCase().trim())"
-                  >
-                    <TypeBox
-                      :typeName="type.name"
-                      :linkEnabled="false"
-                      :clickable="true"
-                    >
-                      {{ toUpper(type.name) }}
-                    </TypeBox>
-                  </div>
-                </ul>
+              <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('')">
+                <Button size="medium" color="ps-red">Clear</Button>
               </div>
             </div>
-          </div> -->
-
-          <!-- <div class="typeSelector">
-            <div
-              v-for="(type, index) in allTypeNames"
-              :key="index"
-              v-on:click="e => updateTypes(e.target.innerHTML.toLowerCase().trim())"
-            >
-              <TypeBox
-                :typeName="type.name"
-                :linkEnabled="false"
-                :clickable="true"
-              >
-                {{ toUpper(type.name) }}
-            </TypeBox>
-            </div>
-          </div> -->
-
-          <!-- <table>
-            <tr>
-              <td
-                v-for="num in 5"
-                :key="num"
-              >
-                <TypeBox
-                  :typeName="allTypeNames[num].name"
-                  :linkEnabled="false"
-                  :clickable="true"
-                >
-                  {{ toUpper(allTypeNames[num].name) }}
-                </TypeBox>
-              </td>
-            </tr>
-            <tr>
-              <td
-                v-for="num in 5"
-                :key="(num + 4) * 2"
-              >
-                <TypeBox
-                  :typeName="allTypeNames[(num + 4) * 2].name"
-                  :linkEnabled="false"
-                  :clickable="true"
-                >
-                  {{ toUpper(allTypeNames[(num + 4) * 2].name) }}
-                </TypeBox>
-              </td>
-            </tr>
-            <tr>
-              <td
-                v-for="num in 5"
-                :key="(num + 3) * 3"
-              >
-                <TypeBox
-                  :typeName="allTypeNames[(num + 4) * 3].name"
-                  :linkEnabled="false"
-                  :clickable="true"
-                >
-                  {{ toUpper(allTypeNames[(num + 4) * 3].name) }}
-                </TypeBox>
-              </td>
-            </tr>
-          </table> -->
-
-          <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('', clear = true)">
-            <Button size="medium" color="ps-red">Clear</Button>
           </div>
         </div>
 
         <div class="typeOffense info-box" :class="'type-border-' + typeInfo.name">
           <h3>Offensiveness</h3>
-          <p>Effectiveness of the {{ toUpper(typeInfo.name) }} type against other types</p>
+          <p>Effectiveness of the <TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> type against all other types</p>
           <TypeEffectiveness :typing="types" direction="to" />
         </div>
 
         <div class="info-box" :class="'type-border-' + typeInfo.name">
-          <h3>{{ toUpper(typeInfo.name) }} Type Pokémon</h3>
+          <h3><TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> Type Pokémon</h3>
           <div class="pokemonList">
             <PokeBox
               v-for="(poke) in pokesWithType"
@@ -162,7 +73,7 @@ import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import Button from '@/components/Button'
 import TypeBox from '@/components/types/TypeBox'
 import PokeBox from '../components/pokemon/PokeBox.vue'
-// import Dropdown from '../components/Dropdown.vue'
+import TypeName from '../components/types/TypeName.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
@@ -175,7 +86,7 @@ export default {
     Button,
     TypeEffectiveness,
     TypeBox,
-    // Dropdown,
+    TypeName,
     PokeBox
   },
   data () {
@@ -273,19 +184,12 @@ export default {
       else return false
     },
 
-    updateTypes (type, clear = false) {
+    updateTypes (type) {
       // console.log(this.types)
       if (this.types.length > 1) {
         this.types.pop()
       }
-      // if (!clear) {
-      //   this.types.push({
-      //     type: {
-      //       name: type
-      //     }
-      //   })
-      // }
-      if (!clear) {
+      if (type !== '') {
         this.types.push(type)
       }
       this.typeEffKey += 1
@@ -314,6 +218,13 @@ export default {
 
     //   return entry
     // }
+  },
+  computed: {
+    typeSelectClass () {
+      return this.types.length > 1
+        ? 'type-border-' + this.types[1] + ' type-color-' + this.types[1]
+        : 'type-border-' + this.types[0] + ' type-color-' + this.types[0]
+    }
   },
   watch: {
     $route: function (to, from) {
@@ -376,69 +287,37 @@ export default {
   justify-content: center;
 }
 
-// Styling for type dropdown
-.aselect {
-  width: 280px;
-  margin: 20px auto;
-  .selector {
-    border: 1px solid gainsboro;
-    background: #F8F8F8;
-    position: relative;
-    z-index: 1;
-    .arrow {
-      position: absolute;
-      right: 10px;
-      top: 40%;
-      width: 0;
-      height: 0;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-top: 10px solid #888;
-      transform: rotateZ(0deg) translateY(0px);
-      transition-duration: 0.3s;
-      transition-timing-function: cubic-bezier(.59,1.39,.37,1.01);
-    }
-    .expanded {
-      transform: rotateZ(180deg) translateY(2px);
-    }
-    .label {
-      display: block;
-      padding: 12px;
-      font-size: 16px;
-      color: #888;
-    }
-  }
-  // ul {
-  //   width: 100%;
-  //   list-style-type: none;
-  //   padding: 0;
-  //   margin: 0;
-  //   font-size: 16px;
-  //   border: 1px solid gainsboro;
-  //   position: absolute;
-  //   z-index: 1;
-  //   background: #fff;
-  // }
-  // li {
-  //   padding: 12px;
-  //   color: #666;
-  //   &:hover {
-  //     color: white;
-  //     background: seagreen;
-  //   }
-  // }
-  .current {
-    background: #eaeaea;
-  }
-  .hidden {
-    visibility: hidden;
-  }
-  .visible {
-    visibility: visible;
+.typeDualDefense{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 1.5rem 0 1rem 0;
+}
+.typeSelect {
+  display: flex;
+  flex-direction: row;
+  margin-top: 1rem;
+  select {
+    -webkit-appearance: none;
+    padding: 0.2rem 1rem;
+    min-width: 5.625rem;
+    height: 2.75rem;
+    text-align: center;
+    border-radius: 0.625rem;
+    font-size: inherit;
+    background-color: white;
+    font: inherit;
+    margin-right: 1rem;
   }
 }
 
-// @media screen and (min-width: 25.9375rem) {
-
-// }
+@media screen and (min-width: 25.9375rem) {
+  .typeSelect {
+    margin-top: 0;
+    select {
+      margin: 0 1rem;
+    }
+  }
+}
 </style>
