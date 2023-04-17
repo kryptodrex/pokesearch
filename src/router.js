@@ -1,49 +1,60 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import Pokemon from './views/Pokemon.vue'
-import NotFound from '@/views/NotFound.vue'
+import HomeView from './views/HomeView.vue'
+import PokemonView from './views/PokemonView.vue'
+import TypeView from './views/TypeView.vue'
+import NotFoundView from '@/views/NotFoundView.vue'
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
+  // base: '/',
   routes: [
     {
       path: '/pokemon',
-      name: 'homePokemon',
-      component: Home
+      redirect: '/',
+      name: 'homePokemon'
     },
     {
       path: '/pokemon/:name',
       name: 'pokePageDirect',
-      component: Pokemon
+      component: PokemonView
     },
     {
       path: '/pokemon/:name/forms',
       name: 'pokePageForms',
-      component: Pokemon
+      component: PokemonView
     },
     {
       path: '/pokemon/:name/forms/:form',
       name: 'pokePageAltForm',
-      component: Pokemon
+      component: PokemonView
+    },
+    {
+      path: '/types',
+      redirect: '/'
+    },
+    {
+      path: '/types/:name',
+      name: 'typePageDirect',
+      component: TypeView
     },
     {
       path: '/lost-in-the-tall-grass',
       name: 'gotLost',
-      component: NotFound
+      component: NotFoundView
     },
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: HomeView
     },
     {
       path: '*',
       name: 'default',
-      component: Home
+      component: HomeView
     }
   ]
   // scrollBehavior (to, from, savedPosition) {

@@ -3,7 +3,9 @@
     <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
     <div v-if="!isLoading" class="typeEffectiveness">
         <div class="dmg-box" v-for="(type, index) in types" :key="index">
-            <span :class="'type-' + type.name "> {{ getAbbrType(type.name) }} </span>
+            <router-link :to="'/types/' + type.name">
+              <span :class="'typeLink type-color-' + type.name + ' type-border-' + type.name + ' type-btn-' + type.name"> {{ getAbbrType(type.name) }} </span>
+            </router-link>
             <span :class="'dmg-num dmg-' + getDamageAmount(type.name)"> {{ getDamageAmount(type.name) }} </span>
         </div>
     </div>
@@ -17,9 +19,9 @@ import Loader from '@/components/Loader'
 const pokeApi = RepositoryFactory.get('pokeApi')
 
 const damageMap = {
-  double_damage_from: 2,
-  half_damage_from: 0.5,
-  no_damage_from: 0
+  double_damage: 2,
+  half_damage: 0.5,
+  no_damage: 0
 }
 
 const DamageRepo = {
@@ -32,7 +34,8 @@ export default {
     Loader
   },
   props: {
-    typing: Array // 'typing' is passed in as an Array to the component
+    typing: Array, // 'typing' is passed in as an Array to the component
+    direction: String
   },
   data () {
     return {
@@ -52,18 +55,18 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getAllTypes() // eslint-disable-line
-      this.types = data.results // eslint-disable-line
-
-      this.types = this.types.filter((item) => {
+      var { data } = await pokeApi.getAllTypes()
+      this.types = data.results.filter((item) => { // filtering out unknown and shadow types
         if (item.name !== 'unknown' && item.name !== 'shadow') return item
       })
 
-      var { data } = await pokeApi.getType(this.typing[0].type.name) // eslint-disable-line
+      // var { data } = await pokeApi.getType(this.typing[0].type.name) // eslint-disable-line
+      var { data } = await pokeApi.getType(this.typing[0]) // eslint-disable-line
       this.typingData.push(data.damage_relations) // eslint-disable-line
 
-      if (this.typing.length > 1) {
-        var { data } = await pokeApi.getType(this.typing[1].type.name) // eslint-disable-line
+      if (this.typing.length > 1 && this.direction === 'from') {
+        // var { data } = await pokeApi.getType(this.typing[1].type.name) // eslint-disable-line
+        var { data } = await pokeApi.getType(this.typing[1]) // eslint-disable-line
         this.typingData.push(data.damage_relations) // eslint-disable-line
       }
 
@@ -78,24 +81,24 @@ export default {
 
     storeDamageRelations () {
       this.typingData.forEach(data => {
-        data.double_damage_from.forEach(type => {
+        data['double_damage_' + this.direction].forEach(type => {
           this.damageRelations = this.damageRelations.concat({
             name: type.name,
-            damage: DamageRepo.get('double_damage_from')
+            damage: DamageRepo.get('double_damage')
           })
         })
 
-        data.half_damage_from.forEach(type => {
+        data['half_damage_' + this.direction].forEach(type => {
           this.damageRelations = this.damageRelations.concat({
             name: type.name,
-            damage: DamageRepo.get('half_damage_from')
+            damage: DamageRepo.get('half_damage')
           })
         })
 
-        data.no_damage_from.forEach(type => {
+        data['no_damage_' + this.direction].forEach(type => {
           this.damageRelations = this.damageRelations.concat({
             name: type.name,
-            damage: DamageRepo.get('no_damage_from')
+            damage: DamageRepo.get('no_damage')
           })
         })
       })
@@ -123,17 +126,17 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
-@import '../../styling/types.css';
+@import '../../styling/types.scss';
 
 .typeEffectiveness {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-row-gap: 0.5rem;
-
     margin-bottom: 1.25rem;
+    max-width: 44.625rem;
 }
 
 .loaderBall {
@@ -186,6 +189,14 @@ export default {
   background-color: #73d216;
   color: #ffdd57;
 }
+
+// .typeLink {
+//     transition: 0.2s;
+// }
+// .typeLink:hover, .typeLink:focus {
+//   box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
+//   transition: 0.3s;
+// }
 
 /* Viewing on smaller phones, like iPhone SE */
 @media screen and (max-width: 22.25rem) {

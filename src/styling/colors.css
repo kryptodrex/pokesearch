@@ -1,7 +1,8 @@
 
 /* Border colors */
+
+/* Default border color */
 [class*="border-"] {
-    /* Default border color */
     border: 2px solid #4a4a4a;
 }
 .border-black {
@@ -129,6 +130,39 @@
 .bg-black:yellow { color: #f8d030; }
 .bg-yellow:hover { color: #323232; }
 .bgInv-yellow { border-color: #f8d030; color: #323232; }
+
+/* Just background colors */
+
+.bg-color-black {
+    background-color: #323232;
+}
+.bg-color-blue {
+    background-color: #3482de;
+}
+.bg-color-brown {
+    background-color: #af891f;
+}
+.bg-color-gray {
+    background-color: #707070;
+}
+.bg-color-green {
+    background-color: #64a743;
+}
+.bg-color-pink {
+    background-color: #e97698;
+}
+.bg-color-purple {
+    background-color: #7c63b8;
+}
+.bg-color-red {
+    background-color: rgb(201, 38, 63);
+}
+.bg-color-white {
+    background-color: #aaaaaa;
+}
+.bg-color-yellow {
+    background-color: #f8d030;
+}
 
 /* Font colors */
 

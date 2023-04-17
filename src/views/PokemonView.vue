@@ -8,7 +8,18 @@
       <div id="head" class="poke-head">
         <h1 class="pokedex-num">#{{ formatIndex(speciesInfo.id) }}</h1>
 
-        <img :src="photoUrl" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" @error="imgUrlAlt" />
+        <div class="pokemon-img-container">
+          <img :src="photoUrl" alt="" class="pokemon-image" id="poke-img" v-on:click="showEasterEgg()" @error="imgUrlAlt" />
+          <div class="shiny-slider" v-if="!form || parseInt(form) === speciesInfo.id">
+            <span>Normal</span>
+            <span class="shiny-switch">
+              <SliderSwitch :propState="showShiny" :color="speciesInfo.color.name" v-on:toggle="toggleShiny($event)"/>
+            </span>
+            <span>Shiny</span>
+          </div>
+        </div>
+
+        <!-- <PokeImg class="pokemon-image" :baseUrl="'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'" :dexNum="speciesInfo.id" :name="pokeName"/> -->
 
         <!-- Grab the base name of the Pokémon -->
         <h1 class="pokemon-name" id="pokemon-name">
@@ -17,13 +28,15 @@
 
         <!-- Grab the type(s) of the Pokémon -->
         <div class="pokemon-types">
-          <div
-            :class="'type-' + typeInfo.type.name"
-            v-for="typeInfo in types"
-            v-bind:key="typeInfo.slot"
-          >
-            {{ toUpper(typeInfo.type.name) }}
-          </div>
+          <TypeBox
+            v-for="(typeName, index) in types"
+            v-bind:key="index"
+            :typeName="typeName"
+            size="small"
+            :linkEnabled="true"
+            >
+              {{ toUpper(typeName) }}
+          </TypeBox>
         </div>
 
         <div class="pokemon-desc">
@@ -62,7 +75,7 @@
       <div
         id="basic-info"
         class="pokemon-basic-info"
-        v-bind:class="'info-box border-' + speciesInfo.color.name"
+        :class="'info-box border-' + speciesInfo.color.name"
       >
         <h3>Pokédex Data</h3>
 
@@ -93,7 +106,7 @@
           </span>
         </p>
 
-        <p><strong>Shape:</strong> {{ toUpper(speciesInfo.shape.name) }}</p>
+        <p><strong>Shape:</strong> {{ toUpper(speciesInfo.shape !== null ? speciesInfo.shape.name : '(Not found)') }}</p>
 
         <p>
           <strong>Height:</strong> {{ getHeight(pokeInfo.height) }} <br />
@@ -109,7 +122,7 @@
       <div id="type-defenses" class="typeDefenses" :class="'info-box border-' + speciesInfo.color.name">
         <h3>Type Defenses</h3>
         <p>Effectiveness of each move typing on {{ toUpper(speciesInfo.name) }}</p>
-        <TypeEffectiveness :typing="types" />
+        <TypeEffectiveness :typing="types" direction="from" />
       </div>
 
       <!-- Pokemon Training Info Box -->
@@ -120,7 +133,12 @@
             <h4>EV Yield</h4>
 
             <div class="poke-evs-3">
-              <span class="poke-evs" v-for="(statInfo, index) in getStats(pokeInfo.stats)" :key="index" :class="'poke-ev-' + statInfo.stat_names.short.replace('.','').toLowerCase()">
+              <span
+                class="poke-evs"
+                v-for="(statInfo, index) in getStats(pokeInfo.stats)"
+                :key="index"
+                :class="'poke-ev-' + statInfo.stat_names.short.replace('.','').toLowerCase()"
+              >
                 <strong>{{ statInfo.stat_names.short }}</strong>
                 <span>{{ statInfo.effort }}</span>
               </span>
@@ -205,7 +223,7 @@
       <div id="evolutions" class="evoChain" :class="'info-box border-' + speciesInfo.color.name">
         <!-- <h3>Evolution Chain</h3> -->
         <h3>Evolutions</h3>
-        <EvolutionChain :chain="getId(speciesInfo.evolution_chain.url)" />
+        <EvolutionChain :chain="speciesInfo.evolution_chain == null ? 'None' : getId(speciesInfo.evolution_chain.url)" />
       </div>
 
       <!-- Pokemon Dex Entries Info Box -->
@@ -224,9 +242,13 @@ import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import DexNavigation from '@/components/pokemon/DexNavigation'
 import EvolutionChain from '@/components/pokemon/EvolutionChain'
 import Button from '@/components/Button'
+import SliderSwitch from '@/components/SliderSwitch'
+import TypeBox from '@/components/types/TypeBox'
+// import PokeImg from '../components/pokemon/PokeImg.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
+const img = RepositoryFactory.get('img')
 
 const statMap = {
   hp: { short: 'HP', long: 'HP' },
@@ -243,13 +265,16 @@ const StatRepo = {
 
 export default {
 
-  name: 'Pokemon',
+  name: 'PokemonView',
   components: {
     Loader,
     Button,
     TypeEffectiveness,
     DexNavigation,
-    EvolutionChain
+    EvolutionChain,
+    SliderSwitch,
+    TypeBox
+    // PokeImg
   },
   data () {
     return {
@@ -261,11 +286,14 @@ export default {
       pokeInfo: null,
       formInfo: null,
       // types: null,
+      showShiny: false,
       pokeName: null,
       abilityList: [],
       nextNum: null,
       prevNum: null,
       navigating: false,
+      timeout: null,
+      timer: 0,
       locales: [],
       title: ' - Pokémon'
     }
@@ -369,9 +397,9 @@ export default {
 
     getTyping (types) {
       if (types.length > 1) {
-        return util.toUpper(types[0].type.name) + ' & ' + util.toUpper(types[1].type.name)
+        return util.toUpper(types[0]) + ' & ' + util.toUpper(types[1])
       } else {
-        return util.toUpper(types[0].type.name)
+        return util.toUpper(types[0])
       }
     },
 
@@ -381,7 +409,7 @@ export default {
     },
 
     getFlavorText (data) {
-      return this.getEntryForLocale(data).flavor_text
+      return util.tryData(this.getEntryForLocale(data), 'flavor_text')
     },
 
     changeForm (toForm, type) {
@@ -442,7 +470,8 @@ export default {
     },
 
     getGenus (data) {
-      return this.getEntryForLocale(data).genus
+      // return this.getEntryForLocale(data).genus
+      return util.tryData(this.getEntryForLocale(data), 'genus', '(Not found)')
     },
 
     getWeight (data) {
@@ -553,6 +582,23 @@ export default {
       return groups
     },
 
+    toggleShiny (e) {
+      // console.log(e)
+      if (this.timer === 0) {
+        // console.log('toggling shiny on/off')
+        this.showShiny = e
+        // console.log(this.showShiny)
+        this.timer = 1
+
+        clearTimeout(this.timeout)
+
+        var that = this
+        this.timeout = setTimeout(function () {
+          that.timer = 0
+        }, 1)
+      }
+    },
+
     showEasterEgg () {
       var origName = this.pokeName
 
@@ -595,7 +641,7 @@ export default {
         switch (this.formType) {
           case 'form':
             if (this.formInfo.sprites.front_default !== null) event.target.src = this.formInfo.sprites.front_default
-            else event.target.src = util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+            else event.target.src = img.getPokemonImageUrl(this.speciesInfo.id)
             break
 
           case 'variety':
@@ -603,7 +649,7 @@ export default {
             break
         }
       } else {
-        event.target.src = util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+        event.target.src = img.getPokemonImageUrl(this.speciesInfo.id)
       }
     },
 
@@ -617,14 +663,6 @@ export default {
 
     getEntryForLocale (data) {
       var entry
-      // this.locales.forEach(lang => {
-      //   data.forEach(item => {
-      //     if (item.language.name === lang) {
-      //       entry = item;
-      //     }
-      //   })
-
-      // })
 
       if (!entry) {
         data.forEach(item => {
@@ -639,10 +677,9 @@ export default {
   },
   computed: {
     photoUrl () {
-      if (this.form) {
-        if (parseInt(this.form) === this.speciesInfo.id) {
-          return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
-        } else if (this.speciesInfo.id === 351) {
+      // if (this.form) {
+      if (this.form && parseInt(this.form) !== this.speciesInfo.id) {
+        if (this.speciesInfo.id === 351) {
           // Logic for forms of specific pokemon, which don't work well for images
           return this.pokeInfo.sprites.front_default
         } else {
@@ -652,12 +689,14 @@ export default {
           })
 
           if (formId >= 0) {
-            return util.getPokemonAltFormImageUrl(util.formatIndex(this.speciesInfo.id), formId + 1)
+            return img.getPokemonAltFormImageUrl(util.formatIndex(this.speciesInfo.id), formId + 1)
           } else {
             return ''
           }
         }
-      } else return util.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+      } else if (this.showShiny) {
+        return img.getPokemonShinyImageUrl(util.formatIndex(this.speciesInfo.id))
+      } else return img.getPokemonImageUrl(this.speciesInfo.id)
     },
     alternateForms () {
       var varietiesFormatted = []
@@ -726,8 +765,23 @@ export default {
       return hasDefault
     },
     types () {
-      if (this.formInfo) return this.formInfo.types
-      else return this.pokeInfo.types
+      const typeArr = []
+      if (this.formInfo) {
+        this.formInfo.types.forEach(typeData => {
+          // console.log(typeData)
+          typeArr.push(typeData.type.name)
+        })
+        // return this.formInfo.types
+        return typeArr
+      } else {
+        this.pokeInfo.types.forEach(typeData => {
+          // console.log(typeData)
+          typeArr.push(typeData.type.name)
+        })
+        // return this.formInfo.types
+        return typeArr
+      }
+      // else return this.pokeInfo.types
     }
   },
   watch: {
@@ -752,7 +806,7 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/types.css';
+@import '../styling/types.scss';
 @import '../styling/colors.css';
 
 .poke-head {
@@ -760,9 +814,27 @@ export default {
   margin: 0 auto;
 }
 
+.pokemon-img-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 1rem;
+}
+
 .pokemon-image {
   margin-top: 1rem;
   height: 12rem;
+}
+
+.shiny-slider {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.shiny-switch {
+  margin: 0 1rem 0 1rem;
 }
 
 /* Type styling */
@@ -807,18 +879,6 @@ export default {
 .pokemon-desc {
   text-align: left;
   margin: 0 1rem;
-}
-
-.info-box {
-  border-radius: 0.625rem;
-  padding: 0 1rem;
-  margin: 1rem 0;
-  text-align: left;
-  transition: 0.3s;
-}
-.info-box:hover {
-  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
-  transition: 0.3s;
 }
 
 /* Pokedex Data */

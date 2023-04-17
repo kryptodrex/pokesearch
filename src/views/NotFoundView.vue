@@ -13,10 +13,10 @@
 import Button from '@/components/Button'
 
 export default {
-  name: 'NotFound',
+  name: 'NotFoundView',
   components: {
     Button
-  }
+  },
   // created () {
   //   this.getAlternatives()
   // },
@@ -26,7 +26,11 @@ export default {
   //     console.log(routes)
   //   }
   // }
-
+  watch: {
+    $route: function (to, from) {
+      console.log(to, from)
+    }
+  }
 }
 </script>
 

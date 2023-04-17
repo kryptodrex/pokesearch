@@ -11,12 +11,18 @@ const api = axios.create({
 })
 
 api.interceptors.response.use(null, error => {
+  // console.log(router)
+  console.log(error.response)
   let path = '/error'
   switch (error.response.status) {
-    case 404: path = '/lost-in-the-tall-grass'; break
+    case 404:
+      path = '/lost-in-the-tall-grass'
+      break
   }
+  // console.log(path)
   router.push(path)
   return Promise.reject(error)
+  // return error
 })
 
 export default api

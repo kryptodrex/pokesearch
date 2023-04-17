@@ -39,6 +39,7 @@ import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
+const img = RepositoryFactory.get('img')
 
 export default {
   name: 'DexNavigation',
@@ -67,14 +68,14 @@ export default {
       this.prevPokeData = {
         name: util.toUpper(data.species.name), // eslint-disable-line
         dexNum: this.formatIndex(this.prevNum),
-        spriteUrl: data.sprites.front_default // eslint-disable-line
+        spriteUrl: this.chooseSpriteUrl(data.sprites, this.prevNum) // eslint-disable-line
       }
 
       var { data } = await pokeApi.getPokemon(this.nextNum) // eslint-disable-line
       this.nextPokeData = {
         name: util.toUpper(data.species.name), // eslint-disable-line
         dexNum: this.formatIndex(this.nextNum),
-        spriteUrl: data.sprites.front_default // eslint-disable-line
+        spriteUrl: this.chooseSpriteUrl(data.sprites, this.nextNum) // eslint-disable-line
       }
 
       this.isLoading = false
@@ -86,6 +87,12 @@ export default {
 
     splitName (value) {
       return util.splitName(value, '-')
+    },
+
+    chooseSpriteUrl (data, id) {
+      if (data.front_default == null) {
+        return img.getPokemonImageUrl(id)
+      } else return data.front_default
     }
   }
 }
