@@ -299,6 +299,7 @@ export default {
   flex-direction: row;
   margin-top: 1rem;
   select {
+    cursor: pointer;
     -webkit-appearance: none;
     padding: 0.2rem 1rem;
     min-width: 5.625rem;
