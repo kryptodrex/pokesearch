@@ -36,6 +36,7 @@ import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
+const img = RepositoryFactory.get('img')
 
 export default {
   name: 'PokeBox',
@@ -119,8 +120,9 @@ export default {
     },
 
     getImageUrl () {
-      var basePath = 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'
-      return basePath + this.formatIndex() + '.png'
+      // var basePath = 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'
+      // return basePath + this.formatIndex() + '.png'
+      return img.getPokemonImageUrl(this.dexNum)
     },
 
     setLoaded () {

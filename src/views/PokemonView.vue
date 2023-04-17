@@ -641,7 +641,7 @@ export default {
         switch (this.formType) {
           case 'form':
             if (this.formInfo.sprites.front_default !== null) event.target.src = this.formInfo.sprites.front_default
-            else event.target.src = img.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+            else event.target.src = img.getPokemonImageUrl(this.speciesInfo.id)
             break
 
           case 'variety':
@@ -649,7 +649,7 @@ export default {
             break
         }
       } else {
-        event.target.src = img.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+        event.target.src = img.getPokemonImageUrl(this.speciesInfo.id)
       }
     },
 
@@ -696,7 +696,7 @@ export default {
         }
       } else if (this.showShiny) {
         return img.getPokemonShinyImageUrl(util.formatIndex(this.speciesInfo.id))
-      } else return img.getPokemonImageUrl(util.formatIndex(this.speciesInfo.id))
+      } else return img.getPokemonImageUrl(this.speciesInfo.id)
     },
     alternateForms () {
       var varietiesFormatted = []
@@ -768,14 +768,14 @@ export default {
       const typeArr = []
       if (this.formInfo) {
         this.formInfo.types.forEach(typeData => {
-          console.log(typeData)
+          // console.log(typeData)
           typeArr.push(typeData.type.name)
         })
         // return this.formInfo.types
         return typeArr
       } else {
         this.pokeInfo.types.forEach(typeData => {
-          console.log(typeData)
+          // console.log(typeData)
           typeArr.push(typeData.type.name)
         })
         // return this.formInfo.types
