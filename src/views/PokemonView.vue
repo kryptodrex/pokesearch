@@ -238,7 +238,7 @@
 import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
-import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
+import TypeEffectiveness from '@/components/types/TypeEffectiveness'
 import DexNavigation from '@/components/pokemon/DexNavigation'
 import EvolutionChain from '@/components/pokemon/EvolutionChain'
 import Button from '@/components/Button'
