@@ -46,6 +46,8 @@
           <h3>Offensiveness</h3>
           <p>Effectiveness of the <TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> type against all other types</p>
           <TypeEffectiveness :typing="types" direction="to" />
+
+          <TypeEffTable :typing="types" />
         </div>
 
         <div class="info-box" :class="'type-border-' + typeInfo.name">
@@ -69,11 +71,12 @@
 import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
-import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
+import TypeEffectiveness from '@/components/types/TypeEffectiveness'
 import Button from '@/components/Button'
 import TypeBox from '@/components/types/TypeBox'
 import PokeBox from '../components/pokemon/PokeBox.vue'
 import TypeName from '../components/types/TypeName.vue'
+import TypeEffTable from '../components/types/TypeEffTable.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
@@ -85,6 +88,7 @@ export default {
     Loader,
     Button,
     TypeEffectiveness,
+    TypeEffTable,
     TypeBox,
     TypeName,
     PokeBox
@@ -110,7 +114,7 @@ export default {
   },
   updated () {
     if (this.navigating) {
-      // this.formInfo = null
+      this.allTypeNames = []
       this.fetch()
       this.navigating = false
     }
@@ -313,7 +317,7 @@ export default {
   }
 }
 
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: 27rem) {
   .typeSelect {
     margin-top: 0;
     select {
