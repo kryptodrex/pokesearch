@@ -190,14 +190,6 @@ export default {
   color: #ffdd57;
 }
 
-// .typeLink {
-//     transition: 0.2s;
-// }
-// .typeLink:hover, .typeLink:focus {
-//   box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
-//   transition: 0.3s;
-// }
-
 /* Viewing on smaller phones, like iPhone SE */
 @media screen and (max-width: 22.25rem) {
     .typeEffectiveness {
@@ -211,7 +203,7 @@ export default {
 }
 
 /* Viewing on large devices, like tablets and desktop */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: 27rem) {
     .typeEffectiveness {
         display: grid;
         grid-template-rows: 1fr 1fr;
