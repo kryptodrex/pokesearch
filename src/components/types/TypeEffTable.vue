@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="typeEffTable">
     <!-- <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" /> -->
     <!-- <table v-if="!isLoading"> -->
     <table>
@@ -14,8 +14,9 @@
         </th>
       </tr>
       <tr v-for="(type, index) in types" :key="index">
-        <td><TypeBox :typeName="type.name" :linkEnabled="true">{{ type.name }}</TypeBox></td>
-        <td :class="'dmg-num dmg-' + getDamageAmount(type.name)" v-for="(type, index) in types" :key="index">
+        <th><TypeBox :typeName="type.name" :linkEnabled="true">{{ type.name }}</TypeBox></th>
+        <!-- <td :class="'dmg-num dmg-' + getDamageAmount(type.name)" v-for="(type, index) in types" :key="index"> -->
+        <td>
           <span> {{ getDamageAmount(type.name) }} </span>
         </td>
       </tr>
@@ -136,6 +137,10 @@ export default {
 
 @import '../../styling/types.scss';
 
+.typeEffTable {
+  overflow: scroll;
+}
+
 .typeEffectiveness {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
@@ -197,42 +202,50 @@ export default {
 }
 
 table {
-  display: none
+  width: 26px;
+  font-size: 0.8rem;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  th {
+    width: 26px;
+  }
+  tr {
+    width: 26px;
+    td {
+      text-align: center;
+      width: 26px;
+      height: 26px;
+      font-size: .625rem;
+      line-height: 24px;
+      padding: 0;
+      border: 1px solid #f0f0f0;
+    }
+  }
 }
 
 /* Viewing on smaller phones, like iPhone SE */
 @media screen and (max-width: 22.25rem) {
-    .typeEffectiveness {
-        display: grid;
-        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-row-gap: 0.5rem;
+  .typeEffectiveness {
+      display: grid;
+      grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-row-gap: 0.5rem;
 
-        margin-bottom: 1.25rem;
-    }
+      margin-bottom: 1.25rem;
+  }
 }
 
 /* Viewing on large devices, like tablets and desktop */
 @media screen and (min-width: 27rem) {
-    .typeEffectiveness {
-        display: grid;
-        grid-template-rows: 1fr 1fr;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-        grid-row-gap: 0.5rem;
+  .typeEffectiveness {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-row-gap: 0.5rem;
 
-        margin-bottom: 1.25rem;
-    }
-
-    table {
-      display: inline;
-      font-size: 0.8rem;
-
-      tr {
-        td {
-          text-align: center
-        }
-      }
-    }
+      margin-bottom: 1.25rem;
+  }
 }
 
 </style>
