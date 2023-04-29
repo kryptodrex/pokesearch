@@ -18,27 +18,18 @@
       <div class="typeCharts">
         <div class="typeDefense info-box" :class="'type-border-' + typeInfo.name">
           <h3>Defensiveness</h3>
-          <p>Effectiveness of other types against the <TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> type</p>
+          <p>
+            Effectiveness of other types against
+            <span v-if="types.length === 1"> the <TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> type</span>
+            <span v-if="types.length > 1">
+              a <TypeName :name="types[0]">{{ toUpper(types[0]) }}</TypeName> & <TypeName :name="types[1]">{{ toUpper(types[1]) }}</TypeName> type
+            </span>
+          </p>
           <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
 
           <div class="typeDualDefense">
             <span>Add another typing to see dual typing defensiveness:</span>
-            <div class="typeSelect">
-              <select
-                name="typeList"
-                id="typeList"
-                :class="typeSelectClass"
-                :value="types[1]"
-                @change="e => updateTypes(e.target.value)"
-              >
-                <option value=""> - Select a type - </option>
-                <option v-for="(type, index) in allTypeNames" :key="index" :value="type.toLowerCase()">{{ type }}</option>
-              </select>
-
-              <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('')">
-                <Button size="medium" color="ps-red">Clear</Button>
-              </div>
-            </div>
+            <TypeSelect :mainType="types[0]" :count="1" @change="updateTypes($event)" />
           </div>
         </div>
 
@@ -47,7 +38,6 @@
           <p>Effectiveness of the <TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> type against all other types</p>
           <TypeEffectiveness :typing="types" direction="to" />
 
-          <TypeEffTable :typing="types" />
         </div>
 
         <div class="info-box" :class="'type-border-' + typeInfo.name">
@@ -72,11 +62,11 @@ import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
 import TypeEffectiveness from '@/components/types/TypeEffectiveness'
-import Button from '@/components/Button'
+// import Button from '@/components/Button'
 import TypeBox from '@/components/types/TypeBox'
 import PokeBox from '../components/pokemon/PokeBox.vue'
 import TypeName from '../components/types/TypeName.vue'
-import TypeEffTable from '../components/types/TypeEffTable.vue'
+import TypeSelect from '../components/types/TypeSelect.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
@@ -86,12 +76,12 @@ export default {
   name: 'TypeView',
   components: {
     Loader,
-    Button,
+    // Button,
     TypeEffectiveness,
-    TypeEffTable,
     TypeBox,
     TypeName,
-    PokeBox
+    PokeBox,
+    TypeSelect
   },
   data () {
     return {
@@ -102,7 +92,6 @@ export default {
       allTypeNames: [],
       pokesWithType: [],
       typeEffKey: 1,
-      dropdownVisible: false,
       navigating: false,
       locales: [],
       title: ' - Type'
@@ -197,16 +186,12 @@ export default {
         this.types.push(type)
       }
       this.typeEffKey += 1
-      console.log(this.types)
+      // console.log(this.types)
     },
 
     getGeneration (gen) {
       var split = gen.split('-')
       return util.toUpper(split[0]) + ' ' + split[1].toUpperCase()
-    },
-
-    toggle () {
-      this.dropdownVisible = !this.dropdownVisible
     }
 
     // getEntryForLocale (data) {
@@ -297,32 +282,5 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   margin: 1.5rem 0 1rem 0;
-}
-.typeSelect {
-  display: flex;
-  flex-direction: row;
-  margin-top: 1rem;
-  select {
-    cursor: pointer;
-    -webkit-appearance: none;
-    padding: 0.2rem 1rem;
-    min-width: 5.625rem;
-    height: 2.75rem;
-    text-align: center;
-    border-radius: 0.625rem;
-    font-size: inherit;
-    background-color: white;
-    font: inherit;
-    margin-right: 1rem;
-  }
-}
-
-@media screen and (min-width: 27rem) {
-  .typeSelect {
-    margin-top: 0;
-    select {
-      margin: 0 1rem;
-    }
-  }
 }
 </style>
