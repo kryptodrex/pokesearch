@@ -17,15 +17,12 @@ import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
+const util = RepositoryFactory.get('util')
 
 const damageMap = {
   double_damage: 2,
   half_damage: 0.5,
   no_damage: 0
-}
-
-const DamageRepo = {
-  get: dmg => damageMap[dmg]
 }
 
 export default {
@@ -35,7 +32,9 @@ export default {
   },
   props: {
     typing: Array, // 'typing' is passed in as an Array to the component
-    direction: String
+    direction: String,
+    defenseTypes: Array,
+    noAbbreviation: Boolean
   },
   data () {
     return {
@@ -55,17 +54,21 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getAllTypes()
-      this.types = data.results.filter((item) => { // filtering out unknown and shadow types
-        if (item.name !== 'unknown' && item.name !== 'shadow') return item
-      })
+      if (this.defenseTypes !== undefined) {
+        this.types = this.defenseTypes
+      } else {
+        var { data } = await pokeApi.getAllTypes()
+        this.types = data.results.filter((item) => { // filtering out unknown and shadow types
+          if (item.name !== 'unknown' && item.name !== 'shadow') return item
+        })
+      }
 
-      // var { data } = await pokeApi.getType(this.typing[0].type.name) // eslint-disable-line
+      console.log(this.types)
+
       var { data } = await pokeApi.getType(this.typing[0]) // eslint-disable-line
       this.typingData.push(data.damage_relations) // eslint-disable-line
 
       if (this.typing.length > 1 && this.direction === 'from') {
-        // var { data } = await pokeApi.getType(this.typing[1].type.name) // eslint-disable-line
         var { data } = await pokeApi.getType(this.typing[1]) // eslint-disable-line
         this.typingData.push(data.damage_relations) // eslint-disable-line
       }
@@ -76,7 +79,12 @@ export default {
     },
 
     getAbbrType (name) {
-      return name.substring(0, 3).toUpperCase()
+      console.log(this.noAbbreviation)
+      if (!this.noAbbreviation) {
+        return name.substring(0, 3).toUpperCase()
+      } else {
+        return name.toUpperCase()
+      }
     },
 
     storeDamageRelations () {
@@ -84,42 +92,28 @@ export default {
         data['double_damage_' + this.direction].forEach(type => {
           this.damageRelations = this.damageRelations.concat({
             name: type.name,
-            damage: DamageRepo.get('double_damage')
+            damage: damageMap.double_damage
           })
         })
 
         data['half_damage_' + this.direction].forEach(type => {
           this.damageRelations = this.damageRelations.concat({
             name: type.name,
-            damage: DamageRepo.get('half_damage')
+            damage: damageMap.half_damage
           })
         })
 
         data['no_damage_' + this.direction].forEach(type => {
           this.damageRelations = this.damageRelations.concat({
             name: type.name,
-            damage: DamageRepo.get('no_damage')
+            damage: damageMap.no_damage
           })
         })
       })
     },
 
     getDamageAmount (type) {
-      var damageAmt = 1
-
-      this.damageRelations.forEach(data => {
-        if (data.name === type) {
-          damageAmt *= data.damage
-        }
-      })
-
-      if (damageAmt === 0.5) {
-        return '½'
-      } else if (damageAmt === 0.25) {
-        return '¼'
-      } else {
-        return damageAmt.toString()
-      }
+      return util.getDamageAmount(this.damageRelations, type)
     }
 
   }
@@ -156,7 +150,7 @@ export default {
 [class*="type-"] {
   min-width: 2.7rem;
   border-radius: 0.625rem 0.625rem 0 0;
-  padding: 0.2rem 0;
+  padding: 0.2rem;
   margin-bottom: 0.12rem;
 }
 
