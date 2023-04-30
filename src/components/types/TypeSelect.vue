@@ -1,16 +1,29 @@
 <template>
     <div class="typeSelect">
-        <select
-            name="typeList"
-            id="typeList"
-            :class="typeSelectClass"
-            :value="typeSelected"
-            @change="e => updateSelected(e.target.value)"
-        >
-            <option value=""> - Select a type - </option>
-            <option v-for="(type, index) in allTypeNames" :key="index" :value="type.toLowerCase()">{{ type }}</option>
-        </select>
-        <div class="clear" v-if="typeSelected != ''" v-on:click="updateSelected('')">
+        <div class="typeDropdowns">
+            <select
+                name="typeList"
+                id="typeList"
+                :class="typeSelectClass_1"
+                :value="typeSelected_1"
+                @change="e => updateSelected(e.target.value, 1)"
+            >
+                <option value=""> - Select a type - </option>
+                <option v-for="(type, index) in allTypeNames" :key="index" :value="type.toLowerCase()">{{ type }}</option>
+            </select>
+            <select
+                name="typeList"
+                id="typeList"
+                :class="typeSelectClass_2"
+                :value="typeSelected_2"
+                @change="e => updateSelected(e.target.value, 2)"
+                v-if="count == 2"
+            >
+                <option value=""> - Select a type - </option>
+                <option v-for="(type, index) in allTypeNames" :key="index" :value="type.toLowerCase()">{{ type }}</option>
+            </select>
+        </div>
+        <div class="clear" v-if="typeSelected_1 != '' || typeSelected_2 != ''" v-on:click="updateSelected('')">
             <Button size="medium" color="ps-red">Clear</Button>
         </div>
     </div>
@@ -37,13 +50,15 @@ export default {
       throw new RangeError('Parameter count must be 1 or 2')
     }
 
-    this.typeSelected = ''
+    this.typeSelected_1 = ''
+    this.typeSelected_2 = ''
     this.fetch()
   },
   data () {
     return {
       allTypeNames: [],
-      typeSelected: ''
+      typeSelected_1: '',
+      typeSelected_2: ''
     }
   },
   methods: {
@@ -62,16 +77,33 @@ export default {
       return util.toUpper(value)
     },
 
-    updateSelected (type) {
-      this.typeSelected = type
-      this.$emit('change', type)
+    updateSelected (type, num) {
+      if (type !== '') {
+        switch (num) {
+          case 1:
+            this.typeSelected_1 = type
+            break
+          case 2:
+            this.typeSelected_2 = type
+            break
+        }
+      } else {
+        this.typeSelected_1 = ''
+        this.typeSelected_2 = ''
+      }
+      this.$emit('change', { name: type, num: num })
     }
   },
   computed: {
-    typeSelectClass () {
-      return this.mainType != null && this.typeSelected === ''
+    typeSelectClass_1 () {
+      return this.mainType != null && this.typeSelected_1 === ''
         ? 'type-border-' + this.mainType + ' type-color-' + this.mainType
-        : 'type-border-' + this.typeSelected + ' type-color-' + this.typeSelected
+        : 'type-border-' + this.typeSelected_1 + ' type-color-' + this.typeSelected_1
+    },
+    typeSelectClass_2 () {
+      return this.mainType != null && this.typeSelected_2 === ''
+        ? 'type-border-' + this.mainType + ' type-color-' + this.mainType
+        : 'type-border-' + this.typeSelected_2 + ' type-color-' + this.typeSelected_2
     }
   }
 }
@@ -82,8 +114,10 @@ export default {
 
 .typeSelect {
   display: flex;
-  flex-direction: row;
-  margin-top: 1rem;
+//   flex-direction: column;
+  align-items: center;
+//   margin: 1rem;
+  width: 100%;
   select {
     cursor: pointer;
     -webkit-appearance: none;
@@ -95,15 +129,19 @@ export default {
     font-size: inherit;
     background-color: white;
     font: inherit;
-    margin-right: 1rem;
+    // margin-right: 1rem;
+    margin: 0.5rem;
   }
 }
 
 @media screen and (min-width: 27rem) {
   .typeSelect {
     margin-top: 0;
+    // flex-direction: row;
+    width: 50%;
+    width: auto;
     select {
-      margin: 0 1rem;
+    //   margin: 0 1rem;
     }
   }
 }
