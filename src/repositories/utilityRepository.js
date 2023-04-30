@@ -18,6 +18,24 @@ export default {
     }
   },
 
+  getDamageAmount (damageRelations, type) {
+    var damageAmt = 1
+
+    damageRelations.forEach(dmgData => {
+      if (dmgData.name === type) {
+        damageAmt *= dmgData.damage
+      }
+    })
+
+    if (damageAmt === 0.5) {
+      return '½'
+    } else if (damageAmt === 0.25) {
+      return '¼'
+    } else {
+      return damageAmt.toString()
+    }
+  },
+
   toUpper (value) {
     if (value !== '' && value !== null) {
       return value[0].toUpperCase() + value.slice(1)
