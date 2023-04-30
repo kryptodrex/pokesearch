@@ -28,8 +28,8 @@
           <TypeEffectiveness :key="typeEffKey" :typing="types" direction="from" />
 
           <div class="typeDualDefense">
-            <span>Add another typing to see dual typing defensiveness:</span>
-            <TypeSelect :mainType="types[0]" :count="1" @change="updateTypes($event)" />
+            <p>Add another typing to see dual typing defensiveness:</p>
+            <TypeSelect :mainType="types[0]" :count="1" @change="updateDefenseTypes($event)" />
           </div>
         </div>
 
@@ -38,20 +38,35 @@
           <p>Effectiveness of the <TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> type against all other types</p>
           <TypeEffectiveness :typing="types" direction="to" />
 
-        </div>
-
-        <div class="info-box" :class="'type-border-' + typeInfo.name">
-          <h3><TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> Type Pokémon</h3>
-          <div class="pokemonList">
-            <PokeBox
-              v-for="(poke) in pokesWithType"
-              :key="poke.name"
-              :dexNum="getIndex(poke.url)"
-              :name="poke.name"
-            />
+          <div class="typeDualOffense">
+            <p>Use the dropdowns to select a dual-type and see the effectiveness of the <TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> type against it:</p>
+            <div class="typeDualOffenseResults">
+              <TypeSelect :mainType="types[0]" :count="2" @change="updateOffenseTypes($event)" />
+              <div
+                class="typeDualOffenseEff"
+                v-if="offenseTypes[1] !== '' && offenseTypes[2] !== ''"
+              >
+                <TypeEffectiveness :key="typeEffKey+1" :typing="offenseTypesArray" direction="from" :defenseTypes="[ { name: type } ]" :noAbbreviation="true" />
+                <!-- <p><TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> is</p>
+                <p>{{ typeDualOffenseResult }}</p>x
+                <p>effective</p> -->
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
+      <!-- List of Pokemon of this type -->
+      <div class="info-box" :class="'type-border-' + typeInfo.name">
+        <h3><TypeName :name="typeInfo.name">{{ toUpper(typeInfo.name) }}</TypeName> Type Pokémon</h3>
+        <div class="pokemonList">
+          <PokeBox
+            v-for="(poke) in pokesWithType"
+            :key="poke.name"
+            :dexNum="getIndex(poke.url)"
+            :name="poke.name"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -92,6 +107,7 @@ export default {
       allTypeNames: [],
       pokesWithType: [],
       typeEffKey: 1,
+      offenseTypes: { 1: '', 2: '' },
       navigating: false,
       locales: [],
       title: ' - Type'
@@ -103,12 +119,22 @@ export default {
   },
   updated () {
     if (this.navigating) {
-      this.allTypeNames = []
+      this.reset()
       this.fetch()
       this.navigating = false
     }
   },
   methods: {
+    reset () {
+      this.typeInfo = null
+      this.types = []
+      this.allTypeNames = []
+      this.pokesWithType = []
+      this.typeEffKey = 1
+      this.offenseTypes = { 1: '', 2: '' }
+      this.locales = []
+      this.title = ' - Type'
+    },
     async fetch () {
       this.isLoading = true
 
@@ -177,16 +203,28 @@ export default {
       else return false
     },
 
-    updateTypes (type) {
+    updateDefenseTypes (type) {
       // console.log(this.types)
+      var typeName = type.name
       if (this.types.length > 1) {
         this.types.pop()
       }
-      if (type !== '') {
-        this.types.push(type)
+      if (typeName !== '') {
+        this.types.push(typeName)
       }
       this.typeEffKey += 1
       // console.log(this.types)
+    },
+
+    updateOffenseTypes (type) {
+      // console.log(this.types)
+      if (type.name !== '') {
+        this.offenseTypes[type.num] = type.name
+      } else {
+        this.offenseTypes = { 1: '', 2: '' }
+      }
+      this.typeEffKey += 1
+      console.log(this.offenseTypes)
     },
 
     getGeneration (gen) {
@@ -209,10 +247,11 @@ export default {
     // }
   },
   computed: {
-    typeSelectClass () {
-      return this.types.length > 1
-        ? 'type-border-' + this.types[1] + ' type-color-' + this.types[1]
-        : 'type-border-' + this.types[0] + ' type-color-' + this.types[0]
+    offenseTypesArray () {
+      var array = []
+      array.push(this.offenseTypes[1])
+      array.push(this.offenseTypes[2])
+      return array
     }
   },
   watch: {
@@ -276,11 +315,51 @@ export default {
   justify-content: center;
 }
 
+.typeDualDefense, .typeDualOffense {
+  margin: 1.5rem 0 1rem 0;
+}
+
 .typeDualDefense{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  margin: 1.5rem 0 1rem 0;
+  // margin: 1.5rem 0 1rem 0;
+
+  p {
+    margin: 0;
+    margin-right: 1rem;
+  }
+}
+
+.typeDualOffense{
+  width: 100%;
+
+  .typeDualOffenseResults {
+    // display: grid;
+    // grid-template-rows: 1fr;
+    // grid-template-columns: 1fr;
+    text-align: center;
+    width: 100%;
+  }
+
+  .typeDualOffenseEff {
+    width: 50%;
+    text-align: center;
+  }
+}
+
+@media screen and (min-width: 27rem) {
+  .typeDualOffense {
+  width: 100%;
+
+    .typeDualOffenseResults {
+      // grid-template-columns: 1fr 1fr;
+    }
+
+    .typeDualOffenseEff {
+      width: 50%;
+    }
+}
 }
 </style>
