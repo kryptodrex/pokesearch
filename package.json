@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "core-js": "^3.27.1",
-    "vue": "^2.6.10",
+    "vue": "^3.3.4",
     "vue-autosuggest": "^2.2.0",
     "vue-router": "^3.6.5",
     "vuex": "^3.0.1"
