@@ -55,9 +55,9 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getAllTypes()
-      this.types = data.results.filter((item) => { // filtering out unknown and shadow types
-        if (item.name !== 'unknown' && item.name !== 'shadow') return item
+      const { data: allTypesData } = await pokeApi.getAllTypes()
+      this.types = allTypesData.results.filter((item) => { // filtering out unknown and shadow types
+        return item.name !== 'unknown' && item.name !== 'shadow'
       })
 
       // var { data } = await pokeApi.getType(this.typing[0].type.name) // eslint-disable-line
@@ -105,7 +105,7 @@ export default {
     },
 
     getDamageAmount (type) {
-      var damageAmt = 1
+      let damageAmt = 1
 
       this.damageRelations.forEach(data => {
         if (data.name === type) {

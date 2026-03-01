@@ -39,8 +39,7 @@ export default {
       this.visible = !this.visible
     },
     select (option) {
-      this.value = option
-      this.$emit('input', this.value)
+      this.$emit('input', option)
     }
   }
   // computed: {

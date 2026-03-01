@@ -120,7 +120,7 @@ export default {
       this.isLoading = true
 
       // Get data on the type from url
-      var { data } = await pokeApi.getType(this.type)
+      const { data } = await pokeApi.getType(this.type)
       this.typeInfo = data
 
       // Get array of Pokemon that have this type
@@ -140,9 +140,9 @@ export default {
       // Add main type to the types array for tracking
       this.types.push(this.typeInfo.name)
 
-      var { data } = await pokeApi.getAllTypes() // eslint-disable-line
-      data.results.filter((item) => { // filtering out unknown and shadow types
-        if (item.name !== 'unknown' && item.name !== 'shadow' && item.name !== this.typeInfo.name) return item
+      const { data: allTypesData } = await pokeApi.getAllTypes()
+      allTypesData.results.filter((item) => { // filtering out unknown and shadow types
+        return item.name !== 'unknown' && item.name !== 'shadow' && item.name !== this.typeInfo.name
       }).forEach(type => {
         this.allTypeNames.push(this.toUpper(type.name))
       })
@@ -159,8 +159,8 @@ export default {
     },
 
     toUpperEachWord (value) {
-      var strArr = value.trim().split(' ')
-      var newString = ''
+      const strArr = value.trim().split(' ')
+      let newString = ''
       strArr.forEach(str => {
         newString += this.toUpper(str) + ' '
       })
@@ -197,7 +197,7 @@ export default {
     },
 
     getGeneration (gen) {
-      var split = gen.split('-')
+      const split = gen.split('-')
       return util.toUpper(split[0]) + ' ' + split[1].toUpperCase()
     },
 
