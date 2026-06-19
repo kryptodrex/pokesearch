@@ -7,25 +7,14 @@
         <h1 class="site-name">PokéSearch</h1>
         <h4 v-if="env == 'dev'" class="site-name">&nbsp; beta</h4>
     </div>
-
-    <!-- <div class="header-search" v-if="!isHomeRoute && !isHome">
-        <Search class="header-search-input" placeholder="Search..." v-on:searching="setSearchedPokemon($event)" :hasAutosuggest="false" />
-        <Button size="medium" color="white"> GO! </Button>
-    </div> -->
   </header>
 </template>
 
 <script>
-import router from '@/router'
-// import Button from '@/components/Button'
-// import Search from '@/components/Search'
+import { useHistoryStore } from '@/stores/history'
 
 export default {
   name: 'Header',
-  // components: {
-  //   Button,
-  //   Search
-  // },
   data () {
     return {
       isHomeRoute: false,
@@ -33,8 +22,7 @@ export default {
     }
   },
   mounted () {
-    this.env = process.env.VUE_APP_ENV
-    // console.log('Running in ' + this.env + ' mode.')
+    this.env = import.meta.env.VITE_APP_ENV
   },
   methods: {
     setSearchedPokemon (e) {
@@ -43,21 +31,13 @@ export default {
   },
   computed: {
     isHome () {
-      var route = router.currentRoute.name
-      // console.log(route)
-      if (route === 'home') return true
-      else return false
+      return this.$route.name === 'home'
     }
   },
   watch: {
     $route: function (to, from) {
-      // console.log(this.$store.state.priorId)
-      // console.log(to, from)
-
-      // Add path to history
-      // this.$store.commit('addIdToHistory', from.fullPath)
-      this.$store.commit('addIdToHistory', to.fullPath)
-      // console.log(this.$store.state.idHistory)
+      const historyStore = useHistoryStore()
+      historyStore.addIdToHistory(to.fullPath)
 
       if (to.name === 'home') this.isHomeRoute = true
       else this.isHomeRoute = false
@@ -72,7 +52,6 @@ header {
     width: auto;
     padding: 1rem;
     margin: 0.5rem 0 1rem;
-    /* margin-bottom: 1rem; */
     background-color: rgb(201, 38, 63);
     border-radius: 0.625rem;
     color: white;
@@ -99,7 +78,6 @@ h1 {
 }
 .site-name {
     margin: 0;
-    /* display: none; */
     font-family: 'QSMed', Arial, Helvetica, sans-serif;
 }
 
@@ -132,11 +110,6 @@ h1 {
 
 /* Styling for desktop/tablet viewing */
 @media screen and (min-width: 25.9375rem) {
-  header {
-    /* margin: 0.7rem;
-    margin-bottom: 0; */
-  }
-
   h1 {
     font-size: 2rem;
   }

@@ -66,7 +66,6 @@
 </template>
 
 <script>
-import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
@@ -91,7 +90,7 @@ export default {
   },
   data () {
     return {
-      type: router.currentRoute.params.name,
+      type: null,
       isLoading: true,
       typeInfo: null,
       types: [],
@@ -105,6 +104,7 @@ export default {
     }
   },
   mounted () {
+    this.type = this.$route.params.name
     this.fetch()
     this.locales = util.getUserLocales()
   },

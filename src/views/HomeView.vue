@@ -32,7 +32,6 @@
 
 <script>
 
-import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import PokeBox from '@/components/pokemon/PokeBox'
 import Loader from '@/components/Loader'
@@ -56,7 +55,7 @@ export default {
       searching: false,
       pokeInfo: [],
       generations: [],
-      genToSearch: router.currentRoute.query.gen,
+      genToSearch: null,
       nextGen: { name: 'generation-ii' },
       limit: 30,
       offset: 0,
@@ -68,6 +67,7 @@ export default {
   },
   mounted () {
     document.title = this.title
+    this.genToSearch = this.$route.query.gen
     this.fetch()
     this.locales = util.getUserLocales()
   },
@@ -78,7 +78,7 @@ export default {
 
     changeGeneration (gen) {
       this.genToSearch = gen
-      var currentRoute = this.$router.currentRoute
+      var currentRoute = this.$route
       if (currentRoute.query.gen !== gen) {
         this.pokeInfo = []
         this.$router.push({ name: 'homePokemon', query: { gen: gen } })

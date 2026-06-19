@@ -235,7 +235,6 @@
 </template>
 
 <script>
-import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import Loader from '@/components/Loader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
@@ -278,9 +277,9 @@ export default {
   },
   data () {
     return {
-      pokemon: router.currentRoute.params.name,
-      form: router.currentRoute.params.form,
-      formType: router.currentRoute.query.formType,
+      pokemon: null,
+      form: null,
+      formType: null,
       isLoading: true,
       speciesInfo: null,
       pokeInfo: null,
@@ -299,6 +298,9 @@ export default {
     }
   },
   mounted () {
+    this.pokemon = this.$route.params.name
+    this.form = this.$route.params.form || null
+    this.formType = this.$route.query.formType || null
     this.fetch()
     this.locales = util.getUserLocales()
   },
@@ -413,7 +415,7 @@ export default {
     },
 
     changeForm (toForm, type) {
-      var currentRoute = this.$router.currentRoute
+      var currentRoute = this.$route
 
       if (currentRoute.params.form !== toForm) {
         if (toForm !== this.speciesInfo.id && toForm) {
