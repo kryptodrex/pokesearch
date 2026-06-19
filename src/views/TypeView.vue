@@ -240,8 +240,8 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/types.scss';
-@import '../styling/colors.css';
+@import '../styling/types';
+@import '../styling/colors';
 
 .typePage {
   display: flex;
@@ -312,7 +312,7 @@ export default {
   }
 }
 
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .typeSelect {
     margin-top: 0;
     select {

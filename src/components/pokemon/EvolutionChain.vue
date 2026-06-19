@@ -101,7 +101,7 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
 .evolutionChain {
   display: flex;
@@ -120,12 +120,12 @@ export default {
 }
 
 /* Viewing on smaller phones, like iPhone SE */
-@media screen and (max-width: 22.25rem) {
+@media screen and (max-width: $bp-sm) {
 
 }
 
 /* Viewing on large devices, like tablets and desktop */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
 
 }
 

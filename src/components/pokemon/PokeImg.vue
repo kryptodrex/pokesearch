@@ -69,10 +69,10 @@ export default {
 
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
-@import '../../styling/colors.css';
-@import '../../styling/types.scss';
+@import '../../styling/colors';
+@import '../../styling/types';
 
 .pokeBox {
     /* border: 2px solid #4A4A4A; */
@@ -111,14 +111,14 @@ export default {
 }
 
 /* Viewing on smaller phones, like iPhone SE */
-@media screen and (max-width: 22.25rem) {
+@media screen and (max-width: $bp-sm) {
   .pokePic {
     height: 6.5rem;
   }
 }
 
 /* Styling for desktop/tablet viewing */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .pokeBox {
     padding: 1rem;
     margin: 1rem;

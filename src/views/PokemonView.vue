@@ -808,8 +808,8 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/types.scss';
-@import '../styling/colors.css';
+@import '../styling/types';
+@import '../styling/colors';
 
 .poke-head {
   max-width: 46.875rem;
@@ -1011,7 +1011,7 @@ export default {
   color: #f755c1;
 }
 
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .alternateForms {
     flex-direction: row;
     align-items: center;

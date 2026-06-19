@@ -62,8 +62,8 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/colors.css';
-@import '../styling/types.scss';
+@import '../styling/colors';
+@import '../styling/types';
 
 .aselect {
   width: 280px;

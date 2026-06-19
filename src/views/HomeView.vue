@@ -196,7 +196,7 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
 .content {
   display: flex;
@@ -231,7 +231,7 @@ export default {
 }
 
 /* Styling for desktop/tablet viewing */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .filterBtns {
     overflow: visible;
     justify-content: center;

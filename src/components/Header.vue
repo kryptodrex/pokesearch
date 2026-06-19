@@ -46,70 +46,67 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="css">
+<style scoped lang="scss">
 header {
-    width: auto;
-    padding: 1rem;
-    margin: 0.5rem 0 1rem;
-    background-color: rgb(201, 38, 63);
-    border-radius: 0.625rem;
-    color: white;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  width: auto;
+  padding: $space-md;
+  margin: $space-sm 0 $space-md;
+  background-color: $color-primary;
+  border-radius: $radius-md;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .header-text {
-    flex-grow: 3;
-
-    display: flex;
-    align-items: center;
+  flex-grow: 3;
+  display: flex;
+  align-items: center;
 }
 
 .logo {
-    height: 3rem;
-    margin-right: 1rem;
+  height: 3rem;
+  margin-right: $space-md;
 }
 
 h1 {
   font-size: 1.7rem;
 }
+
 .site-name {
-    margin: 0;
-    font-family: 'QSMed', Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: $font-bold;
 }
 
 .header-search {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .header-search-input {
-    margin-right: 0.5rem;
+  margin-right: $space-sm;
 }
 
-@media screen and (max-width: 22.25rem) {
-    .header-text {
-        width: 100%;
-        justify-content: center;
-        text-align: center;
-    }
+@media screen and (max-width: $bp-sm) {
+  .header-text {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 
-    .logo {
-        height: 2rem;
-        margin: 0 0 0.2rem 0;
-    }
+  .logo {
+    height: 2rem;
+    margin: 0 0 0.2rem 0;
+  }
 
-    .header-pokepage {
-        display: flex;
-        flex-direction: column;
-    }
+  .header-pokepage {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
-/* Styling for desktop/tablet viewing */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   h1 {
     font-size: 2rem;
   }

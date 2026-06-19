@@ -1,5 +1,4 @@
 <template>
-    <!-- <div tabindex="0" class="button" :class="getFormatting()"> -->
     <div tabindex="0" class="button" :class="colorClass + ' ' + sizeClass">
       <slot></slot>
     </div>
@@ -13,17 +12,6 @@ export default {
     size: String,
     color: String,
     inverted: Boolean
-  },
-  methods: {
-    getFormatting () {
-      if (this.size !== null && this.color !== null) {
-        return this.size + ' ' + this.color
-      } else if (this.size == null && this.color !== null) {
-        return this.color
-      } else if (this.size !== null && this.color == null) {
-        return this.size
-      }
-    }
   },
   computed: {
     colorClass () {
@@ -42,9 +30,9 @@ export default {
 
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
-@import '../styling/colors.css';
+@import '../styling/colors';
 
 .button {
   display: flex;
@@ -53,69 +41,62 @@ export default {
   justify-content: center;
   font-weight: bold;
   font-size: 1.1rem;
-  /* border: 2px solid; */
-  border-radius: 0.625rem;
-  /* margin: 0 1rem; */
+  border-radius: $radius-md;
   width: fit-content;
   cursor: pointer;
-  transition: 0.2s;
+  transition: $transition-fast;
 }
 
-.large{
-  border-radius: 0.5rem;
+.large {
+  border-radius: $radius-sm + 2px;
   font-size: 1.2rem;
-  padding: 0.8rem 1.5rem;
+  padding: 0.8rem $space-lg;
 }
 .medium {
-  border-radius: 0.4rem;
+  border-radius: $radius-sm;
   font-size: 1rem;
-  padding: 0.5rem 0.8rem;
+  padding: $space-sm 0.8rem;
 }
 
+// PokéSearch brand button variants (separate from Pokémon species colors)
 .bg-ps-white {
-    background-color: #f1f1f1;
-    border-color: #f1f1f1;
-    color: rgb(201, 38, 63);
+  background-color: $color-primary-light;
+  border-color: $color-primary-light;
+  color: $color-primary;
+}
+.bg-ps-white:hover,
+.bg-ps-white:focus {
+  border-color: $color-primary-light;
+  background-color: $color-text-secondary;
+  color: $color-primary-light;
 }
 
 .bg-ps-red {
-    background-color: rgb(201, 38, 63);
-    border-color: rgb(201, 38, 63);
-    color: #f1f1f1;
+  background-color: $color-primary;
+  border-color: $color-primary;
+  color: $color-primary-light;
 }
+.bg-ps-red:hover,
+.bg-ps-red:focus {
+  background-color: $color-primary-light;
+  border-color: $color-primary;
+  color: $color-primary;
+}
+
 .bgInv-ps-red {
-    background-color: #f1f1f1;
-    border-color: rgb(201, 38, 63);
-    color: rgb(201, 38, 63);
+  background-color: $color-primary-light;
+  border-color: $color-primary;
+  color: $color-primary;
 }
 
-.button:hover, .button:focus {
-    /* border: 2px solid; */
-    transition: 0.2s;
+.button:hover,
+.button:focus {
+  transition: $transition-fast;
 }
 
-.bg-ps-white:hover, .bg-ps-white:focus {
-    border-color: #f1f1f1;
-    background-color: #4A4A4A;
-    color: #f1f1f1;
-}
-
-.bg-ps-red:hover, .bg-ps-red:focus {
-    background-color: #f1f1f1;
-    border-color: rgb(201, 38, 63);
-    color: rgb(201, 38, 63);
-}
-
-/* .bg-ps-grey:hover, .bg-ps-grey:focus {
-    background-color: rgb(201, 38, 63);
-    border-color: rgb(201, 38, 63);
-    color: #f1f1f1;
-} */
-
-/* Styling for desktop/tablet viewing */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .button {
-    /* margin: 0 1rem; */
+    // reserved for future desktop overrides
   }
 }
 

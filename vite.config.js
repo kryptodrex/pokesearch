@@ -8,6 +8,15 @@ export default defineConfig({
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
     extensions: ['.vue', '.js', '.json']
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Auto-injects variables into every SCSS context (no manual @import needed).
+        // _variables.scss must contain only variable declarations — no CSS output.
+        additionalData: `@import "@/styling/variables";`
+      }
+    }
+  },
   test: {
     environment: 'jsdom',
     globals: true
