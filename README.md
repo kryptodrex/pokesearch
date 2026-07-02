@@ -2,38 +2,38 @@
 
 ## Project setup
 ```
-yarn install
+npm install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-yarn run serve
+npm run dev
 ```
 
 ### Compiles and minifies for production
 ```
-yarn run build
+npm run build
+```
+
+### Locally preview the production build
+```
+npm run preview
 ```
 
 ### Run your tests
 ```
-yarn run test
+npm test
 ```
 
-### Lints and fixes files
+### Run your tests once (CI mode)
 ```
-yarn run lint
-```
-
-### Run your end-to-end tests
-```
-yarn run test:e2e
+npm run test:run
 ```
 
-### Run your unit tests
+### Lints files
 ```
-yarn run test:unit
+npm run lint
 ```
 
 ### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+See the [Vite configuration reference](https://vite.dev/config/).

@@ -1,0 +1,105 @@
+@use 'variables' as *;
+
+// Pokémon species color utility classes.
+// Class names correspond to the `color` property returned by the PokéAPI.
+// Used by PokeBox, SliderSwitch, and any component that colors by species.
+
+/* Default border */
+[class*='border-'] {
+  border: 2px solid $color-text-secondary;
+}
+.border-black  { border: 2px solid $pokemon-black; }
+.border-blue   { border: 2px solid $pokemon-blue; }
+.border-brown  { border: 2px solid $pokemon-brown; }
+.border-gray   { border: 2px solid $pokemon-gray; }
+.border-green  { border: 2px solid $pokemon-green; }
+.border-pink   { border: 2px solid $pokemon-pink; }
+.border-purple { border: 2px solid $pokemon-purple; }
+.border-red    { border: 2px solid $pokemon-red; }
+.border-white  { border: 2px solid $pokemon-white; }
+.border-yellow { border: 2px solid $pokemon-yellow; }
+
+/* Filled color buttons (bg-*) and inverted variants (bgInv-*) */
+[class*='bg-'] {
+  border: 2px solid;
+  border-color: $color-text-secondary;
+  background-color: $color-primary;
+  transition: $transition-fast;
+}
+[class*='bg-']:hover {
+  background-color: $color-primary-light;
+  transition: $transition-fast;
+}
+[class*='bgInv-'] {
+  border: 2px solid;
+  background-color: $color-primary-light;
+  transition: $transition-fast;
+}
+[class*='bgInv-']:hover {
+  background-color: $color-primary-light;
+  transition: $transition-fast;
+}
+
+.bg-black  { border-color: $pokemon-black;  background-color: $pokemon-black;  color: white; }
+.bg-black:hover { color: $pokemon-black; }
+.bgInv-black { border-color: $pokemon-black; color: $pokemon-black; }
+
+.bg-blue   { border-color: $pokemon-blue;   background-color: $pokemon-blue;   color: white; }
+.bg-blue:hover { border-color: $pokemon-blue; color: $pokemon-blue; }
+.bgInv-blue { color: $pokemon-blue; }
+
+.bg-brown  { border-color: $pokemon-brown;  background-color: $pokemon-brown;  color: white; }
+.bg-brown:hover { color: $pokemon-brown; }
+.bgInv-brown { border-color: $pokemon-brown; color: $pokemon-brown; }
+
+.bg-gray   { border-color: $pokemon-gray;   background-color: $pokemon-gray;   color: white; }
+.bg-gray:hover { color: $pokemon-gray; }
+.bgInv-gray { border-color: $pokemon-gray; color: $pokemon-gray; }
+
+.bg-green  { border-color: $pokemon-green;  background-color: $pokemon-green;  color: white; }
+.bg-green:hover { color: $pokemon-green; }
+.bgInv-green { border-color: $pokemon-green; color: $pokemon-green; }
+
+.bg-pink   { border-color: $pokemon-pink;   background-color: $pokemon-pink;   color: $pokemon-black; }
+.bg-pink:hover { color: $pokemon-pink; }
+.bgInv-pink { border-color: $pokemon-pink; color: $pokemon-pink; }
+
+.bg-purple { border-color: $pokemon-purple; background-color: $pokemon-purple; color: white; }
+.bg-purple:hover { color: $pokemon-purple; }
+.bgInv-purple { border-color: $pokemon-purple; color: $pokemon-purple; }
+
+.bg-red    { border-color: $pokemon-red;    background-color: $pokemon-red;    color: white; }
+.bg-red:hover { color: $pokemon-red; }
+.bgInv-red { border-color: $pokemon-red; color: $pokemon-red; }
+
+.bg-white  { border-color: $pokemon-white;  background-color: $pokemon-white;  color: $pokemon-black; }
+.bg-white:hover { color: $pokemon-black; }
+.bgInv-white { border-color: $pokemon-white; color: $pokemon-black; }
+
+.bg-yellow { border-color: $pokemon-yellow; background-color: $pokemon-yellow; color: $pokemon-black; }
+.bg-yellow:hover { color: $pokemon-black; }
+.bgInv-yellow { border-color: $pokemon-yellow; color: $pokemon-black; }
+
+/* Plain background colors (no border) */
+.bg-color-black  { background-color: $pokemon-black; }
+.bg-color-blue   { background-color: $pokemon-blue; }
+.bg-color-brown  { background-color: $pokemon-brown; }
+.bg-color-gray   { background-color: $pokemon-gray; }
+.bg-color-green  { background-color: $pokemon-green; }
+.bg-color-pink   { background-color: $pokemon-pink; }
+.bg-color-purple { background-color: $pokemon-purple; }
+.bg-color-red    { background-color: $pokemon-red; }
+.bg-color-white  { background-color: #aaaaaa; }
+.bg-color-yellow { background-color: $pokemon-yellow; }
+
+/* Text-only color classes */
+.color-black  { color: $pokemon-black; }
+.color-blue   { color: $pokemon-blue; }
+.color-brown  { color: $pokemon-brown; }
+.color-gray   { color: $pokemon-gray; }
+.color-green  { color: $pokemon-green; }
+.color-pink   { color: $pokemon-pink; }
+.color-purple { color: $pokemon-purple; }
+.color-red    { color: $pokemon-red; }
+.color-white  { color: #aaaaaa; }
+.color-yellow { color: $pokemon-yellow; }

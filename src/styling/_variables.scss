@@ -1,0 +1,51 @@
+// === Brand / UI Colors ===
+$color-primary:          rgb(201, 38, 63);   // PokéSearch red
+$color-primary-light:    #f1f1f1;            // Button inverse / input background
+$color-text:             #2c3e50;            // Main body text
+$color-text-secondary:   #4a4a4a;            // Links, muted text
+$color-text-muted:       #707070;            // Placeholder, borders
+$color-error:            rgb(199, 95, 95);   // Error messages / footer links
+$color-footer-bg:        #4a4a4a;
+$color-shadow:           rgba(0, 0, 0, 0.20);
+
+// === Pokémon Species Colors (match the color property from the PokéAPI) ===
+$pokemon-black:  #323232;
+$pokemon-blue:   #3482de;
+$pokemon-brown:  #af891f;
+$pokemon-gray:   #707070;
+$pokemon-green:  #64a743;
+$pokemon-pink:   #e97698;
+$pokemon-purple: #7c63b8;
+$pokemon-red:    rgb(201, 38, 63);
+$pokemon-white:  #e3e3e3;
+$pokemon-yellow: #f8d030;
+
+// === Typography ===
+$font-primary:      'QSReg', Helvetica, Arial, sans-serif;
+$font-bold:         'QSMed', Arial, Helvetica, sans-serif;
+$font-size-base:    1.1rem;
+$line-height-base:  1.5rem;
+
+// === Spacing ===
+$space-xs: 0.25rem;   //  4px
+$space-sm: 0.5rem;    //  8px
+$space-md: 1rem;      // 16px
+$space-lg: 1.5rem;    // 24px
+$space-xl: 2rem;      // 32px
+
+// === Border Radius ===
+$radius-sm: 4px;
+$radius-md: 0.625rem;   // 10px — buttons, cards, inputs (most common)
+$radius-lg: 1rem;       // 16px — large type badges, desktop cards
+
+// === Transitions ===
+$transition-fast: 0.2s;
+$transition-base: 0.3s;
+$transition-slow: 0.4s;
+
+// === Breakpoints ===
+$bp-sm: 22.25rem;     // small phones (e.g. iPhone SE)
+$bp-md: 25.9375rem;   // tablet / desktop
+
+// === Shadows ===
+$shadow-md: 0 5px 5px 0 rgba(0, 0, 0, 0.20);

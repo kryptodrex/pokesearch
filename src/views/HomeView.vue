@@ -6,9 +6,9 @@
       <div class="filterBtns">
         <div class="genBtns" v-for="(gen, index) in generations" :key="index" v-on:click="changeGeneration(getIndex(gen.url))" :aria-label="'Click to load ' +  getGeneration(gen.name) + ' Pokémon'">
           <!-- Buttons for other unselected generations -->
-          <Button size="medium" color="ps-red" v-if="getIndex(gen.url) !== genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <AppButton size="medium" color="ps-red" v-if="getIndex(gen.url) !== genToSearch" > {{ getGeneration(gen.name) }} </AppButton>
           <!-- Button for selected generation -->
-          <Button size="medium" color="ps-red" :inverted="true" v-if="getIndex(gen.url) === genToSearch" > {{ getGeneration(gen.name) }} </Button>
+          <AppButton size="medium" color="ps-red" :inverted="true" v-if="getIndex(gen.url) === genToSearch" > {{ getGeneration(gen.name) }} </AppButton>
         </div>
       </div>
 
@@ -24,30 +24,29 @@
     </div>
 
     <div class="loadMore" v-on:click="getNextGen()" :aria-label="'Click to load ' +  getGeneration(nextGen.name) + ' Pokémon'" v-if="nextGen !== null">
-      <Button id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen !== null && !searching"> Load {{ getGeneration(nextGen.name) }} </Button>
-      <Loader v-if="isLoading" size="large" :full-page="true" />
+      <AppButton id="loadMoreBtn" size="medium" color="red" v-if="!isLoading && nextGen !== null && !searching"> Load {{ getGeneration(nextGen.name) }} </AppButton>
+      <AppLoader v-if="isLoading" size="large" :full-page="true" />
     </div>
   </div>
 </template>
 
 <script>
 
-import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 import PokeBox from '@/components/pokemon/PokeBox'
-import Loader from '@/components/Loader'
-import Button from '@/components/Button'
+import AppLoader from '@/components/AppLoader'
+import AppButton from '@/components/AppButton'
 import Search from '@/components/Search'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
 
 export default {
-  name: 'Home',
+  name: 'HomeView',
   components: {
     PokeBox,
-    Loader,
-    Button,
+    AppLoader,
+    AppButton,
     Search
   },
   data () {
@@ -56,7 +55,7 @@ export default {
       searching: false,
       pokeInfo: [],
       generations: [],
-      genToSearch: router.currentRoute.query.gen,
+      genToSearch: null,
       nextGen: { name: 'generation-ii' },
       limit: 30,
       offset: 0,
@@ -68,6 +67,7 @@ export default {
   },
   mounted () {
     document.title = this.title
+    this.genToSearch = this.$route.query.gen
     this.fetch()
     this.locales = util.getUserLocales()
   },
@@ -78,7 +78,7 @@ export default {
 
     changeGeneration (gen) {
       this.genToSearch = gen
-      var currentRoute = this.$router.currentRoute
+      var currentRoute = this.$route
       if (currentRoute.query.gen !== gen) {
         this.pokeInfo = []
         this.$router.push({ name: 'homePokemon', query: { gen: gen } })
@@ -89,7 +89,7 @@ export default {
     async getPokemon () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getAllGenerations() // eslint-disable-line
+      var { data } = await pokeApi.getAllGenerations()
       this.generations = data.results
 
       var latestGen = this.getIndex(this.generations[this.generations.length - 1].url)
@@ -101,7 +101,7 @@ export default {
 
       var { data } = await pokeApi.getGeneration(this.genToSearch) // eslint-disable-line
 
-      data.pokemon_species.forEach(species => { // eslint-disable-line
+      data.pokemon_species.forEach(species => {
         this.pokeInfo = this.pokeInfo.concat([{
           name: species.name,
           url: species.url,
@@ -196,7 +196,7 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
 .content {
   display: flex;
@@ -231,7 +231,7 @@ export default {
 }
 
 /* Styling for desktop/tablet viewing */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .filterBtns {
     overflow: visible;
     justify-content: center;

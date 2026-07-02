@@ -1,6 +1,6 @@
 <template>
   <div class="pokemonPage" :key="pokemon">
-    <Loader v-if="isLoading" :full-page="true" />
+    <AppLoader v-if="isLoading" :full-page="true" />
 
     <DexNavigation v-if="!isLoading" :nextNum="nextNum" :prevNum="prevNum"/>
 
@@ -28,13 +28,15 @@
 
         <!-- Grab the type(s) of the Pokémon -->
         <div class="pokemon-types">
-          <div
-            :class="'type-' + typeInfo.type.name"
-            v-for="typeInfo in types"
-            v-bind:key="typeInfo.slot"
-          >
-            {{ toUpper(typeInfo.type.name) }}
-          </div>
+          <TypeBox
+            v-for="(typeName, index) in types"
+            v-bind:key="index"
+            :typeName="typeName"
+            size="small"
+            :linkEnabled="true"
+            >
+              {{ toUpper(typeName) }}
+          </TypeBox>
         </div>
 
         <div class="pokemon-desc">
@@ -60,12 +62,12 @@
             :aria-label="'Click to show form ' + toUpper(formData.name_formatted)"
           >
             <!-- Buttons for other unselected forms -->
-            <Button size="medium" :color="speciesInfo.color.name" v-if="formData.id !== form && formData.id" > {{ toUpperEachWord(formData.name_formatted) }} </Button>
+            <AppButton size="medium" :color="speciesInfo.color.name" v-if="formData.id !== form && formData.id" > {{ toUpperEachWord(formData.name_formatted) }} </AppButton>
             <!-- Button for selected forms -->
-            <Button size="medium" :color="speciesInfo.color.name" :inverted="true" v-if="formData.id === form" > {{ toUpperEachWord(formData.name_formatted) }} </Button>
+            <AppButton size="medium" :color="speciesInfo.color.name" :inverted="true" v-if="formData.id === form" > {{ toUpperEachWord(formData.name_formatted) }} </AppButton>
           </div>
           <!-- <router-link v-if="!hasDefaultForm && form" :to="'/pokemon/' + pokemon" class="formBtn">
-            <Button size="medium" :color="speciesInfo.color.name"> Default </Button>
+            <AppButton size="medium" :color="speciesInfo.color.name"> Default </AppButton>
           </router-link> -->
         </div>
       </div>
@@ -73,7 +75,7 @@
       <div
         id="basic-info"
         class="pokemon-basic-info"
-        v-bind:class="'info-box border-' + speciesInfo.color.name"
+        :class="'info-box border-' + speciesInfo.color.name"
       >
         <h3>Pokédex Data</h3>
 
@@ -120,7 +122,7 @@
       <div id="type-defenses" class="typeDefenses" :class="'info-box border-' + speciesInfo.color.name">
         <h3>Type Defenses</h3>
         <p>Effectiveness of each move typing on {{ toUpper(speciesInfo.name) }}</p>
-        <TypeEffectiveness :typing="types" />
+        <TypeEffectiveness :typing="types" direction="from" />
       </div>
 
       <!-- Pokemon Training Info Box -->
@@ -131,7 +133,12 @@
             <h4>EV Yield</h4>
 
             <div class="poke-evs-3">
-              <span class="poke-evs" v-for="(statInfo, index) in getStats(pokeInfo.stats)" :key="index" :class="'poke-ev-' + statInfo.stat_names.short.replace('.','').toLowerCase()">
+              <span
+                class="poke-evs"
+                v-for="(statInfo, index) in getStats(pokeInfo.stats)"
+                :key="index"
+                :class="'poke-ev-' + statInfo.stat_names.short.replace('.','').toLowerCase()"
+              >
                 <strong>{{ statInfo.stat_names.short }}</strong>
                 <span>{{ statInfo.effort }}</span>
               </span>
@@ -228,18 +235,19 @@
 </template>
 
 <script>
-import router from '@/router'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
+import AppLoader from '@/components/AppLoader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import DexNavigation from '@/components/pokemon/DexNavigation'
 import EvolutionChain from '@/components/pokemon/EvolutionChain'
-import Button from '@/components/Button'
+import AppButton from '@/components/AppButton'
 import SliderSwitch from '@/components/SliderSwitch'
+import TypeBox from '@/components/types/TypeBox'
 // import PokeImg from '../components/pokemon/PokeImg.vue'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
+const img = RepositoryFactory.get('img')
 
 const statMap = {
   hp: { short: 'HP', long: 'HP' },
@@ -256,21 +264,22 @@ const StatRepo = {
 
 export default {
 
-  name: 'Pokemon',
+  name: 'PokemonView',
   components: {
-    Loader,
-    Button,
+    AppLoader,
+    AppButton,
     TypeEffectiveness,
     DexNavigation,
     EvolutionChain,
-    SliderSwitch
+    SliderSwitch,
+    TypeBox
     // PokeImg
   },
   data () {
     return {
-      pokemon: router.currentRoute.params.name,
-      form: router.currentRoute.params.form,
-      formType: router.currentRoute.query.formType,
+      pokemon: null,
+      form: null,
+      formType: null,
       isLoading: true,
       speciesInfo: null,
       pokeInfo: null,
@@ -289,6 +298,9 @@ export default {
     }
   },
   mounted () {
+    this.pokemon = this.$route.params.name
+    this.form = this.$route.params.form || null
+    this.formType = this.$route.query.formType || null
     this.fetch()
     this.locales = util.getUserLocales()
   },
@@ -303,12 +315,12 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getPokemonSpecies(this.pokemon) // eslint-disable-line
-      this.speciesInfo = data // eslint-disable-line 
+      var { data } = await pokeApi.getPokemonSpecies(this.pokemon)
+      this.speciesInfo = data
       this.pokeName = this.getEntryForLocale(this.speciesInfo.names).name
 
       var { data } = await pokeApi.getPokemon(this.pokemon) // eslint-disable-line
-      this.pokeInfo = data // eslint-disable-line
+      this.pokeInfo = data
 
       if (this.form) {
         var formInd = this.alternateForms.findIndex(form => {
@@ -319,12 +331,12 @@ export default {
           switch (this.formType) {
             case 'form':
               var { data } = await pokeApi.getPokemonForm(this.form) // eslint-disable-line
-              this.formInfo = data // eslint-disable-line
+              this.formInfo = data
               break
 
             case 'variety':
               var { data } = await pokeApi.getPokemon(this.form) // eslint-disable-line
-              this.pokeInfo = data // eslint-disable-line
+              this.pokeInfo = data
 
               // var { data } = await pokeApi.getPokemonForm(this.pokeInfo.forms[0])
               // this.formInfo = data
@@ -342,7 +354,7 @@ export default {
       }
 
       var { data } = await pokeApi.getCurrentTotalPokemon() // eslint-disable-line
-      this.totalPokemon = data.count // eslint-disable-line
+      this.totalPokemon = data.count
 
       // Set the prev Pokedex num and next Pokedex num
       if ((this.speciesInfo.id - 1) < 1) this.prevNum = this.totalPokemon
@@ -355,7 +367,7 @@ export default {
       for (var i = 0; i < this.pokeInfo.abilities.length; i++) {
         var abilityInfo = this.pokeInfo.abilities[i]
         var { data } = await pokeApi.getAbility(abilityInfo.ability.name) // eslint-disable-line
-        this.storeAbilityData(data) // eslint-disable-line
+        this.storeAbilityData(data)
       }
 
       document.title = '#' + this.formatIndex(this.speciesInfo.id) + ' ' + this.pokeName + this.title // set site title to pokemon name
@@ -387,9 +399,9 @@ export default {
 
     getTyping (types) {
       if (types.length > 1) {
-        return util.toUpper(types[0].type.name) + ' & ' + util.toUpper(types[1].type.name)
+        return util.toUpper(types[0]) + ' & ' + util.toUpper(types[1])
       } else {
-        return util.toUpper(types[0].type.name)
+        return util.toUpper(types[0])
       }
     },
 
@@ -403,7 +415,7 @@ export default {
     },
 
     changeForm (toForm, type) {
-      var currentRoute = this.$router.currentRoute
+      var currentRoute = this.$route
 
       if (currentRoute.params.form !== toForm) {
         if (toForm !== this.speciesInfo.id && toForm) {
@@ -631,7 +643,7 @@ export default {
         switch (this.formType) {
           case 'form':
             if (this.formInfo.sprites.front_default !== null) event.target.src = this.formInfo.sprites.front_default
-            else event.target.src = util.getPokemonImageUrl(this.speciesInfo.id)
+            else event.target.src = img.getPokemonImageUrl(this.speciesInfo.id)
             break
 
           case 'variety':
@@ -639,7 +651,7 @@ export default {
             break
         }
       } else {
-        event.target.src = util.getPokemonImageUrl(this.speciesInfo.id)
+        event.target.src = img.getPokemonImageUrl(this.speciesInfo.id)
       }
     },
 
@@ -679,14 +691,14 @@ export default {
           })
 
           if (formId >= 0) {
-            return util.getPokemonAltFormImageUrl(util.formatIndex(this.speciesInfo.id), formId + 1)
+            return img.getPokemonAltFormImageUrl(util.formatIndex(this.speciesInfo.id), formId + 1)
           } else {
             return ''
           }
         }
       } else if (this.showShiny) {
-        return util.getPokemonShinyImageUrl(util.formatIndex(this.speciesInfo.id))
-      } else return util.getPokemonImageUrl(this.speciesInfo.id)
+        return img.getPokemonShinyImageUrl(util.formatIndex(this.speciesInfo.id))
+      } else return img.getPokemonImageUrl(this.speciesInfo.id)
     },
     alternateForms () {
       var varietiesFormatted = []
@@ -755,12 +767,27 @@ export default {
       return hasDefault
     },
     types () {
-      if (this.formInfo) return this.formInfo.types
-      else return this.pokeInfo.types
+      const typeArr = []
+      if (this.formInfo) {
+        this.formInfo.types.forEach(typeData => {
+          // console.log(typeData)
+          typeArr.push(typeData.type.name)
+        })
+        // return this.formInfo.types
+        return typeArr
+      } else {
+        this.pokeInfo.types.forEach(typeData => {
+          // console.log(typeData)
+          typeArr.push(typeData.type.name)
+        })
+        // return this.formInfo.types
+        return typeArr
+      }
+      // else return this.pokeInfo.types
     }
   },
   watch: {
-    $route: function (to, from) {
+    $route: function (to) {
       this.pokemon = 0
       this.form = 0
       this.formType = null
@@ -781,8 +808,8 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/types.css';
-@import '../styling/colors.css';
+@use '../styling/types' as *;
+@use '../styling/colors' as *;
 
 .poke-head {
   max-width: 46.875rem;
@@ -854,18 +881,6 @@ export default {
 .pokemon-desc {
   text-align: left;
   margin: 0 1rem;
-}
-
-.info-box {
-  border-radius: 0.625rem;
-  padding: 0 1rem;
-  margin: 1rem 0;
-  text-align: left;
-  transition: 0.3s;
-}
-.info-box:hover {
-  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
-  transition: 0.3s;
 }
 
 /* Pokedex Data */
@@ -996,7 +1011,7 @@ export default {
   color: #f755c1;
 }
 
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .alternateForms {
     flex-direction: row;
     align-items: center;

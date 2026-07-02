@@ -2,12 +2,12 @@
     <!-- <div class="pokeBox" :id="dexNum" :class="'border-' + color.main"> -->
     <div class="pokeBox">
       <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(name)" @load="setLoaded">
-      <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
+      <AppLoader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
     </div>
 </template>
 
 <script>
-import Loader from '@/components/Loader'
+import AppLoader from '@/components/AppLoader'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
 const util = RepositoryFactory.get('util')
@@ -15,7 +15,7 @@ const util = RepositoryFactory.get('util')
 export default {
   name: 'PokeImg',
   components: {
-    Loader
+    AppLoader
   },
   props: {
     baseUrl: String,
@@ -69,10 +69,10 @@ export default {
 
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
-@import '../../styling/colors.css';
-@import '../../styling/types.css';
+@use '../../styling/colors' as *;
+@use '../../styling/types' as *;
 
 .pokeBox {
     /* border: 2px solid #4A4A4A; */
@@ -111,14 +111,14 @@ export default {
 }
 
 /* Viewing on smaller phones, like iPhone SE */
-@media screen and (max-width: 22.25rem) {
+@media screen and (max-width: $bp-sm) {
   .pokePic {
     height: 6.5rem;
   }
 }
 
 /* Styling for desktop/tablet viewing */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .pokeBox {
     padding: 1rem;
     margin: 1rem;

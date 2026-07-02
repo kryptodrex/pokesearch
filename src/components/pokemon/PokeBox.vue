@@ -23,24 +23,25 @@
           </div>
         </transition> -->
 
-        <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
-        <!-- <Loader class="pokePic loaderBall" type="ball" size="medium" v-if="getData !== null && isLoading" /> -->
+        <AppLoader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
+        <!-- <AppLoader class="pokePic loaderBall" type="ball" size="medium" v-if="getData !== null && isLoading" /> -->
 
       </router-link>
     </div>
 </template>
 
 <script>
-import Loader from '@/components/Loader'
+import AppLoader from '@/components/AppLoader'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 const util = RepositoryFactory.get('util')
+const img = RepositoryFactory.get('img')
 
 export default {
   name: 'PokeBox',
   components: {
-    Loader
+    AppLoader
   },
   props: {
     name: String,
@@ -64,15 +65,15 @@ export default {
 
     async getPokeData () {
       if (!this.gotData) {
-        var { data } = await pokeApi.getPokemonSpecies(this.dexNum) // eslint-disable-line
+        var { data } = await pokeApi.getPokemonSpecies(this.dexNum)
         this.color = {
-          main: data.color.name, // eslint-disable-line
+          main: data.color.name,
           backup: ''
         }
 
         var { data } = await pokeApi.getPokemon(this.dexNum) // eslint-disable-line
         this.types = {
-          main: data.types, // eslint-disable-line
+          main: data.types,
           backup: []
         }
 
@@ -121,7 +122,7 @@ export default {
     getImageUrl () {
       // var basePath = 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'
       // return basePath + this.formatIndex() + '.png'
-      return util.getPokemonImageUrl(this.dexNum)
+      return img.getPokemonImageUrl(this.dexNum)
     },
 
     setLoaded () {
@@ -147,26 +148,24 @@ export default {
 
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
-@import '../../styling/colors.css';
-@import '../../styling/types.css';
+@use '../../styling/colors' as *;
+@use '../../styling/types' as *;
 
 .pokeBox {
-    /* border: 2px solid #4A4A4A; */
-    border-radius: 0.625rem;
-    text-align: center;
-    cursor: pointer;
-
-    padding: 0.5rem;
-    margin: 0.4rem;
-
-    transition: 0.2s;
+  border-radius: $radius-md;
+  text-align: center;
+  cursor: pointer;
+  padding: $space-sm;
+  margin: 0.4rem;
+  transition: $transition-fast;
 }
 
-.pokeBox:hover, .pokeBox:focus {
-  box-shadow: 0 5px 5px 0 rgba(0,0,0,0.20);;
-  transition: 0.2s;
+.pokeBox:hover,
+.pokeBox:focus {
+  box-shadow: $shadow-md;
+  transition: $transition-fast;
 }
 
 .pokeInfo {
@@ -176,95 +175,57 @@ export default {
 }
 
 .pokePic {
-  /* margin-top: 1rem; */
   height: 8rem;
 }
 
-/* Type styling */
 .pokemon-types {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-[class*="type-"] {
+[class*='type-'] {
   display: flex;
   flex-direction: column;
   text-align: center;
   min-width: 2.7rem;
-  border-radius: 0.625rem;
+  border-radius: $radius-md;
   margin: 0 0.2rem;
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem $space-sm;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
+.fade-enter-active, .fade-leave-active { transition: opacity 0.5s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 
-.loading, .loaded {
-  display: none;
-}
+.loading, .loaded { display: none; }
 .loaderBall {
   width: 8rem;
-  margin: 0rem;
+  margin: 0;
 }
 
-/* Pokemon colors */
-.black {
-  color: #323232;
-}
-.blue {
-  color: #3482de;
-}
-.brown {
-  color: #af891f;
-}
-.gray {
-  color: #707070;
-}
-.green {
-  color: #64a743;
-}
-.pink {
-  color: #e97698;
-}
-.purple {
-  color: #7c63b8;
-}
-.red {
-  color: #ef4036;
-}
-.white {
-  color: #aaaaaa;
-}
-.yellow {
-  color: #f8d030;
+// Pokémon species text colors
+.black  { color: $pokemon-black; }
+.blue   { color: $pokemon-blue; }
+.brown  { color: $pokemon-brown; }
+.gray   { color: $pokemon-gray; }
+.green  { color: $pokemon-green; }
+.pink   { color: $pokemon-pink; }
+.purple { color: $pokemon-purple; }
+.red    { color: $pokemon-red; }
+.white  { color: #aaaaaa; }
+.yellow { color: $pokemon-yellow; }
+
+@media screen and (max-width: $bp-sm) {
+  .pokePic { height: 6.5rem; }
 }
 
-/* Viewing on smaller phones, like iPhone SE */
-@media screen and (max-width: 22.25rem) {
-  .pokePic {
-    height: 6.5rem;
-  }
-}
-
-/* Styling for desktop/tablet viewing */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .pokeBox {
-    padding: 1rem;
-    margin: 1rem;
+    padding: $space-md;
+    margin: $space-md;
   }
-
-  .pokePic {
-    height: 10rem;
-  }
-
-  .loaderBall {
-    width: 10rem;
-  }
+  .pokePic    { height: 10rem; }
+  .loaderBall { width: 10rem; }
 }
 
 </style>

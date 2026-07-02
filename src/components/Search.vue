@@ -16,11 +16,11 @@
         <!-- </vue-autosuggest> -->
 
         <div class="clearBtn" v-on:click="clearSearch()" v-if="searchValue.length >= 1 && clearable">
-          <Button size="medium" color="red"> Clear </Button>
+          <AppButton size="medium" color="red"> Clear </AppButton>
         </div>
       </div>
       <div class="loadingSearch" v-if="isLoading">
-        <Loader />
+        <AppLoader />
       </div>
     </div>
 </template>
@@ -28,16 +28,16 @@
 <script>
 // import { VueAutosuggest } from 'vue-autosuggest'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
-import Button from '@/components/Button'
+import AppLoader from '@/components/AppLoader'
+import AppButton from '@/components/AppButton'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 
 export default {
   name: 'PokeBox',
   components: {
-    Loader,
-    Button
+    AppLoader,
+    AppButton
     // VueAutosuggest
   },
   props: {
@@ -119,45 +119,43 @@ export default {
 
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
 .searchbar {
   display: flex;
   flex-direction: row;
   align-items: center;
   height: fit-content;
-  /* margin-bottom: 0.5rem; */
 }
 
 .search-input {
-  border: 2px solid #707070;
-  border-radius: 0.625rem;
-  padding: 0.5rem 1rem;
+  border: 2px solid $color-text-muted;
+  border-radius: $radius-md;
+  padding: $space-sm $space-md;
   line-height: 1.8rem;
   font-size: 1.2rem;
   width: 100%;
-  transition: 0.3s;
+  transition: $transition-base;
 }
 
 .search-input:focus {
-    border: 2px solid rgb(201, 38, 63);
-    background-color: white;
-    transition: 0.3s;
+  border: 2px solid $color-primary;
+  background-color: white;
+  transition: $transition-base;
 }
 
 .clearBtn {
-  margin-left: 0.5rem;
+  margin-left: $space-sm;
 }
 
 .loadingSearch {
-  margin: 1rem;
+  margin: $space-md;
 }
 
-/* Styling for desktop/tablet viewing */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .search-input:hover {
-    border: 2px solid rgb(201, 38, 63);
-    transition: 0.3s;
+    border: 2px solid $color-primary;
+    transition: $transition-base;
   }
 }
 
