@@ -7,7 +7,7 @@
 <script>
 
 export default {
-  name: 'Button',
+  name: 'AppButton',
   props: {
     size: String,
     color: String,
@@ -32,7 +32,7 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/colors';
+@use '../styling/colors' as *;
 
 .button {
   display: flex;

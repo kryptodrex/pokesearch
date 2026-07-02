@@ -14,7 +14,7 @@
 import { useHistoryStore } from '@/stores/history'
 
 export default {
-  name: 'Header',
+  name: 'AppHeader',
   data () {
     return {
       isHomeRoute: false,
@@ -35,7 +35,7 @@ export default {
     }
   },
   watch: {
-    $route: function (to, from) {
+    $route: function (to) {
       const historyStore = useHistoryStore()
       historyStore.addIdToHistory(to.fullPath)
 

@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'Loader',
+  name: 'AppLoader',
   props: {
     type: String,
     size: String,

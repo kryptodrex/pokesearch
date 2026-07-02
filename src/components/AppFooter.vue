@@ -1,6 +1,7 @@
 <template>
   <div class="footerSection">
     <footer>
+      <p class="footer-version">PokéSearch v{{ version }}</p>
       <p>
         All images are owned by Pokémon™, ® Nintendo. Data from <a class="regLink" href="https://pokeapi.co" target="_blank">PokéAPI</a>.
       </p>
@@ -9,8 +10,15 @@
 </template>
 
 <script>
+import version from '../../version?raw'
+
 export default {
-  name: 'Footer'
+  name: 'AppFooter',
+  data () {
+    return {
+      version: version.trim()
+    }
+  }
 }
 </script>
 
@@ -35,5 +43,11 @@ footer {
   display: unset;
   color: $color-error;
   font-weight: bold;
+}
+
+.footer-version {
+  margin: 0 0 $space-xs;
+  font-size: 0.85rem;
+  opacity: 0.7;
 }
 </style>

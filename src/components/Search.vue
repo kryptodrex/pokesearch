@@ -16,11 +16,11 @@
         <!-- </vue-autosuggest> -->
 
         <div class="clearBtn" v-on:click="clearSearch()" v-if="searchValue.length >= 1 && clearable">
-          <Button size="medium" color="red"> Clear </Button>
+          <AppButton size="medium" color="red"> Clear </AppButton>
         </div>
       </div>
       <div class="loadingSearch" v-if="isLoading">
-        <Loader />
+        <AppLoader />
       </div>
     </div>
 </template>
@@ -28,16 +28,16 @@
 <script>
 // import { VueAutosuggest } from 'vue-autosuggest'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
-import Button from '@/components/Button'
+import AppLoader from '@/components/AppLoader'
+import AppButton from '@/components/AppButton'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 
 export default {
   name: 'PokeBox',
   components: {
-    Loader,
-    Button
+    AppLoader,
+    AppButton
     // VueAutosuggest
   },
   props: {

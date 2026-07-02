@@ -1,0 +1,159 @@
+name: Validate Version
+
+# Gate for PRs into main: the root `version` file must be bumped above main's
+# current value before merge, since a merge to main auto-publishes a release
+# tagged from that file (see release.yml).
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - '.github/workflows/**'
+      - '**/*.md'
+      - '**/*.MD'
+      - '.gitignore'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.base_ref }}
+
+      - name: Check if version file was modified
+        id: check_version
+        run: |
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          if echo "$CHANGED_FILES" | grep -q "^version$"; then
+            echo "version_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "version_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Read current version
+        if: steps.check_version.outputs.version_changed == 'true'
+        id: current_version
+        run: |
+          VERSION=$(tr -d ' \n' < version)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check if release tag already exists
+        if: steps.check_version.outputs.version_changed == 'true'
+        id: check_tag
+        run: |
+          TAG="v${{ steps.current_version.outputs.version }}"
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "${TAG}$"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Read base branch version
+        if: steps.check_version.outputs.version_changed == 'true'
+        id: base_version
+        run: |
+          if git cat-file -e origin/${{ github.base_ref }}:version 2>/dev/null; then
+            BASE_VERSION=$(git show origin/${{ github.base_ref }}:version | tr -d ' \n')
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "version=$BASE_VERSION" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compare versions
+        if: steps.check_version.outputs.version_changed == 'true' && steps.base_version.outputs.exists == 'true'
+        id: compare
+        run: |
+          CURRENT="${{ steps.current_version.outputs.version }}"
+          BASE="${{ steps.base_version.outputs.version }}"
+
+          compare_versions() {
+            local current=$1 base=$2
+            IFS='.' read -ra CURRENT_PARTS <<< "$current"
+            IFS='.' read -ra BASE_PARTS <<< "$base"
+            local max_len=${#CURRENT_PARTS[@]}
+            [ ${#BASE_PARTS[@]} -gt "$max_len" ] && max_len=${#BASE_PARTS[@]}
+            for ((i=0; i<max_len; i++)); do
+              c=${CURRENT_PARTS[$i]:-0}
+              b=${BASE_PARTS[$i]:-0}
+              if [ "$c" -gt "$b" ]; then return 0; fi
+              if [ "$c" -lt "$b" ]; then return 1; fi
+            done
+            return 2
+          }
+
+          compare_versions "$CURRENT" "$BASE"
+          case $? in
+            0) echo "result=increased" >> "$GITHUB_OUTPUT"; echo "should_fail=false" >> "$GITHUB_OUTPUT" ;;
+            2) echo "result=unchanged" >> "$GITHUB_OUTPUT"; echo "should_fail=true" >> "$GITHUB_OUTPUT" ;;
+            1) echo "result=decreased" >> "$GITHUB_OUTPUT"; echo "should_fail=true" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Comment on PR
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const versionChanged = '${{ steps.check_version.outputs.version_changed }}';
+            const compareResult = '${{ steps.compare.outputs.result }}';
+            const currentVersion = '${{ steps.current_version.outputs.version }}';
+            const baseVersion = '${{ steps.base_version.outputs.version }}';
+            const baseExists = '${{ steps.base_version.outputs.exists }}';
+            const tagExists = '${{ steps.check_tag.outputs.exists }}';
+
+            let message = '';
+
+            if (versionChanged === 'false') {
+              message = `❌ **Version File Not Updated**\n\nThe root \`version\` file was not modified in this PR. Please bump it before merging to \`main\`.`;
+            } else if (tagExists === 'true') {
+              message = `❌ **Release Tag Already Exists**\n\nVersion \`${currentVersion}\` maps to tag \`v${currentVersion}\`, which already exists. Please bump the version further.`;
+            } else if (baseExists === 'false') {
+              message = `⚠️ **New Version File**\n\nThe \`version\` file doesn't exist on \`main\` yet. Creating it with version \`${currentVersion}\`.`;
+            } else if (compareResult === 'increased') {
+              message = `✅ **Version Update Detected**\n\nVersion bumped from \`${baseVersion}\` to \`${currentVersion}\`.`;
+            } else if (compareResult === 'unchanged') {
+              message = `❌ **Version Unchanged**\n\nThe \`version\` file was modified but still reads \`${currentVersion}\`. Please bump it.`;
+            } else if (compareResult === 'decreased') {
+              message = `❌ **Version Decreased**\n\nVersion dropped from \`${baseVersion}\` to \`${currentVersion}\`. Versions must only increase.`;
+            }
+
+            if (message) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: message
+              });
+            }
+
+      - name: Fail if version not bumped
+        if: steps.check_version.outputs.version_changed == 'false'
+        run: |
+          echo "::error::The root 'version' file must be updated in this PR before merging to main."
+          exit 1
+
+      - name: Fail if release tag already exists
+        if: steps.check_version.outputs.version_changed == 'true' && steps.check_tag.outputs.exists == 'true'
+        run: |
+          echo "::error::Release tag v${{ steps.current_version.outputs.version }} already exists. Bump the version."
+          exit 1
+
+      - name: Fail if version comparison failed
+        if: steps.compare.outputs.should_fail == 'true'
+        run: |
+          echo "::error::Version validation failed: ${{ steps.compare.outputs.result }}."
+          exit 1

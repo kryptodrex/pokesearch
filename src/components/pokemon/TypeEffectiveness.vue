@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
+    <AppLoader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
     <div v-if="!isLoading" class="typeEffectiveness">
         <div class="dmg-box" v-for="(type, index) in types" :key="index">
             <router-link :to="'/types/' + type.name">
@@ -14,7 +14,7 @@
 
 <script>
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
+import AppLoader from '@/components/AppLoader'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
 
@@ -31,7 +31,7 @@ const DamageRepo = {
 export default {
   name: 'TypeEffectiveness',
   components: {
-    Loader
+    AppLoader
   },
   props: {
     typing: Array, // 'typing' is passed in as an Array to the component
@@ -62,12 +62,12 @@ export default {
 
       // var { data } = await pokeApi.getType(this.typing[0].type.name) // eslint-disable-line
       var { data } = await pokeApi.getType(this.typing[0]) // eslint-disable-line
-      this.typingData.push(data.damage_relations) // eslint-disable-line
+      this.typingData.push(data.damage_relations)
 
       if (this.typing.length > 1 && this.direction === 'from') {
         // var { data } = await pokeApi.getType(this.typing[1].type.name) // eslint-disable-line
         var { data } = await pokeApi.getType(this.typing[1]) // eslint-disable-line
-        this.typingData.push(data.damage_relations) // eslint-disable-line
+        this.typingData.push(data.damage_relations)
       }
 
       this.storeDamageRelations()
@@ -128,7 +128,7 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../../styling/types';
+@use '../../styling/types' as *;
 
 .typeEffectiveness {
     display: grid;

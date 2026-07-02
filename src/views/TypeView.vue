@@ -1,6 +1,6 @@
 <template>
   <div class="typePage">
-    <Loader v-if="isLoading" :full-page="true" />
+    <AppLoader v-if="isLoading" :full-page="true" />
 
     <div class="typeData" v-if="!isLoading">
       <div class="typeHeader">
@@ -36,7 +36,7 @@
               </select>
 
               <div class="clear" v-if="types.length > 1" v-on:click="updateTypes('')">
-                <Button size="medium" color="ps-red">Clear</Button>
+                <AppButton size="medium" color="ps-red">Clear</AppButton>
               </div>
             </div>
           </div>
@@ -67,9 +67,9 @@
 
 <script>
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
+import AppLoader from '@/components/AppLoader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
-import Button from '@/components/Button'
+import AppButton from '@/components/AppButton'
 import TypeBox from '@/components/types/TypeBox'
 import PokeBox from '../components/pokemon/PokeBox.vue'
 import TypeName from '../components/types/TypeName.vue'
@@ -81,8 +81,8 @@ export default {
 
   name: 'TypeView',
   components: {
-    Loader,
-    Button,
+    AppLoader,
+    AppButton,
     TypeEffectiveness,
     TypeBox,
     TypeName,
@@ -227,7 +227,7 @@ export default {
     }
   },
   watch: {
-    $route: function (to, from) {
+    $route: function (to) {
       this.type = ''
       this.types = []
       this.type = to.params.name
@@ -240,8 +240,8 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/types';
-@import '../styling/colors';
+@use '../styling/types' as *;
+@use '../styling/colors' as *;
 
 .typePage {
   display: flex;

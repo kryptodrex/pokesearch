@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
-import Button from '@/components/Button.vue'
+import AppButton from '@/components/AppButton.vue'
 
-describe('Button.vue', () => {
+describe('AppButton.vue', () => {
   it('renders slot content', () => {
-    const wrapper = mount(Button, {
+    const wrapper = mount(AppButton, {
       props: { size: 'medium', color: 'ps-red' },
       slots: { default: 'Click me' }
     })
@@ -13,7 +13,7 @@ describe('Button.vue', () => {
   })
 
   it('uses the inverted color class when inverted', () => {
-    const wrapper = mount(Button, {
+    const wrapper = mount(AppButton, {
       props: { color: 'ps-red', inverted: true }
     })
     expect(wrapper.classes()).toContain('bgInv-ps-red')

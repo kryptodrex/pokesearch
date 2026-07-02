@@ -3,19 +3,19 @@
     <h2>404 Not Found</h2>
     <p class="">Whatever you were searching for couldn't be found...</p>
     <router-link :to="'/'">
-        <Button color="ps-red" size="large"> Head back home? </Button>
+        <AppButton color="ps-red" size="large"> Head back home? </AppButton>
     </router-link>
   </div>
 </template>
 
 <script>
 // import router from '@/router'
-import Button from '@/components/Button'
+import AppButton from '@/components/AppButton'
 
 export default {
   name: 'NotFoundView',
   components: {
-    Button
+    AppButton
   },
   // created () {
   //   this.getAlternatives()

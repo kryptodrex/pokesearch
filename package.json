@@ -1,12 +1,15 @@
 {
   "name": "pokesearch",
-  "version": "0.9.4",
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
   "engines": {
-    "node": ">=20 <23"
+    "node": ">=22"
   },
   "scripts": {
     "dev": "vite",
+    "sync-version": "node scripts/sync-version.js",
+    "prebuild": "npm run sync-version",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",

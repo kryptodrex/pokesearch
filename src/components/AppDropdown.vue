@@ -24,7 +24,7 @@
 <script>
 
 export default {
-  name: 'Dropdown',
+  name: 'AppDropdown',
   props: {
     list: Array,
     value: String
@@ -39,8 +39,7 @@ export default {
       this.visible = !this.visible
     },
     select (option) {
-      this.value = option
-      this.$emit('input', this.value)
+      this.$emit('input', option)
     }
   }
   // computed: {
@@ -62,8 +61,8 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/colors';
-@import '../styling/types';
+@use '../styling/colors' as *;
+@use '../styling/types' as *;
 
 .aselect {
   width: 280px;

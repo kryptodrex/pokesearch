@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 // Pokémon species color utility classes.
 // Class names correspond to the `color` property returned by the PokéAPI.
 // Used by PokeBox, SliderSwitch, and any component that colors by species.
