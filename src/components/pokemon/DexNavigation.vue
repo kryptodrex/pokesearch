@@ -98,7 +98,7 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 
 /* Next/Prev in Pokédex */
 .forward-back {
@@ -175,14 +175,14 @@ export default {
 }
 
 /* Viewing on smaller phones, like iPhone SE */
-@media screen and (max-width: 22.25rem) {
+@media screen and (max-width: $bp-sm) {
     .prev-sprite, .pokesprite {
         display: none;
     }
 }
 
 /* Styling for desktop/tablet viewing */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
     .pokenumname {
         flex-direction: row;
     }

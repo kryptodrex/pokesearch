@@ -128,7 +128,7 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../../styling/types.scss';
+@import '../../styling/types';
 
 .typeEffectiveness {
     display: grid;
@@ -199,7 +199,7 @@ export default {
 // }
 
 /* Viewing on smaller phones, like iPhone SE */
-@media screen and (max-width: 22.25rem) {
+@media screen and (max-width: $bp-sm) {
     .typeEffectiveness {
         display: grid;
         grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -211,7 +211,7 @@ export default {
 }
 
 /* Viewing on large devices, like tablets and desktop */
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
     .typeEffectiveness {
         display: grid;
         grid-template-rows: 1fr 1fr;

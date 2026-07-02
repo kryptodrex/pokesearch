@@ -55,40 +55,27 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '../../styling/types.scss';
+@import '../../styling/types';
 
-[class*="type-"] {
-  border-radius: 0.625rem;
-
-  padding: 0.2rem 1rem;
-  margin: 0 0.5rem;
-  /* max-width: 25%; */
+[class*='type-'] {
+  border-radius: $radius-md;
+  padding: 0.2rem $space-md;
+  margin: 0 $space-sm;
   min-width: 5.625rem;
   text-align: center;
 }
 
-.large{
-  border-radius: 1rem;
+.large {
+  border-radius: $radius-lg;
   border-width: 4px !important;
   font-size: 1.5rem;
-  padding: 1rem 1.8rem;
+  padding: $space-md 1.8rem;
 }
 .medium {
-  border-radius: 1rem;
+  border-radius: $radius-lg;
   border-width: 3px !important;
   font-size: 1.3rem;
-  padding: 0.5rem 0.8rem;
+  padding: $space-sm 0.8rem;
 }
-/* .small {
-  font-size: 1rem;
-} */
-
-// .typeLink {
-//     transition: 0.2s;
-// }
-// .typeLink:hover, .typeLink:focus {
-//   box-shadow: 0 4px 4px 0 rgba(0,0,0,0.20);
-//   transition: 0.3s;
-// }
 
 </style>

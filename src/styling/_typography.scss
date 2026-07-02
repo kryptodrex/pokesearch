@@ -1,0 +1,28 @@
+@font-face {
+  font-family: 'QSBold';
+  src: url('../assets/fonts/quicksand-bold-webfont.woff2') format('woff2'),
+       url('../assets/fonts/quicksand-bold-webfont.woff') format('woff');
+  font-weight: bolder;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'QSLight';
+  src: url('../assets/fonts/quicksand-light-webfont.woff2') format('woff2'),
+       url('../assets/fonts/quicksand-light-webfont.woff') format('woff');
+  font-weight: lighter;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'QSMed';
+  src: url('../assets/fonts/quicksand-medium-webfont.woff2') format('woff2'),
+       url('../assets/fonts/quicksand-medium-webfont.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'QSReg';
+  src: url('../assets/fonts/quicksand-regular-webfont.woff2') format('woff2'),
+       url('../assets/fonts/quicksand-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}

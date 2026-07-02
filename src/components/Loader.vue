@@ -26,7 +26,7 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
   /* Loading styling */
 .loader {
     /* text-align: center;
@@ -188,7 +188,7 @@ export default {
   100.00% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 6, 1); }
 }
 
-@media screen and (min-width: 25.9375rem) {
+@media screen and (min-width: $bp-md) {
   .large {
     height: 10rem;
   }
