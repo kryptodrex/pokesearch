@@ -1,0 +1,59 @@
+name: Release
+
+# Publishes a GitHub release whenever a PR is merged (or a push lands) on main.
+# validate-version.yml guarantees the root `version` file was already bumped
+# before the merge, so the tag here is always new.
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/workflows/**'
+      - '**/*.md'
+      - '**/*.MD'
+      - '.gitignore'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Read version
+        id: version
+        run: echo "version=$(tr -d ' \n' < version)" >> "$GITHUB_OUTPUT"
+
+      - name: Package build output
+        run: |
+          cd dist
+          zip -r "../pokesearch-${{ steps.version.outputs.version }}.zip" .
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          files: pokesearch-${{ steps.version.outputs.version }}.zip
+          draft: false
+          prerelease: false
+          make_latest: true
