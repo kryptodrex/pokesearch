@@ -2,6 +2,9 @@
   "name": "pokesearch",
   "version": "0.9.4",
   "private": true,
+  "engines": {
+    "node": ">=20 <23"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -23,7 +26,7 @@
     "eslint": "^9.0.0",
     "eslint-plugin-vue": "^9.0.0",
     "jsdom": "^26.0.0",
-    "sass": "^1.57.1",
+    "sass": "^1.77.0",
     "vite": "^6.0.0",
     "vitest": "^3.0.0"
   }
