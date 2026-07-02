@@ -31,16 +31,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
-          cache: yarn
+          cache: npm
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Lint
-        run: yarn lint
+        run: npm run lint
 
       - name: Run tests
-        run: yarn test:run
+        run: npm run test:run
 
       - name: Build
-        run: yarn build
+        run: npm run build
