@@ -11,9 +11,9 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        // Auto-injects variables into every SCSS context (no manual @import needed).
+        // Auto-injects variables into every SCSS context (no manual @use needed).
         // _variables.scss must contain only variable declarations — no CSS output.
-        additionalData: `@import "@/styling/variables";`
+        additionalData: `@use "@/styling/variables" as *;`
       }
     }
   },
