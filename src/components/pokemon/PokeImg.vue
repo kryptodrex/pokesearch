@@ -2,12 +2,12 @@
     <!-- <div class="pokeBox" :id="dexNum" :class="'border-' + color.main"> -->
     <div class="pokeBox">
       <img class="pokePic" :class="imgLoadClass" :src="getImageUrl()" :alt="toUpper(name)" @load="setLoaded">
-      <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
+      <AppLoader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
     </div>
 </template>
 
 <script>
-import Loader from '@/components/Loader'
+import AppLoader from '@/components/AppLoader'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
 const util = RepositoryFactory.get('util')
@@ -15,7 +15,7 @@ const util = RepositoryFactory.get('util')
 export default {
   name: 'PokeImg',
   components: {
-    Loader
+    AppLoader
   },
   props: {
     baseUrl: String,
@@ -71,8 +71,8 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../../styling/colors';
-@import '../../styling/types';
+@use '../../styling/colors' as *;
+@use '../../styling/types' as *;
 
 .pokeBox {
     /* border: 2px solid #4A4A4A; */

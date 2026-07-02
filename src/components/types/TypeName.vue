@@ -14,5 +14,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '../../styling/types';
+@use '../../styling/types' as *;
 </style>

@@ -23,15 +23,15 @@
           </div>
         </transition> -->
 
-        <Loader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
-        <!-- <Loader class="pokePic loaderBall" type="ball" size="medium" v-if="getData !== null && isLoading" /> -->
+        <AppLoader class="pokePic loaderBall" :class="loaderClass" type="ball" size="medium" />
+        <!-- <AppLoader class="pokePic loaderBall" type="ball" size="medium" v-if="getData !== null && isLoading" /> -->
 
       </router-link>
     </div>
 </template>
 
 <script>
-import Loader from '@/components/Loader'
+import AppLoader from '@/components/AppLoader'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
@@ -41,7 +41,7 @@ const img = RepositoryFactory.get('img')
 export default {
   name: 'PokeBox',
   components: {
-    Loader
+    AppLoader
   },
   props: {
     name: String,
@@ -65,15 +65,15 @@ export default {
 
     async getPokeData () {
       if (!this.gotData) {
-        var { data } = await pokeApi.getPokemonSpecies(this.dexNum) // eslint-disable-line
+        var { data } = await pokeApi.getPokemonSpecies(this.dexNum)
         this.color = {
-          main: data.color.name, // eslint-disable-line
+          main: data.color.name,
           backup: ''
         }
 
         var { data } = await pokeApi.getPokemon(this.dexNum) // eslint-disable-line
         this.types = {
-          main: data.types, // eslint-disable-line
+          main: data.types,
           backup: []
         }
 
@@ -150,8 +150,8 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../../styling/colors';
-@import '../../styling/types';
+@use '../../styling/colors' as *;
+@use '../../styling/types' as *;
 
 .pokeBox {
   border-radius: $radius-md;

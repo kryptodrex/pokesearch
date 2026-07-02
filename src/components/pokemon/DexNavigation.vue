@@ -6,7 +6,7 @@
                 <img class="arrow" id="back-arrow" src="@/assets/images/back.svg" alt="Back arrow">
             </router-link>
             <div class="placeholder prev" v-if="isLoading">
-                <Loader type="ball" size="small" />
+                <AppLoader type="ball" size="small" />
             </div>
             <img class="pokesprite prev" :src="prevPokeData.spriteUrl" :alt="'Sprite of ' + prevPokeData.name" v-if="!isLoading">
             <div class="pokenumname" v-if="!isLoading">
@@ -23,7 +23,7 @@
             </div>
             <img class="pokesprite next" :src="nextPokeData.spriteUrl" :alt="'Sprite of ' + nextPokeData.name" v-if="!isLoading">
             <div class="placeholder next" v-if="isLoading">
-                <Loader type="ball" size="small" />
+                <AppLoader type="ball" size="small" />
             </div>
             <router-link aria-label="Navigate forward in dex" :to="'/pokemon/' + nextNum">
                 <img class="arrow" id="forward-arrow" src="@/assets/images/forward.svg" alt="Forward arrow">
@@ -34,7 +34,7 @@
 
 <script>
 
-import Loader from '@/components/Loader'
+import AppLoader from '@/components/AppLoader'
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
@@ -44,7 +44,7 @@ const img = RepositoryFactory.get('img')
 export default {
   name: 'DexNavigation',
   components: {
-    Loader
+    AppLoader
   },
   props: {
     prevNum: null,
@@ -64,18 +64,18 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getPokemon(this.prevNum) // eslint-disable-line
+      var { data } = await pokeApi.getPokemon(this.prevNum)
       this.prevPokeData = {
-        name: util.toUpper(data.species.name), // eslint-disable-line
+        name: util.toUpper(data.species.name),
         dexNum: this.formatIndex(this.prevNum),
-        spriteUrl: this.chooseSpriteUrl(data.sprites, this.prevNum) // eslint-disable-line
+        spriteUrl: this.chooseSpriteUrl(data.sprites, this.prevNum)
       }
 
       var { data } = await pokeApi.getPokemon(this.nextNum) // eslint-disable-line
       this.nextPokeData = {
-        name: util.toUpper(data.species.name), // eslint-disable-line
+        name: util.toUpper(data.species.name),
         dexNum: this.formatIndex(this.nextNum),
-        spriteUrl: this.chooseSpriteUrl(data.sprites, this.nextNum) // eslint-disable-line
+        spriteUrl: this.chooseSpriteUrl(data.sprites, this.nextNum)
       }
 
       this.isLoading = false

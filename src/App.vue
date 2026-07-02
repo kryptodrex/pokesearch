@@ -1,25 +1,25 @@
 <template>
   <div id="app">
-    <Header />
+    <AppHeader />
     <main>
       <router-view/>
     </main>
-    <Footer />
+    <AppFooter />
   </div>
 </template>
 
 <script>
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
+import AppHeader from '@/components/AppHeader.vue'
+import AppFooter from '@/components/AppFooter.vue'
 
 const util = RepositoryFactory.get('util')
 
 export default {
   name: 'App',
   components: {
-    Header,
-    Footer
+    AppHeader,
+    AppFooter
   },
   mounted () {
     console.log(util.getUserLocales())

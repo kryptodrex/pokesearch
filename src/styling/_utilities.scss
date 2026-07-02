@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 // Prevents text selection on interactive elements
 .button {
   -webkit-touch-callout: none;

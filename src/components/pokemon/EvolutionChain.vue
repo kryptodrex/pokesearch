@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Loader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
+    <AppLoader v-if="isLoading" class="loaderBall" type="ball" size="medium" />
     <div v-if="!isLoading" class="evolutionChain">
       <div class="evoLevels" v-if="evoDetails.length > 1">
         <!-- <div v-for="(evo, index) in evoDetails" :key="index" :class="'evoLevel' + evo.level">
@@ -23,7 +23,7 @@
 
 <script>
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
+import AppLoader from '@/components/AppLoader'
 import PokeBox from '@/components/pokemon/PokeBox'
 
 const pokeApi = RepositoryFactory.get('pokeApi')
@@ -32,7 +32,7 @@ const util = RepositoryFactory.get('util')
 export default {
   name: 'EvolutionChain',
   components: {
-    Loader,
+    AppLoader,
     PokeBox
   },
   props: {

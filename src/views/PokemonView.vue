@@ -1,6 +1,6 @@
 <template>
   <div class="pokemonPage" :key="pokemon">
-    <Loader v-if="isLoading" :full-page="true" />
+    <AppLoader v-if="isLoading" :full-page="true" />
 
     <DexNavigation v-if="!isLoading" :nextNum="nextNum" :prevNum="prevNum"/>
 
@@ -62,12 +62,12 @@
             :aria-label="'Click to show form ' + toUpper(formData.name_formatted)"
           >
             <!-- Buttons for other unselected forms -->
-            <Button size="medium" :color="speciesInfo.color.name" v-if="formData.id !== form && formData.id" > {{ toUpperEachWord(formData.name_formatted) }} </Button>
+            <AppButton size="medium" :color="speciesInfo.color.name" v-if="formData.id !== form && formData.id" > {{ toUpperEachWord(formData.name_formatted) }} </AppButton>
             <!-- Button for selected forms -->
-            <Button size="medium" :color="speciesInfo.color.name" :inverted="true" v-if="formData.id === form" > {{ toUpperEachWord(formData.name_formatted) }} </Button>
+            <AppButton size="medium" :color="speciesInfo.color.name" :inverted="true" v-if="formData.id === form" > {{ toUpperEachWord(formData.name_formatted) }} </AppButton>
           </div>
           <!-- <router-link v-if="!hasDefaultForm && form" :to="'/pokemon/' + pokemon" class="formBtn">
-            <Button size="medium" :color="speciesInfo.color.name"> Default </Button>
+            <AppButton size="medium" :color="speciesInfo.color.name"> Default </AppButton>
           </router-link> -->
         </div>
       </div>
@@ -236,11 +236,11 @@
 
 <script>
 import { RepositoryFactory } from '@/repositories/repositoryFactory'
-import Loader from '@/components/Loader'
+import AppLoader from '@/components/AppLoader'
 import TypeEffectiveness from '@/components/pokemon/TypeEffectiveness'
 import DexNavigation from '@/components/pokemon/DexNavigation'
 import EvolutionChain from '@/components/pokemon/EvolutionChain'
-import Button from '@/components/Button'
+import AppButton from '@/components/AppButton'
 import SliderSwitch from '@/components/SliderSwitch'
 import TypeBox from '@/components/types/TypeBox'
 // import PokeImg from '../components/pokemon/PokeImg.vue'
@@ -266,8 +266,8 @@ export default {
 
   name: 'PokemonView',
   components: {
-    Loader,
-    Button,
+    AppLoader,
+    AppButton,
     TypeEffectiveness,
     DexNavigation,
     EvolutionChain,
@@ -315,12 +315,12 @@ export default {
     async fetch () {
       this.isLoading = true
 
-      var { data } = await pokeApi.getPokemonSpecies(this.pokemon) // eslint-disable-line
-      this.speciesInfo = data // eslint-disable-line 
+      var { data } = await pokeApi.getPokemonSpecies(this.pokemon)
+      this.speciesInfo = data
       this.pokeName = this.getEntryForLocale(this.speciesInfo.names).name
 
       var { data } = await pokeApi.getPokemon(this.pokemon) // eslint-disable-line
-      this.pokeInfo = data // eslint-disable-line
+      this.pokeInfo = data
 
       if (this.form) {
         var formInd = this.alternateForms.findIndex(form => {
@@ -331,12 +331,12 @@ export default {
           switch (this.formType) {
             case 'form':
               var { data } = await pokeApi.getPokemonForm(this.form) // eslint-disable-line
-              this.formInfo = data // eslint-disable-line
+              this.formInfo = data
               break
 
             case 'variety':
               var { data } = await pokeApi.getPokemon(this.form) // eslint-disable-line
-              this.pokeInfo = data // eslint-disable-line
+              this.pokeInfo = data
 
               // var { data } = await pokeApi.getPokemonForm(this.pokeInfo.forms[0])
               // this.formInfo = data
@@ -354,7 +354,7 @@ export default {
       }
 
       var { data } = await pokeApi.getCurrentTotalPokemon() // eslint-disable-line
-      this.totalPokemon = data.count // eslint-disable-line
+      this.totalPokemon = data.count
 
       // Set the prev Pokedex num and next Pokedex num
       if ((this.speciesInfo.id - 1) < 1) this.prevNum = this.totalPokemon
@@ -367,7 +367,7 @@ export default {
       for (var i = 0; i < this.pokeInfo.abilities.length; i++) {
         var abilityInfo = this.pokeInfo.abilities[i]
         var { data } = await pokeApi.getAbility(abilityInfo.ability.name) // eslint-disable-line
-        this.storeAbilityData(data) // eslint-disable-line
+        this.storeAbilityData(data)
       }
 
       document.title = '#' + this.formatIndex(this.speciesInfo.id) + ' ' + this.pokeName + this.title // set site title to pokemon name
@@ -787,7 +787,7 @@ export default {
     }
   },
   watch: {
-    $route: function (to, from) {
+    $route: function (to) {
       this.pokemon = 0
       this.form = 0
       this.formType = null
@@ -808,8 +808,8 @@ export default {
 
 <style scoped lang="scss">
 
-@import '../styling/types';
-@import '../styling/colors';
+@use '../styling/types' as *;
+@use '../styling/colors' as *;
 
 .poke-head {
   max-width: 46.875rem;
